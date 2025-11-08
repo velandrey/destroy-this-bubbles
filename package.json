@@ -27,6 +27,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "lerna": "^5.4.3"
+    "lerna": "^5.4.3",
+    "vite-tsconfig-paths": "^5.1.4"
   }
 }

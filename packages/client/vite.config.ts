@@ -1,4 +1,5 @@
 import path from 'path';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 import react from '@vitejs/plugin-react';
 import dotenv from 'dotenv';
@@ -25,5 +26,5 @@ export default defineConfig({
     ssr: {
         format: 'cjs',
     },
-    plugins: [react()],
+    plugins: [react(), tsconfigPaths()],
 });

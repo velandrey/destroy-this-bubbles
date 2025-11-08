@@ -1,4 +1,4 @@
-import { selectUser } from './slices/userSlice';
+import { selectUser } from '@slices/userSlice';
 import { useSelector } from './store';
 
 const App = () => {
