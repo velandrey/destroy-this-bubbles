@@ -1,24 +1,24 @@
+import { configureStore } from '@reduxjs/toolkit';
+import { Request as ExpressRequest } from 'express';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
-import { Provider } from 'react-redux';
-import { ServerStyleSheet } from 'styled-components';
 import { Helmet } from 'react-helmet';
-import { Request as ExpressRequest } from 'express';
+import { Provider } from 'react-redux';
+import { matchRoutes } from 'react-router-dom';
 import {
     createStaticHandler,
     createStaticRouter,
     StaticRouterProvider,
 } from 'react-router-dom/server';
-import { matchRoutes } from 'react-router-dom';
-import { configureStore } from '@reduxjs/toolkit';
+import { ServerStyleSheet } from 'styled-components';
 
 import {
     createContext,
     createFetchRequest,
     createUrl,
 } from './entry-server.utils';
-import { reducer } from './store';
 import { routes } from './routes';
+import { reducer } from './store';
 import './index.css';
 import { setPageHasBeenInitializedOnServer } from './slices/ssrSlice';
 

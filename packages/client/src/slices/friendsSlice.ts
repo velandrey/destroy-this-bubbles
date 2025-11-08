@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../store';
+
 import { SERVER_HOST } from '../constants';
+import { RootState } from '../store';
 
 interface Friend {
     name: string;

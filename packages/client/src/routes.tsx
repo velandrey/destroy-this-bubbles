@@ -1,8 +1,7 @@
-import { AppDispatch, RootState } from './store';
-
-import { initMainPage, MainPage } from './pages/Main';
 import { initFriendsPage, FriendsPage } from './pages/FriendsPage';
+import { initMainPage, MainPage } from './pages/Main';
 import { initNotFoundPage, NotFoundPage } from './pages/NotFound';
+import { AppDispatch, RootState } from './store';
 
 export type PageInitContext = {
     clientToken?: string;

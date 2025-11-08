@@ -1,4 +1,5 @@
 import { Request as ExpressRequest } from 'express';
+
 import { PageInitContext } from './routes';
 
 export const createContext = (req: ExpressRequest): PageInitContext => ({
