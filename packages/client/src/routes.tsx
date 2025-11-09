@@ -1,33 +1,32 @@
-import { AppDispatch, RootState } from './store'
-
-import { initMainPage, MainPage } from './pages/Main'
-import { initFriendsPage, FriendsPage } from './pages/FriendsPage'
-import { initNotFoundPage, NotFoundPage } from './pages/NotFound'
+import { initFriendsPage, FriendsPage } from './pages/FriendsPage';
+import { initMainPage, MainPage } from './pages/Main';
+import { initNotFoundPage, NotFoundPage } from './pages/NotFound';
+import { AppDispatch, RootState } from './store';
 
 export type PageInitContext = {
-  clientToken?: string
-}
+    clientToken?: string;
+};
 
 export type PageInitArgs = {
-  dispatch: AppDispatch
-  state: RootState
-  ctx: PageInitContext
-}
+    dispatch: AppDispatch;
+    state: RootState;
+    ctx: PageInitContext;
+};
 
 export const routes = [
-  {
-    path: '/',
-    Component: MainPage,
-    fetchData: initMainPage,
-  },
-  {
-    path: '/friends',
-    Component: FriendsPage,
-    fetchData: initFriendsPage,
-  },
-  {
-    path: '*',
-    Component: NotFoundPage,
-    fetchData: initNotFoundPage,
-  },
-]
+    {
+        path: '/',
+        Component: MainPage,
+        fetchData: initMainPage,
+    },
+    {
+        path: '/friends',
+        Component: FriendsPage,
+        fetchData: initFriendsPage,
+    },
+    {
+        path: '*',
+        Component: NotFoundPage,
+        fetchData: initNotFoundPage,
+    },
+];
