@@ -1,6 +1,8 @@
 {
     "extends": "./tsconfig.json",
     "compilerOptions": {
+        "composite": true,
+        "noEmit": false,
         "outDir": "./dist/server",
         "lib": ["DOM", "ES2019"],
         "target": "ES2019",
@@ -9,5 +11,6 @@
         "esModuleInterop": true,
         "types": ["react/jsx-runtime"]
     },
-    "include": ["src/entry-server.tsx", "server", "src/pages/"]
+    "include": ["src/", "server"],
+    "exclude": ["src/**/*.test.*", "src/**/*.spec.*"]
 }

@@ -25,9 +25,10 @@ export default defineConfig(async () => {
         build: {
             outDir: path.join(__dirname, 'dist/client'),
         },
-        ssr: {
-            format: 'cjs',
-        },
+        // Подключить при использовании реального сср в будущем
+        // ssr: {
+        //     format: 'cjs',
+        // },
         plugins: [react(), tsconfigPaths()],
     };
 });

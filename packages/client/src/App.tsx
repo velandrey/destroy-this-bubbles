@@ -1,23 +1,43 @@
 import { selectUser } from '@slices/userSlice';
 import { useSelector } from './store';
-import { Button } from '@mui/material';
+import { Button, TextField } from '@mui/material';
+import { useState } from 'react';
 
 const App = () => {
-    const user = useSelector(selectUser);
+    const [value, setValue] = useState('');
 
     return (
         <div>
             <Button variant="contained" color="primary">
                 Click me
             </Button>
-            {user ? (
-                <div>
-                    <p>{user.name}</p>
-                    <p>{user.secondName}</p>
-                </div>
-            ) : (
-                <p>Пользователь не найден!</p>
-            )}
+            <br />
+            <br />
+            <TextField
+                id="outlined-basic"
+                label="Outlined"
+                variant="outlined"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+            />
+            <br />
+            <br />
+            <TextField
+                id="filled-basic"
+                label="Filled"
+                variant="filled"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+            />
+            <br />
+            <br />
+            <TextField
+                id="standard-basic"
+                label="Standard"
+                variant="standard"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+            />
         </div>
     );
 };
