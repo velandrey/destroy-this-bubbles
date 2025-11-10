@@ -6,6 +6,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { routes } from './routes';
 import { store } from './store';
 
+import './styles/style.scss';
+
 const router = createBrowserRouter(routes);
 
 ReactDOM.hydrateRoot(
