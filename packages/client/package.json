@@ -7,7 +7,7 @@
         "preview": "node server/index.js",
         "lint": "eslint . --fix",
         "format": "prettier --write .",
-        "test": "jest --passWithNoTests"
+        "test": "jest ./"
     },
     "dependencies": {
         "@emotion/react": "^11.14.0",
