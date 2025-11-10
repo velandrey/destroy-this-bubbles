@@ -6,13 +6,48 @@ import { usePage } from '../hooks/usePage';
 import { PageInitArgs } from '../routes';
 import { fetchUserThunk, selectUser } from '../slices/userSlice';
 import { useSelector } from '../store';
+import { Button, TextField } from '@mui/material';
+import { useState } from 'react';
 
 export const MainPage = () => {
     const user = useSelector(selectUser);
 
+    const [value, setValue] = useState('');
+
     usePage({ initPage: initMainPage });
     return (
         <div>
+            <Button variant="contained" color="primary">
+                Click me
+            </Button>
+            <br />
+            <br />
+            <TextField
+                id="outlined-basic"
+                label="Outlined"
+                variant="outlined"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+            />
+            <br />
+            <br />
+            <TextField
+                id="filled-basic"
+                label="Filled"
+                variant="filled"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+            />
+            <br />
+            <br />
+            <TextField
+                id="standard-basic"
+                label="Standard"
+                variant="standard"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+            />
+            <br />
             <Helmet>
                 <meta charSet="utf-8" />
                 <title>Главная</title>
