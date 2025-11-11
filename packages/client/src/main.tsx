@@ -1,9 +1,10 @@
 import ReactDOM from 'react-dom/client';
-import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider } from '@mui/material/styles';
 
 import './styles/style.scss';
 import { darkTheme } from '@styles/theme';
+
 import App from './App';
 
 ReactDOM.hydrateRoot(
