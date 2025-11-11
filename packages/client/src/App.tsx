@@ -1,4 +1,3 @@
-import { Button, TextField } from '@mui/material';
 import { ErrorPage } from '@pages/error';
 import { ForumPage } from '@pages/forum';
 import { GamePage } from '@pages/game';
@@ -7,7 +6,6 @@ import { LoginPage } from '@pages/login';
 import { MenuPage } from '@pages/menu';
 import { ProfilePage } from '@pages/profile';
 import { RegistrationPage } from '@pages/registration';
-import { useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 const App = () => {
