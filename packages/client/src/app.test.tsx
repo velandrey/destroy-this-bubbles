@@ -3,7 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import App from './App';
 
-const appContent = 'Vite + React';
+const appContent = 'Профиль';
 
 // @ts-ignore
 global.fetch = jest.fn(() =>
