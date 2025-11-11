@@ -11,6 +11,7 @@ module.exports = {
         __INTERNAL_SERVER_URL__: process.env.INTERNAL_SERVER_URL || 'http://localhost:3001',
     },
     moduleNameMapper: {
+        '\\.(scss|css)$': 'identity-obj-proxy',
         '^@slices/(.*)$': '<rootDir>/src/slices/$1',
         '^@components/(.*)$': '<rootDir>/src/components/$1',
         '^@pages/(.*)$': '<rootDir>/src/pages/$1',
