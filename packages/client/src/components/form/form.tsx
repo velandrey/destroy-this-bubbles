@@ -6,6 +6,7 @@ type TInput = {
     inputLabel: string;
     placeholder?: string;
     type?: 'text' | 'password' | 'email' | 'tel';
+    defaultValue?: string;
 };
 
 type TFormProps = {
@@ -28,7 +29,13 @@ const Form = (props: TFormProps) => {
     } = props;
 
     const initialState = useMemo(
-        () => Object.fromEntries(inputs.map((input) => [input.inputName, ''])),
+        () =>
+            Object.fromEntries(
+                inputs.map(({ inputName, defaultValue }) => [
+                    inputName,
+                    defaultValue ?? '',
+                ])
+            ),
         [inputs]
     );
 
