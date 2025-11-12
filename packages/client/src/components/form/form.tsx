@@ -14,6 +14,7 @@ type TFormProps = {
     resetBtnLabel?: string;
     inputs: TInput[];
     onSubmit: (data: Record<string, string | File | null>) => void;
+    onReset?: () => void;
     inputsVariant?: 'outlined' | 'filled' | 'standard';
     className?: string;
 };
@@ -24,6 +25,7 @@ const Form = (props: TFormProps) => {
         resetBtnLabel,
         inputs,
         onSubmit,
+        onReset,
         inputsVariant,
         className,
     } = props;
@@ -63,6 +65,9 @@ const Form = (props: TFormProps) => {
     const handleReset = () => {
         setFormData(initialState);
         setHasChanged(false);
+        if (onReset) {
+            onReset();
+        }
     };
 
     return (

@@ -25,7 +25,6 @@ const LoginPage = () => {
                 <h1>Авторизация</h1>
                 <Form
                     submitBtnLabel="Войти"
-                    resetBtnLabel="Отменить"
                     inputs={LOGIN_INPUTS}
                     onSubmit={handleSubmit}
                     className={styles.formContainer}
