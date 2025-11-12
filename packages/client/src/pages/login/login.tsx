@@ -1,7 +1,9 @@
 import { Form } from '@components/form';
 import { TInput } from '@components/form/form';
 import { Page } from '@components/page';
-import { Grid } from '@mui/material';
+import { Grid, Link } from '@mui/material';
+
+import styles from './styles.module.scss';
 
 const LoginPage = () => {
     const inputs: TInput[] = [
@@ -11,12 +13,15 @@ const LoginPage = () => {
             placeholder: 'Введите имя',
         },
         {
-            inputName: 'email',
-            inputLabel: 'Email',
+            inputName: 'password',
+            inputLabel: 'Пароль',
+            placeholder: 'Введите пароль',
+            type: 'password',
         },
     ];
 
     const handleSubmit = (data: Record<string, string | File | null>) => {
+        // Отсюда обращения к API авторизации, пока не реализовано - console.log
         console.log(data);
     };
     return (
@@ -31,12 +36,17 @@ const LoginPage = () => {
                     minHeight: '100vh',
                 }}
             >
+                <h1>Авторизация</h1>
                 <Form
                     submitBtnLabel="Войти"
                     resetBtnLabel="Отменить"
                     inputs={inputs}
                     onSubmit={handleSubmit}
                 />
+                <span className={styles.link}>
+                    Новый пользователь?
+                    <Link href="/registration">Зарегистрироваться</Link>
+                </span>
             </Grid>
         </Page>
     );

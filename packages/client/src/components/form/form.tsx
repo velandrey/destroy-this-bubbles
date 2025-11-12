@@ -5,6 +5,7 @@ type TInput = {
     inputName: string;
     inputLabel: string;
     placeholder?: string;
+    type?: 'text' | 'password' | 'email' | 'tel';
 };
 
 type TFormProps = {
@@ -35,12 +36,12 @@ const Form = (props: TFormProps) => {
     };
 
     const initialState = useMemo(
-        () => Object.fromEntries(inputs.map((input) => [input.inputName])),
+        () => Object.fromEntries(inputs.map((input) => [input.inputName, ''])),
         [inputs]
     );
 
     const [formData, setFormData] =
-        useState<Record<string, string | File | null>>(initialState);
+        useState<Record<string, string>>(initialState);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -74,20 +75,23 @@ const Form = (props: TFormProps) => {
             onReset={handleReset}
             sx={sx || defaultSx}
         >
-            {inputs.map(({ inputName, inputLabel, placeholder }) => {
-                return (
-                    <TextField
-                        fullWidth
-                        key={inputName}
-                        name={inputName}
-                        label={inputLabel}
-                        placeholder={placeholder}
-                        value={(formData[inputName] as string) ?? ''}
-                        onChange={handleChange}
-                        variant={inputsVariant || 'outlined'}
-                    />
-                );
-            })}
+            {inputs.map(
+                ({ inputName, inputLabel, placeholder, type = 'text' }) => {
+                    return (
+                        <TextField
+                            fullWidth
+                            key={inputName}
+                            name={inputName}
+                            label={inputLabel}
+                            placeholder={placeholder}
+                            value={(formData[inputName] as string) ?? ''}
+                            onChange={handleChange}
+                            variant={inputsVariant || 'outlined'}
+                            type={type}
+                        />
+                    );
+                }
+            )}
 
             <Button
                 type="submit"
