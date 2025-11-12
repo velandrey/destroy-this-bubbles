@@ -42,6 +42,7 @@ const LoginPage = () => {
                     resetBtnLabel="Отменить"
                     inputs={inputs}
                     onSubmit={handleSubmit}
+                    className={styles.formContainer}
                 />
                 <span className={styles.link}>
                     Новый пользователь?

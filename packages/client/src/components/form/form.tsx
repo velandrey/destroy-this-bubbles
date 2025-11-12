@@ -1,4 +1,4 @@
-import { Box, Button, SxProps, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
 
 type TInput = {
@@ -14,7 +14,7 @@ type TFormProps = {
     inputs: TInput[];
     onSubmit: (data: Record<string, string | File | null>) => void;
     inputsVariant?: 'outlined' | 'filled' | 'standard';
-    sx?: SxProps;
+    className?: string;
 };
 
 const Form = (props: TFormProps) => {
@@ -23,17 +23,9 @@ const Form = (props: TFormProps) => {
         resetBtnLabel,
         inputs,
         onSubmit,
-        sx,
         inputsVariant,
+        className,
     } = props;
-
-    const defaultSx = {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 2,
-    };
 
     const initialState = useMemo(
         () => Object.fromEntries(inputs.map((input) => [input.inputName, ''])),
@@ -47,8 +39,6 @@ const Form = (props: TFormProps) => {
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
-
-        setHasChanged(true);
     };
 
     useEffect(() => {
@@ -73,7 +63,7 @@ const Form = (props: TFormProps) => {
             component="form"
             onSubmit={handleSubmit}
             onReset={handleReset}
-            sx={sx || defaultSx}
+            className={className}
         >
             {inputs.map(
                 ({ inputName, inputLabel, placeholder, type = 'text' }) => {
