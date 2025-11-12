@@ -1,25 +1,11 @@
 import { Form } from '@components/form';
-import { TInput } from '@components/form/form';
 import { Page } from '@components/page';
 import { Grid, Link } from '@mui/material';
 
+import { LOGIN_INPUTS } from './constants';
 import styles from './styles.module.scss';
 
 const LoginPage = () => {
-    const inputs: TInput[] = [
-        {
-            inputName: 'name',
-            inputLabel: 'Имя',
-            placeholder: 'Введите имя',
-        },
-        {
-            inputName: 'password',
-            inputLabel: 'Пароль',
-            placeholder: 'Введите пароль',
-            type: 'password',
-        },
-    ];
-
     const handleSubmit = (data: Record<string, string | File | null>) => {
         // Отсюда обращения к API авторизации, пока не реализовано - console.log
         console.log(data);
@@ -40,7 +26,7 @@ const LoginPage = () => {
                 <Form
                     submitBtnLabel="Войти"
                     resetBtnLabel="Отменить"
-                    inputs={inputs}
+                    inputs={LOGIN_INPUTS}
                     onSubmit={handleSubmit}
                     className={styles.formContainer}
                 />
