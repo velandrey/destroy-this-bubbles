@@ -48,7 +48,7 @@ const GamePage = () => {
         <Page className={styles.container}>
             <div className={styles.descriptionPart}>
                 <p>{descriptionPart.description}</p>
-                <ul>
+                <ul className={styles.list}>
                     {descriptionPart.rules.map((rule) => (
                         <li key={rule}>{rule}</li>
                     ))}
