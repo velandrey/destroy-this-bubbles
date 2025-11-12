@@ -1,7 +1,8 @@
-import React from 'react';
-import styles from './styles.module.scss';
 import { Button } from '@mui/material';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import styles from './styles.module.scss';
 
 const descriptionPart = {
     name: 'Destroy This Bubbles',

@@ -1,11 +1,11 @@
 import { Page } from '@components/page';
-import { accordionActionsClasses, Button } from '@mui/material';
+import { Button } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import styles from './styles.module.scss';
-import { GamePageLauncher } from './launcher';
 import { GamePageCountdown } from './countdown';
+import { GamePageLauncher } from './launcher';
+import styles from './styles.module.scss';
 
 const GamePage = () => {
     const navigate = useNavigate();
