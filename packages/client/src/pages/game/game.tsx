@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import styles from './styles.module.scss';
 import { GamePageLauncher } from './launcher';
+import { GamePageCountdown } from './countdown';
 
 const GamePage = () => {
     const navigate = useNavigate();
@@ -13,6 +14,10 @@ const GamePage = () => {
     const [gameState, setGameState] = useState<
         'launcher' | 'countdown' | 'playing'
     >('launcher');
+
+    const handleGameStart = () => {
+        setGameState('countdown');
+    };
 
     useEffect(() => {
         if (gameState === 'countdown') {
@@ -29,17 +34,15 @@ const GamePage = () => {
         }
     }, [gameState, countdown]);
 
-    const handleGameStart = () => {
-        setGameState('countdown');
-    };
-
     return (
         <Page className={styles.container}>
             {gameState === 'launcher' && (
                 <GamePageLauncher handleGameStart={handleGameStart} />
             )}
 
-            {gameState === 'countdown' && <div>{countdown}</div>}
+            {gameState === 'countdown' && (
+                <GamePageCountdown countdown={countdown} />
+            )}
 
             {gameState === 'playing' && (
                 <div>
