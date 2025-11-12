@@ -61,6 +61,8 @@
     }
 
     .gameTitle {
+        position: relative;
+        padding: 0.5rem 1rem;
         cursor: crosshair;
         font-size: 3rem;
         font-weight: bold;
@@ -77,6 +79,18 @@
             0 0 50px #228b2230;
         animation: fireFlicker 2s ease-in-out infinite alternate,
                    backgroundShift 4s ease-in-out infinite;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            box-shadow: 0 0 5px #00ff00;
+        }
     }
 }
 
