@@ -1,20 +1,39 @@
+import { Form } from '@components/form';
 import { Page } from '@components/page';
-import { Button } from '@mui/material';
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Grid, Link } from '@mui/material';
+
+import { LOGIN_INPUTS } from './constants';
+import styles from './styles.module.scss';
 
 const LoginPage = () => {
-    const navigate = useNavigate();
-
+    const handleSubmit = (data: Record<string, string | File | null>) => {
+        // Отсюда обращения к API авторизации, пока не реализовано - console.log
+        console.log(data);
+    };
     return (
         <Page>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => navigate('/')}
+            <Grid
+                container
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    minHeight: '100vh',
+                }}
             >
-                Вход
-            </Button>
+                <h1>Авторизация</h1>
+                <Form
+                    submitBtnLabel="Войти"
+                    inputs={LOGIN_INPUTS}
+                    onSubmit={handleSubmit}
+                    className={styles.formContainer}
+                />
+                <span className={styles.link}>
+                    Новый пользователь?
+                    <Link href="/registration">Зарегистрироваться</Link>
+                </span>
+            </Grid>
         </Page>
     );
 };
