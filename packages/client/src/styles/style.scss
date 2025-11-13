@@ -23,3 +23,17 @@
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
+
+* {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  appearance: none;
+  border: 0;
+  text-decoration: none;
+  &,
+  &::after,
+  &::before {
+    box-sizing: border-box;
+  }
+}
