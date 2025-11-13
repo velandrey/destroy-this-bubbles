@@ -1,0 +1,32 @@
+.profile {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px 20px 30px;
+  background: rgb(0 0 0 / 40%);
+  border-radius: 6px;
+
+  .profile__title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0 0 30px;
+    text-align: center;
+  }
+
+  .profile__form {
+    margin-top: 40px;
+  }
+
+  .profile__change-password {
+    color: #ffffff;
+    text-decoration: none;
+    text-align: center;
+    display: flex;
+    margin-top: 50px;
+    justify-content: center;
+  }
+
+  .profile__submit_row {
+    margin-top: 30px;
+    text-align: center;
+  }
+}

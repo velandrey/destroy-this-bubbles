@@ -1,0 +1,71 @@
+.profile__button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  background-color: #163acf;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &.button--secondary {
+    background-color: #6c757d;
+
+    &:hover {
+      background-color: #545b62;
+    }
+  }
+
+  &.button--success {
+    background-color: #28a745;
+
+    &:hover {
+      background-color: #1e7e34;
+    }
+  }
+
+  &.button--danger {
+    background-color: #dc3545;
+
+    &:hover {
+      background-color: #c82333;
+    }
+  }
+
+  &.button--outline {
+    background-color: transparent;
+    border: 2px solid #007bff;
+    color: #007bff;
+
+    &:hover {
+      background-color: #007bff;
+      color: white;
+    }
+  }
+}
+
+.profile__button:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.profile__button:active {
+  transform: translateY(0);
+}
+
+.profile__button:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+.profile__button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.profile__button:hover {
+  background-color: #6c757d;
+  transform: none;
+}
