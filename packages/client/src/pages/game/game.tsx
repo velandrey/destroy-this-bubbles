@@ -1,5 +1,6 @@
 import { Page } from '@components/page';
 import { Button } from '@mui/material';
+import Game from 'game/components/Game';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -45,7 +46,7 @@ const GamePage = () => {
             )}
 
             {gameState === 'playing' && (
-                <div>
+                <div className={styles.game}>
                     <Button
                         color="success"
                         variant="contained"
@@ -55,6 +56,7 @@ const GamePage = () => {
                     </Button>
                 </div>
             )}
+            <Game></Game>
         </Page>
     );
 };
