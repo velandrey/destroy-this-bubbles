@@ -1,7 +1,6 @@
 .container {
     width: 100vw;
     height: 100vh;
-    display: flex;
     canvas {
         flex: 0 0 auto;
         width: 800px;
@@ -9,4 +8,8 @@
         display: block;
         margin: auto;
         }
+}
+
+.gameContainer{
+    height: 100vh;
 }

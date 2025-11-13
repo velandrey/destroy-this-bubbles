@@ -46,7 +46,7 @@ const GamePage = () => {
             )}
 
             {gameState === 'playing' && (
-                <div className={styles.game}>
+                <div className={styles.gameContainer}>
                     <Button
                         color="success"
                         variant="contained"
@@ -54,9 +54,9 @@ const GamePage = () => {
                     >
                         Назад к меню
                     </Button>
+                    <Game />
                 </div>
             )}
-            <Game></Game>
         </Page>
     );
 };
