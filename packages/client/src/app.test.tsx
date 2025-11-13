@@ -1,7 +1,9 @@
-import App from './App';
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
-const appContent = 'Click me';
+import App from './App';
+
+const appContent = 'Профиль';
 
 // @ts-ignore
 global.fetch = jest.fn(() =>
@@ -9,6 +11,10 @@ global.fetch = jest.fn(() =>
 );
 
 test('Example test', async () => {
-    render(<App />);
+    render(
+        <MemoryRouter>
+            <App />
+        </MemoryRouter>
+    );
     expect(screen.getByText(appContent)).toBeDefined();
 });
