@@ -1,37 +1,10 @@
+import { GAME_DESCRIPTION } from 'constants';
+
 import { Button } from '@mui/material';
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { mockLastTryPart } from './mock';
 import styles from './styles.module.scss';
-
-const descriptionPart = {
-    name: 'Destroy This Bubbles',
-    rules: [
-        'Щёлкните по пузырям, чтобы уничтожить их',
-        'Чем больше пузырей уничтожаете, тем больше очков вы получаете',
-        'За пропущенные пузыри вы теряете очки',
-    ],
-};
-
-const mockLastTryPart = {
-    lastGamesScore: [
-        {
-            date: '12.11.2025 12:00',
-            score: 100,
-            accuracy: 100,
-        },
-        {
-            date: '11.11.2025 12:00',
-            score: 76,
-            accuracy: 95,
-        },
-        {
-            date: '10.11.2025 12:00',
-            score: 50,
-            accuracy: 80,
-        },
-    ],
-};
 
 type TProps = {
     handleGameStart: () => void;
@@ -44,7 +17,7 @@ const GamePageLauncher = ({ handleGameStart }: TProps) => {
         <div className={styles.container}>
             <div className={styles.descriptionPart}>
                 <ul className={styles.list}>
-                    {descriptionPart.rules.map((rule) => (
+                    {GAME_DESCRIPTION.rules.map((rule) => (
                         <li key={rule}>{rule}</li>
                     ))}
                 </ul>
@@ -54,7 +27,7 @@ const GamePageLauncher = ({ handleGameStart }: TProps) => {
             </div>
             <div className={styles.startPart}>
                 <div className={styles.gameTitle} onClick={handleGameStart}>
-                    {descriptionPart.name}
+                    {GAME_DESCRIPTION.name}
                 </div>
             </div>
             <div className={styles.lastTryPart}>

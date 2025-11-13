@@ -1,3 +1,6 @@
+$accent-color: #00ff00;
+$secondary-color: #898484;
+
 .container {
     width: 100vw;
     height: 100vh;
@@ -13,7 +16,7 @@
         padding: 1rem;
         width: 25%;
 
-        color: #898484;
+        color: $secondary-color;
 
 
         p {
@@ -46,7 +49,7 @@
         padding: 1rem;
         width: 25%;
 
-        color: #898484;
+        color: $secondary-color;
 
         .title {
             font-size: 1.5rem;
@@ -68,7 +71,7 @@
         cursor: crosshair;
         font-size: 3rem;
         font-weight: bold;
-        background: linear-gradient(45deg, #00ff00, #32cd32, #228b22, #006400);
+        background: linear-gradient(45deg, $accent-color, #32cd32, #228b22, #006400);
         background-size: 400% 400%;
         -webkit-background-clip: text;
         background-clip: text;
