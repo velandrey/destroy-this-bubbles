@@ -1,39 +1,78 @@
-import Circle from './Circle';
-export default class GameEngine {
-    private canvas: HTMLCanvasElement;
-    private ctx: CanvasRenderingContext2D;
-    private animationId: number | null = null;
-    private lastTime = 0;
+import { gameSettings } from "game/config/gameSettings";
+import { checkHit } from "game/logic/circle/hitLogic";
+import { SpawnLogic } from "game/logic/circle/spownLogic";
+import Circle from "game/objects/сircle";
 
-    constructor(canvas: HTMLCanvasElement) {
-        this.canvas = canvas;
-        this.ctx = canvas.getContext('2d')!;
-    }
-    //старн игры
-    start() {
-        this.lastTime = performance.now();
-        const loop = (time: number) => {
-            const deltaTime = (time - this.lastTime) / 1000; // секунды
-            this.lastTime = time;
-            this.update(deltaTime);
-            this.draw();
-            this.animationId = requestAnimationFrame(loop);
-        };
-        this.animationId = requestAnimationFrame(loop);
-    }
-    //стоп игры
-    stop() {
-        if (this.animationId) cancelAnimationFrame(this.animationId);
-    }
+export class GameEngine {
+  private ctx: CanvasRenderingContext2D;
+  private circles: Circle[] = [];
+  private spawnLogic: SpawnLogic;
+  private lastTime = 0;
 
-    private update(deltaTime: number) {
-        // Обновление состояния игры с учётом deltaTime
-    }
+  constructor(private canvas: HTMLCanvasElement) {
+    this.ctx = canvas.getContext("2d")!;
+    this.spawnLogic = new SpawnLogic(canvas.width, canvas.height);
+    this.canvas.addEventListener("click", (e) => this.handleClick(e));
+  }
 
-    private draw() {
-        //очистка канваса
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        const circle = new Circle(100, 100, 50, 'red');
-        circle.draw(this.ctx);
+  // 🔹 обработка клика мышью
+  private handleClick(event: MouseEvent) {
+    const rect = this.canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    const result = checkHit(this.circles, x, y);
+
+    if (result.hit) {
+      console.log("Попадание!");
+
+      const { maxCircles } = gameSettings.spawn;
+      const activeCircles = this.circles.filter((c) => c.isActive()).length;
+
+      if (activeCircles < maxCircles) {
+        this.circles.push(this.spawnLogic.spawnCircle());
+      }
     }
+  }
+
+  // 🔹 старт игры
+  start() {
+    this.lastTime = performance.now();
+    requestAnimationFrame((time) => this.loop(time));
+  }
+
+  // 🔹 основной цикл игры
+  private loop(currentTime: number) {
+    const deltaTime = currentTime - this.lastTime;
+    this.lastTime = currentTime;
+
+    this.update(deltaTime, currentTime);  // обновляем состояние
+    this.draw();                           // отрисовываем
+
+    requestAnimationFrame((time) => this.loop(time));
+  }
+
+  // 🔹 обновление состояния всех объектов
+  private update(deltaTime: number, currentTime: number) {
+    // спавн новых кругов
+    this.spawnLogic.update(currentTime, this.circles);
+
+    // обновляем все круги
+    this.circles.forEach((circle) => circle.update(deltaTime));
+
+    // удаляем неактивные круги
+    this.circles = this.circles.filter((circle) => circle.isActive());
+  }
+
+  // 🔹 очистка холста
+  private clear() {
+    this.ctx.fillStyle = gameSettings.game.backgroundColor;
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  // 🔹 отрисовка всех кругов
+  private draw() {
+    this.clear();
+    this.circles.forEach((circle) => circle.draw(this.ctx));
+  }
 }
