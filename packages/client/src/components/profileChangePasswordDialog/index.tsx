@@ -1,7 +1,6 @@
 import './style.scss';
-import ProfileButton from '@components/profileButton';
-import ProfileFormField from '@components/profileFormField';
 import React, { useState } from 'react';
+import { Box, Button, Stack, TextField } from '@mui/material';
 
 interface IProfileChangePasswordDialogProps {
     isOpen: boolean;
@@ -130,29 +129,43 @@ const ProfileChangePasswordDialog: React.FC<
                     className="change-password-dialog__form"
                     onSubmit={handleSubmit}
                 >
-                    <ProfileFormField
-                        label="Старый пароль"
-                        name="oldPassword"
-                        value={oldPassword}
-                        onChange={handleOldPasswordChange}
-                        type="password"
-                    />
-
-                    <ProfileFormField
-                        label="Новый пароль"
-                        name="newPassword"
-                        value={newPassword}
-                        onChange={handleNewPasswordChange}
-                        type="password"
-                    />
-
-                    <ProfileFormField
-                        label="Повторите пароль"
-                        name="confirmPassword"
-                        value={confirmPassword}
-                        onChange={handleConfirmPasswordChange}
-                        type="password"
-                    />
+                    <Box sx={{ p: 2 }}>
+                        <Stack direction="column" spacing={2}>
+                            <TextField
+                                id="oldPassword"
+                                label="Старый пароль"
+                                name="oldPassword"
+                                value={oldPassword}
+                                type="password"
+                                onChange={(e) =>
+                                    handleOldPasswordChange(e.target.value)
+                                }
+                                variant="outlined"
+                            />
+                            <TextField
+                                id="newPassword"
+                                label="Новый пароль"
+                                name="newPassword"
+                                value={newPassword}
+                                type="password"
+                                onChange={(e) =>
+                                    handleNewPasswordChange(e.target.value)
+                                }
+                                variant="outlined"
+                            />
+                            <TextField
+                                id="confirmPassword"
+                                label="Повторите пароль"
+                                name="confirmPassword"
+                                value={confirmPassword}
+                                type="password"
+                                onChange={(e) =>
+                                    handleConfirmPasswordChange(e.target.value)
+                                }
+                                variant="outlined"
+                            />
+                        </Stack>
+                    </Box>
 
                     <div className="change-password-dialog__requirements">
                         <ul className="change-password-dialog__requirements-list">
@@ -212,16 +225,20 @@ const ProfileChangePasswordDialog: React.FC<
                         </ul>
                     </div>
                     <div className="change-password-dialog__actions">
-                        <ProfileButton type="submit" disabled={!isFormValid()}>
+                        <Button
+                            variant="contained"
+                            type="submit"
+                            disabled={!isFormValid()}
+                        >
                             Изменить пароль
-                        </ProfileButton>
-                        <ProfileButton
-                            type="button"
-                            className="button--secondary"
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            className="profile__submit"
                             onClick={handleClose}
                         >
                             Отмена
-                        </ProfileButton>
+                        </Button>
                     </div>
                 </form>
             </div>
