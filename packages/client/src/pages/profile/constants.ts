@@ -1,5 +1,3 @@
-export const defaultAvatar = '/images/profile/user.webp';
-
 export interface IProfile {
     id?: number;
     first_name: string;

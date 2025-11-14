@@ -1,7 +1,7 @@
-import { defaultAvatar } from '@constants/profile';
-import React, { useRef } from 'react';
 import './style.scss';
+import { defaultAvatar } from '@constants/constants';
 import { useProfile } from '@hooks/useProfile';
+import React, { useRef } from 'react';
 
 interface IProfileAvatarUploadProps {
     currentAvatar?: string;
