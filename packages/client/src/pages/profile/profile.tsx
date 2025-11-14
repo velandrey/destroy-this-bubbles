@@ -53,6 +53,7 @@ const ProfilePage = () => {
             login: profile.login,
             email: profile.email,
         });
+        alert('Данные профиля успешно изменены');
     };
 
     const handleAvatarChange = async () => {
