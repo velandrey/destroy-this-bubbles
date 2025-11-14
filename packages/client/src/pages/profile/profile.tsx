@@ -2,9 +2,10 @@ import './style.scss';
 import { Page } from '@components/page';
 import ProfileAvatarUpload from '@components/profileAvatarUpload';
 import ProfileChangePasswordDialog from '@components/profileChangePasswordDialog';
+import ProfileForm from '@components/profileForm';
 import { defaultAvatar } from '@constants/constants';
 import { useProfile } from '@hooks/useProfile';
-import { Box, Button, Grid, Stack, TextField } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { IProfile } from '@pages/profile/constants';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -34,12 +35,14 @@ const ProfilePage = () => {
             console.log(err);
         }
     };
+
     const handleInputChange = (field: keyof IProfile, value: string) => {
         setProfile((prev) => ({
             ...prev,
             [field]: value,
         }));
     };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         await changeProfile({
@@ -64,6 +67,7 @@ const ProfilePage = () => {
             oldPassword: oldPassword,
             newPassword: newPassword,
         });
+        alert('Пароль успешно изменён');
     };
 
     useEffect(() => {
@@ -97,83 +101,11 @@ const ProfilePage = () => {
                     onAvatarChange={handleAvatarChange}
                     size={120}
                 />
-                <form onSubmit={handleSubmit}>
-                    <Box sx={{ p: 2 }}>
-                        <Stack direction="column" spacing={2}>
-                            <TextField
-                                id="first_name"
-                                label="Имя"
-                                name="first_name"
-                                value={profile.first_name}
-                                type="text"
-                                onChange={(e) =>
-                                    handleInputChange(
-                                        'first_name',
-                                        e.target.value
-                                    )
-                                }
-                                variant="outlined"
-                            />
-                            <TextField
-                                id="second_name"
-                                label="Фамилия"
-                                name="second_name"
-                                value={profile.second_name}
-                                type="text"
-                                onChange={(e) =>
-                                    handleInputChange(
-                                        'second_name',
-                                        e.target.value
-                                    )
-                                }
-                                variant="outlined"
-                            />
-                            <TextField
-                                id="display_name"
-                                label="Никнейм"
-                                name="display_name"
-                                value={profile.display_name}
-                                type="text"
-                                onChange={(e) =>
-                                    handleInputChange(
-                                        'display_name',
-                                        e.target.value
-                                    )
-                                }
-                                variant="outlined"
-                            />
-                            <TextField
-                                id="email"
-                                label="Email"
-                                name="email"
-                                value={profile.email}
-                                type="email"
-                                onChange={(e) =>
-                                    handleInputChange('email', e.target.value)
-                                }
-                                variant="outlined"
-                            />
-                            <TextField
-                                id="phone"
-                                label="Телефон"
-                                name="phone"
-                                value={profile.phone}
-                                type="tel"
-                                onChange={(e) =>
-                                    handleInputChange('phone', e.target.value)
-                                }
-                                variant="outlined"
-                            />
-                            <Button
-                                variant="contained"
-                                type="submit"
-                                className="profile__submit"
-                            >
-                                Сохранить изменения
-                            </Button>
-                        </Stack>
-                    </Box>
-                </form>
+                <ProfileForm
+                    profile={profile}
+                    onSubmit={handleSubmit}
+                    onInputChange={handleInputChange}
+                />
                 <ProfileChangePasswordDialog onSubmit={handlePasswordChange} />
             </Grid>
         </Page>
