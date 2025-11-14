@@ -1,7 +1,7 @@
 import { gameSettings } from 'game/config/gameSettings';
 import { checkHit } from 'game/logic/circle/hitLogic';
 import { SpawnLogic } from 'game/logic/circle/spownLogic';
-import Circle from 'game/objects/сircle';
+import Circle from 'game/objects/circle';
 
 const missSound = new Audio('/assets/sounds/miss.wav'); // путь от public
 
@@ -102,7 +102,6 @@ export class GameEngine {
     }
 
     private update(deltaTime: number, currentTime: number) {
-
         this.spawnLogic.update(currentTime, this.circles);
 
         this.circles.forEach((circle) => circle.update(deltaTime));
