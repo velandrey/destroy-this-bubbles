@@ -6,20 +6,17 @@ export class SpawnLogic {
 
   constructor(private canvasWidth: number, private canvasHeight: number) {}
 
-  // 🔹 Проверяем, пора ли спавнить новый круг
   update(currentTime: number, circles: Circle[]) {
     const { interval } = gameSettings.spawn;
 
     if (currentTime - this.lastSpawnTime > interval) {
       this.lastSpawnTime = currentTime;
 
-      // создаём новый круг
       const circle = this.spawnCircle();
       circles.push(circle);
     }
   }
 
-  // 🔹 Метод для создания нового круга
   public spawnCircle(): Circle {
     const { minRadius, maxRadius, color } = gameSettings.circle;
 

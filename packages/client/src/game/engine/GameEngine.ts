@@ -28,9 +28,7 @@ export class GameEngine {
         this.canvas.addEventListener('click', (e) => this.handleClick(e));
     }
 
-    // 🔹 обработка клика мышью
     private handleClick(event: MouseEvent) {
-        // если игра не запущена — обрабатываем только кнопку
         if (!this.isRunning) {
             if (this.restartButton) {
                 const rect = this.canvas.getBoundingClientRect();
@@ -45,14 +43,12 @@ export class GameEngine {
                     y >= this.restartButton.y &&
                     y <= this.restartButton.y + this.restartButton.height
                 ) {
-                    this.start(); // перезапуск игры
+                    this.start();
                 }
             }
-            return; // клики вне кнопки не обрабатываем
+            return;
         }
 
-        // -----------------------------
-        // Далее обработка кликов по кругам только если игра запущена
         const rect = this.canvas.getBoundingClientRect();
         const scaleX = this.canvas.width / rect.width;
         const scaleY = this.canvas.height / rect.height;
@@ -77,7 +73,6 @@ export class GameEngine {
         }
     }
 
-    // 🔹 старт игры
     start() {
         this.clear();
         this.startTime = performance.now();
@@ -86,7 +81,6 @@ export class GameEngine {
         requestAnimationFrame((time) => this.loop(time));
     }
 
-    // 🔹 основной цикл игры
     private loop(currentTime: number) {
         if (!this.isRunning) return;
 
@@ -107,40 +101,30 @@ export class GameEngine {
         requestAnimationFrame((time) => this.loop(time));
     }
 
-    // 🔹 обновление состояния всех объектов
     private update(deltaTime: number, currentTime: number) {
-        // спавн новых кругов
+
         this.spawnLogic.update(currentTime, this.circles);
 
-        // обновляем все круги
         this.circles.forEach((circle) => circle.update(deltaTime));
 
-        // удаляем неактивные круги
         this.circles = this.circles.filter((circle) => circle.isActive());
     }
 
-    // 🔹 очистка холста
     private clear() {
-        // Используем реальные размеры canvas
         this.ctx.fillStyle = gameSettings.game.backgroundColor;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    // 🔹 отрисовка всех кругов
     private draw(currentTime: number) {
         this.clear();
         this.circles.forEach((circle) => circle.draw(this.ctx));
-
-        this.ctx.save(); // сохраняем состояние
+        this.ctx.save();
         this.ctx.fillStyle = 'white';
         this.ctx.font = '24px Arial';
         this.ctx.textAlign = 'left';
         this.ctx.textBaseline = 'top';
-
-        // Score
         this.ctx.fillText(`Score: ${this.score}`, 20, 20);
 
-        // Таймер
         const elapsed = (currentTime - this.startTime) / 1000;
         const remaining =
             gameSettings.game.gameDuration / 1000 - Math.round(elapsed);
@@ -151,7 +135,7 @@ export class GameEngine {
             20
         );
 
-        this.ctx.restore(); // восстанавливаем состояние
+        this.ctx.restore();
     }
 
     private endGame() {
@@ -159,35 +143,27 @@ export class GameEngine {
         this.isRunning = false;
         this.score = 0;
         this.circles = [];
-
-        // Настройки текста
         this.ctx.fillStyle = 'white';
         this.ctx.font = '24px Arial';
-        this.ctx.textAlign = 'center'; // горизонтальное выравнивание по центру
-        this.ctx.textBaseline = 'middle'; // вертикальное выравнивание по центру
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
 
         const centerX = this.canvas.width / 2;
         const centerY = this.canvas.height / 2;
 
-        // Рисуем основной текст
         this.ctx.fillText('Игра окончена', centerX, centerY);
 
-        // Параметры кнопки
         const buttonWidth = 200;
         const buttonHeight = 50;
         const buttonX = centerX - buttonWidth / 2;
-        const buttonY = centerY + 50; // смещаем чуть ниже текста
+        const buttonY = centerY + 50;
 
-        // Рисуем кнопку
         this.ctx.fillStyle = 'blue';
         this.ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-
-        // Текст на кнопке
         this.ctx.fillStyle = 'white';
         this.ctx.font = '20px Arial';
         this.ctx.fillText('Начать заново', centerX, buttonY + buttonHeight / 2);
 
-        // Сохраняем область кнопки для клика
         this.restartButton = {
             x: buttonX,
             y: buttonY,

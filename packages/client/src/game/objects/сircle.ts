@@ -1,7 +1,6 @@
 import { gameSettings } from "../config/gameSettings";
 
 const popSound = new Audio("/assets/sounds/pop.mp3"); // путь от public
-
 export default class Circle {
   public radius: number;
   private growing = true;
@@ -16,7 +15,6 @@ export default class Circle {
     this.radius = initialRadius;
   }
 
-  // 🔹 обновление состояния круга
   update(deltaTime: number) {
     const { growthSpeed, maxRadius, minRadius } = gameSettings.circle;
     if (!this.active) return;
@@ -36,7 +34,7 @@ export default class Circle {
     }
   }
 
-  // 🔹 отрисовка круга
+
   draw(ctx: CanvasRenderingContext2D) {
     if (!this.active) return;
     ctx.beginPath();
@@ -45,19 +43,17 @@ export default class Circle {
     ctx.fill();
   }
 
-  // 🔹 проверка активности
+
   isActive() {
     return this.active;
   }
 
-  // 🔹 проверка попадания
   containsPoint(px: number, py: number): boolean {
     const dx = px - this.x;
     const dy = py - this.y;
     return Math.sqrt(dx * dx + dy * dy) <= this.radius;
   }
 
-  // 🔹 пометить круг как лопнувший и проиграть звук
   pop() {
     this.active = false;
     popSound.currentTime = 0;  // сброс проигрывания

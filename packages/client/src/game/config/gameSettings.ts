@@ -18,6 +18,6 @@ export const gameSettings = {
         backgroundColor: '#111', // фон канваса
         scoreOnHit: 1, // очки за попадание
         scoreOnMiss: -1, // штраф за промах
-        gameDuration: 30000,
+        gameDuration: 30000, //продолжительность игры в мс
     },
 };
