@@ -2,9 +2,9 @@ import { TInput } from '@components/form';
 
 export const LOGIN_INPUTS: TInput[] = [
     {
-        inputName: 'name',
-        inputLabel: 'Имя',
-        placeholder: 'Введите имя',
+        inputName: 'login',
+        inputLabel: 'Логин',
+        placeholder: 'Введите логин',
     },
     {
         inputName: 'password',
