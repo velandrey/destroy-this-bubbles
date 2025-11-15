@@ -1,18 +1,19 @@
-import './style.scss';
 import { Page } from '@components/page';
-import ProfileAvatarUpload from '@components/profileAvatarUpload';
-import ProfileChangePasswordDialog from '@components/profileChangePasswordDialog';
-import ProfileForm from '@components/profileForm';
+import ProfileAvatarUpload from '@components/profileAvatarUpload/profileAvatarUpload';
+import ProfileChangePasswordDialog from '@components/profileChangePasswordDialog/profileChangePasswordDialog';
+import ProfileForm from '@components/profileForm/profileForm';
 import { defaultAvatar } from '@constants/constants';
 import { useProfile } from '@hooks/useProfile';
 import { Button, Grid } from '@mui/material';
-import { IProfile } from '@pages/profile/constants';
+import { TProfile } from '@pages/profile/types';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import styles from './styles.module.scss';
+
 const ProfilePage = () => {
     const navigate = useNavigate();
-    const [profile, setProfile] = useState<IProfile>({
+    const [profile, setProfile] = useState<TProfile>({
         first_name: '',
         second_name: '',
         display_name: '',
@@ -36,7 +37,7 @@ const ProfilePage = () => {
         }
     };
 
-    const handleInputChange = (field: keyof IProfile, value: string) => {
+    const handleInputChange = (field: keyof TProfile, value: string) => {
         setProfile((prev) => ({
             ...prev,
             [field]: value,
@@ -86,16 +87,7 @@ const ProfilePage = () => {
             >
                 Меню
             </Button>
-            <Grid
-                container
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    minHeight: '100vh',
-                }}
-            >
+            <Grid container className={styles.profile__grid}>
                 <h1>Профиль игрока</h1>
                 <ProfileAvatarUpload
                     currentAvatar={avatarUrl}

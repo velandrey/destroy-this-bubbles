@@ -1,15 +1,16 @@
-import './style.scss';
 import { defaultAvatar } from '@constants/constants';
 import { useProfile } from '@hooks/useProfile';
 import React, { useRef } from 'react';
 
-interface IProfileAvatarUploadProps {
+import styles from './styles.module.scss';
+
+type TProfileAvatarUploadProps = {
     currentAvatar?: string;
     onAvatarChange?: () => void;
     size?: number;
-}
+};
 
-const ProfileAvatarUpload: React.FC<IProfileAvatarUploadProps> = ({
+const ProfileAvatarUpload: React.FC<TProfileAvatarUploadProps> = ({
     currentAvatar,
     onAvatarChange,
     size = 120,
@@ -45,17 +46,17 @@ const ProfileAvatarUpload: React.FC<IProfileAvatarUploadProps> = ({
 
     return (
         <div
-            className="avatar__container"
+            className={styles.avatar__container}
             style={{ width: size, height: size }}
         >
-            <div className="avatar__box" onClick={handleAvatarClick}>
+            <div className={styles.avatar__box} onClick={handleAvatarClick}>
                 <img
                     src={currentAvatar || defaultAvatar}
                     alt="Аватар профиля"
-                    className="avatar__image"
+                    className={styles.avatar__image}
                 />
 
-                <div className="avatar__overlay">
+                <div className={styles.avatar__overlay}>
                     <svg
                         width="24"
                         height="24"
@@ -75,7 +76,7 @@ const ProfileAvatarUpload: React.FC<IProfileAvatarUploadProps> = ({
                 type="file"
                 accept="image/*"
                 onChange={handleAvatarChange}
-                className="avatar__fileInput"
+                className={styles.avatar__fileInput}
             />
         </div>
     );

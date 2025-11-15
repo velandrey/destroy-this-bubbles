@@ -13,19 +13,16 @@ import {
     ListItemText,
     Typography,
 } from '@mui/material';
+import { TProfileChangePasswordDialogProps } from '@pages/profile/types';
 import React, { useState } from 'react';
 
-interface IProfileChangePasswordDialogProps {
-    onSubmit: (oldPassword: string, newPassword: string) => void;
-}
-
 const ProfileChangePasswordDialog: React.FC<
-    IProfileChangePasswordDialogProps
+    TProfileChangePasswordDialogProps
 > = ({ onSubmit }) => {
-    const [open, setOpen] = React.useState(false);
-    const [oldPassword, setOldPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [open, setOpen] = React.useState<boolean>(false);
+    const [oldPassword, setOldPassword] = useState<string>('');
+    const [newPassword, setNewPassword] = useState<string>('');
+    const [confirmPassword, setConfirmPassword] = useState<string>('');
 
     const regexpLowercase = /(?=.*[a-z])/;
     const regexpUppercase = /(?=.*[A-Z])/;

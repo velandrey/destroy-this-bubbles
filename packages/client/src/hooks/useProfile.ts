@@ -1,11 +1,6 @@
 import { ApiURL } from '@constants/constants';
 import { useApi } from '@hooks/useApi';
-import { IProfile } from '@pages/profile/constants';
-
-interface IPasswordChangeData {
-    oldPassword: string;
-    newPassword: string;
-}
+import { TPasswordChangeData, TProfile } from '@pages/profile/types';
 
 export const useProfile = () => {
     const auth = async (login: string, password: string) => {
@@ -15,8 +10,8 @@ export const useProfile = () => {
         });
     };
 
-    const getUserData = async (): Promise<IProfile> => {
-        const profileData = await useApi<IProfile>('/auth/user');
+    const getUserData = async (): Promise<TProfile> => {
+        const profileData = await useApi<TProfile>('/auth/user');
 
         if (!profileData || typeof profileData !== 'object') {
             throw new Error('Invalid profile data received');
@@ -35,7 +30,7 @@ export const useProfile = () => {
         };
     };
 
-    const changeProfile = async (profileData: IProfile) => {
+    const changeProfile = async (profileData: TProfile) => {
         return await useApi('/user/profile', {
             method: 'PUT',
             data: profileData,
@@ -53,7 +48,7 @@ export const useProfile = () => {
         });
     };
 
-    const changePassword = async (passwordData: IPasswordChangeData) => {
+    const changePassword = async (passwordData: TPasswordChangeData) => {
         return await useApi('/user/password', {
             method: 'PUT',
             data: passwordData,

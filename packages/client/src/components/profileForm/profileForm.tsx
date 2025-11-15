@@ -1,11 +1,11 @@
 import { Box, Button, Stack, TextField } from '@mui/material';
-import { IProfile } from '@pages/profile/constants';
+import { TProfile } from '@pages/profile/types';
 import React from 'react';
 
 interface ProfileFormProps {
-    profile: IProfile;
+    profile: TProfile;
     onSubmit: (e: React.FormEvent) => void;
-    onInputChange: (field: keyof IProfile, value: string) => void;
+    onInputChange: (field: keyof TProfile, value: string) => void;
 }
 
 const ProfileForm: React.FC<ProfileFormProps> = ({
