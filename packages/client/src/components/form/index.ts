@@ -1,5 +1,4 @@
 import Form from './form';
-import { TInput } from './form';
 
+export type { TInput, TFormProps, TFormValues, TInputsMap } from './types';
 export { Form };
-export type { TInput };

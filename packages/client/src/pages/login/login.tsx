@@ -2,7 +2,7 @@ import { Form } from '@components/form';
 import { Page } from '@components/page';
 import { Grid, Link } from '@mui/material';
 
-import { LOGIN_INPUTS } from './constants';
+import { LOGIN_INPUTS, LOGIN_SCHEMA } from './constants';
 import styles from './styles.module.scss';
 
 const LoginPage = () => {
@@ -26,7 +26,8 @@ const LoginPage = () => {
                 <Form
                     submitBtnLabel="Войти"
                     inputs={LOGIN_INPUTS}
-                    onSubmit={handleSubmit}
+                    schema={LOGIN_SCHEMA}
+                    submitHandler={handleSubmit}
                     className={styles.formContainer}
                 />
                 <span className={styles.link}>
