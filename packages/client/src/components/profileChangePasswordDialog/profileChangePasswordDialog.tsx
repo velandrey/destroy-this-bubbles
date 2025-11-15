@@ -1,3 +1,7 @@
+import { PasswordForm } from '@components/passwordForm';
+import { TPasswordFormData } from '@components/passwordForm/passwordForm';
+import { PasswordRequirementsList } from '@components/passwordRequirementsList';
+import { usePasswordValidation } from '@hooks/usePasswordValidation';
 import {
     Box,
     Button,
@@ -6,82 +10,39 @@ import {
     DialogContent,
     DialogTitle,
     Link,
-    Stack,
-    TextField,
-    List,
-    ListItem,
-    ListItemText,
-    Typography,
 } from '@mui/material';
 import { TProfileChangePasswordDialogProps } from '@pages/profile/types';
-import React, { useState } from 'react';
+import React from 'react';
 
 const ProfileChangePasswordDialog: React.FC<
     TProfileChangePasswordDialogProps
 > = ({ onSubmit }) => {
     const [open, setOpen] = React.useState<boolean>(false);
-    const [oldPassword, setOldPassword] = useState<string>('');
-    const [newPassword, setNewPassword] = useState<string>('');
-    const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [formData, setFormData] = React.useState<TPasswordFormData>({
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+    });
 
-    const regexpLowercase = /(?=.*[a-z])/;
-    const regexpUppercase = /(?=.*[A-Z])/;
-    const regexpNumber = /(?=.*\d)/;
-    const regexpSymbol = /(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?])/;
-
-    const requirements = [
-        {
-            text: 'Минимум 8 символов',
-            isValid: newPassword.length >= 8,
-        },
-        {
-            text: 'Одна строчная буква',
-            isValid: regexpLowercase.test(newPassword),
-        },
-        {
-            text: 'Одна заглавная буква',
-            isValid: regexpUppercase.test(newPassword),
-        },
-        {
-            text: 'Одна цифра',
-            isValid: regexpNumber.test(newPassword),
-        },
-        {
-            text: 'Один специальный символ',
-            isValid: regexpSymbol.test(newPassword),
-        },
-        {
-            text: 'Пароли совпадают',
-            isValid:
-                newPassword === confirmPassword && confirmPassword.length > 0,
-        },
-    ];
-
-    const isPasswordValidate = (): boolean => {
-        const errors: string[] = [];
-        requirements.forEach((rule) => {
-            if (!rule.isValid) {
-                errors.push(rule.text);
-                return rule.text;
-            }
-        });
-
-        return errors.length === 0;
-    };
+    const { requirements, isPasswordValid } = usePasswordValidation(
+        formData.newPassword,
+        formData.confirmPassword
+    );
 
     const isFormValid = () => {
         return (
-            isPasswordValidate() &&
-            newPassword.length > 0 &&
-            confirmPassword.length > 0 &&
-            newPassword === confirmPassword
+            isPasswordValid &&
+            formData.newPassword.length > 0 &&
+            formData.confirmPassword.length > 0 &&
+            formData.newPassword === formData.confirmPassword &&
+            (formData.oldPassword?.length ?? 0) > 0
         );
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (isFormValid()) {
-            onSubmit(oldPassword, newPassword);
+        if (isFormValid() && formData.oldPassword) {
+            onSubmit(formData.oldPassword, formData.newPassword);
             handleClose();
         }
     };
@@ -91,9 +52,11 @@ const ProfileChangePasswordDialog: React.FC<
     };
 
     const handleClose = () => {
-        setOldPassword('');
-        setNewPassword('');
-        setConfirmPassword('');
+        setFormData({
+            oldPassword: '',
+            newPassword: '',
+            confirmPassword: '',
+        });
         setOpen(false);
     };
 
@@ -127,65 +90,12 @@ const ProfileChangePasswordDialog: React.FC<
                 </DialogTitle>
                 <DialogContent>
                     <form id="form-change-password" onSubmit={handleSubmit}>
-                        <Box sx={{ p: 2 }}>
-                            <Stack direction="column" spacing={2}>
-                                <TextField
-                                    id="oldPassword"
-                                    label="Старый пароль"
-                                    name="oldPassword"
-                                    value={oldPassword}
-                                    type="password"
-                                    onChange={(e) =>
-                                        setOldPassword(e.target.value)
-                                    }
-                                    variant="outlined"
-                                />
-                                <TextField
-                                    id="newPassword"
-                                    label="Новый пароль"
-                                    name="newPassword"
-                                    value={newPassword}
-                                    type="password"
-                                    onChange={(e) =>
-                                        setNewPassword(e.target.value)
-                                    }
-                                    variant="outlined"
-                                />
-                                <TextField
-                                    id="confirmPassword"
-                                    label="Повторите пароль"
-                                    name="confirmPassword"
-                                    value={confirmPassword}
-                                    type="password"
-                                    onChange={(e) =>
-                                        setConfirmPassword(e.target.value)
-                                    }
-                                    variant="outlined"
-                                />
-                            </Stack>
-                        </Box>
-
-                        <Box sx={{ p: 2 }}>
-                            <Typography variant="subtitle2" gutterBottom>
-                                Требования к паролю:
-                            </Typography>
-                            <List sx={{ py: 0 }}>
-                                {requirements.map((requirement, index) => (
-                                    <ListItem key={index} sx={{ p: 0 }}>
-                                        <ListItemText
-                                            primary={'• ' + requirement.text}
-                                            sx={{
-                                                '& .MuiListItemText-primary': {
-                                                    color: requirement.isValid
-                                                        ? 'success.main'
-                                                        : 'text.secondary',
-                                                },
-                                            }}
-                                        />
-                                    </ListItem>
-                                ))}
-                            </List>
-                        </Box>
+                        <PasswordForm
+                            formData={formData}
+                            onChange={setFormData}
+                            showOldPassword={true}
+                        />
+                        <PasswordRequirementsList requirements={requirements} />
                     </form>
                 </DialogContent>
                 <DialogActions>
