@@ -1,5 +1,13 @@
 import { TInputsMap } from '@components/form';
-import { object, string, minLength, regex, pipe, maxLength } from 'valibot';
+import {
+    object,
+    string,
+    minLength,
+    regex,
+    pipe,
+    maxLength,
+    trim,
+} from 'valibot';
 
 export const LOGIN_INPUTS: TInputsMap = {
     login: {
@@ -16,6 +24,7 @@ export const LOGIN_INPUTS: TInputsMap = {
 export const LOGIN_SCHEMA = object({
     login: pipe(
         string(),
+        trim(),
         minLength(3, 'Логин не может быть короче 3 символов'),
         maxLength(20, 'Логин не может быть длиннее 20 символов'),
         regex(
@@ -26,7 +35,12 @@ export const LOGIN_SCHEMA = object({
     ),
     password: pipe(
         string(),
+        trim(),
         minLength(8, 'Пароль не может быть короче 8 символов'),
-        maxLength(40, 'Пароль не может быть длиннее 40 символов')
+        maxLength(40, 'Пароль не может быть длиннее 40 символов'),
+        regex(
+            /^(?=.*[A-Z])(?=.*\d).{8,40}$/,
+            'Пароль должен содержать заглавную букву и цифру'
+        )
     ),
 });

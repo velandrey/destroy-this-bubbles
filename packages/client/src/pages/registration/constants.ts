@@ -1,37 +1,99 @@
-import { TInput } from '@components/form';
+import { TInputsMap } from '@components/form';
+import {
+    object,
+    string,
+    minLength,
+    regex,
+    pipe,
+    maxLength,
+    trim,
+} from 'valibot';
 
-export const REGISTRATION_INPUTS: TInput[] = [
-    {
-        inputName: 'first_name',
-        inputLabel: 'Имя',
+export const REGISTRATION_INPUTS: TInputsMap = {
+    first_name: {
+        label: 'Имя',
         placeholder: 'Введите имя',
     },
-    {
-        inputName: 'second_name',
-        inputLabel: 'Фамилия',
+    second_name: {
+        label: 'Фамилия',
         placeholder: 'Введите фамилию',
     },
-    {
-        inputName: 'login',
-        inputLabel: 'Логин',
+    login: {
+        label: 'Логин',
         placeholder: 'Введите логин',
     },
-    {
-        inputName: 'email',
-        inputLabel: 'Email',
+    email: {
+        label: 'Email',
         placeholder: 'Введите email',
         type: 'email',
     },
-    {
-        inputName: 'password',
-        inputLabel: 'Пароль',
-        placeholder: 'Введите пароль',
-        type: 'password',
-    },
-    {
-        inputName: 'phone',
-        inputLabel: 'Телефон',
+    phone: {
+        label: 'Телефон',
         placeholder: 'Введите номер телефона',
         type: 'tel',
     },
-];
+    password: {
+        label: 'Пароль',
+        placeholder: 'Введите пароль',
+        type: 'password',
+    },
+} as const;
+
+export const REGISTRATION_SCHEMA = object({
+    first_name: pipe(
+        string(),
+        trim(),
+        minLength(1, 'Имя не может быть пустым'),
+        maxLength(50, 'Слишком длинное имя'),
+        regex(
+            /^[A-ZА-Я][a-zа-я-]*$/,
+            'Допустима только латиница/кириллица, первая буква — заглавная'
+        )
+    ),
+    second_name: pipe(
+        string(),
+        trim(),
+        minLength(1, 'Имя не может быть пустым'),
+        maxLength(50, 'Слишком длинное имя'),
+        regex(
+            /^[A-ZА-Я][a-zа-я-]*$/,
+            'Допустима только латиница/кириллица, первая буква — заглавная'
+        )
+    ),
+    login: pipe(
+        string(),
+        trim(),
+        minLength(3, 'Логин не может быть короче 3 символов'),
+        maxLength(20, 'Логин не может быть длиннее 20 символов'),
+        regex(
+            /^[A-Za-z0-9_-]+$/,
+            'Допустимы только латинские буквы, цифры, дефис и подчеркивание'
+        ),
+        regex(/^(?!\d+$).+$/, 'Логин не может состоять только из цифр')
+    ),
+    email: pipe(
+        string(),
+        trim(),
+        regex(
+            /^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.[a-zA-Z]+$/,
+            'Некорректный email'
+        )
+    ),
+    phone: pipe(
+        string(),
+        trim(),
+        regex(
+            /^\+?\d{10,15}$/,
+            'Телефон должен содержать от 10 до 15 цифр и может начинаться с +'
+        )
+    ),
+    password: pipe(
+        string(),
+        minLength(8, 'Пароль не может быть короче 8 символов'),
+        maxLength(40, 'Пароль не может быть длиннее 40 символов'),
+        regex(
+            /^(?=.*[A-Z])(?=.*\d).{8,40}$/,
+            'Пароль должен содержать заглавную букву и цифру'
+        )
+    ),
+});
