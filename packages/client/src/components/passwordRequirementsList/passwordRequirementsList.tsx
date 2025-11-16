@@ -2,6 +2,8 @@ import { PasswordRequirement } from '@hooks/usePasswordValidation';
 import { List, ListItem, ListItemText, Typography, Box } from '@mui/material';
 import React from 'react';
 
+import styles from './styles.module.scss';
+
 interface PasswordRequirementsListProps {
     requirements: PasswordRequirement[];
     title?: string;
@@ -12,13 +14,13 @@ const PasswordRequirementsList: React.FC<PasswordRequirementsListProps> = ({
     title = 'Требования к паролю:',
 }) => {
     return (
-        <Box sx={{ p: 2 }}>
+        <Box className={styles.pass_req__box}>
             <Typography variant="subtitle2" gutterBottom>
                 {title}
             </Typography>
-            <List sx={{ py: 0 }}>
+            <List className={styles.prl__list}>
                 {requirements.map((requirement, index) => (
-                    <ListItem key={index} sx={{ p: 0 }}>
+                    <ListItem key={index} className={styles.prl__list_item}>
                         <ListItemText
                             primary={'• ' + requirement.text}
                             sx={{

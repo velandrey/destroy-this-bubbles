@@ -28,7 +28,7 @@ const PasswordForm: React.FC<TPasswordFormProps> = ({
         };
 
     return (
-        <Box sx={{ p: 2 }}>
+        <Box>
             <Stack direction="column" spacing={2}>
                 {showOldPassword && (
                     <TextField

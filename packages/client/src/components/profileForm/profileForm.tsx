@@ -2,20 +2,22 @@ import { Box, Button, Stack, TextField } from '@mui/material';
 import { TProfile } from '@pages/profile/types';
 import React from 'react';
 
-interface ProfileFormProps {
+import styles from './styles.module.scss';
+
+type TProfileFormProps = {
     profile: TProfile;
     onSubmit: (e: React.FormEvent) => void;
     onInputChange: (field: keyof TProfile, value: string) => void;
-}
+};
 
-const ProfileForm: React.FC<ProfileFormProps> = ({
+const ProfileForm: React.FC<TProfileFormProps> = ({
     profile,
     onSubmit,
     onInputChange,
 }) => {
     return (
-        <form onSubmit={onSubmit}>
-            <Box sx={{ p: 2 }}>
+        <Box className={styles.profile__form_box}>
+            <form onSubmit={onSubmit}>
                 <Stack direction="column" spacing={2}>
                     <TextField
                         id="first_name"
@@ -76,8 +78,8 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
                         Сохранить изменения
                     </Button>
                 </Stack>
-            </Box>
-        </form>
+            </form>
+        </Box>
     );
 };
 

@@ -14,6 +14,8 @@ import {
 import { TProfileChangePasswordDialogProps } from '@pages/profile/types';
 import React from 'react';
 
+import styles from './styles.module.scss';
+
 const ProfileChangePasswordDialog: React.FC<
     TProfileChangePasswordDialogProps
 > = ({ onSubmit }) => {
@@ -62,7 +64,7 @@ const ProfileChangePasswordDialog: React.FC<
 
     return (
         <>
-            <Box sx={{ p: 2 }}>
+            <Box className={styles.profile__link_changepass}>
                 <Link
                     component="button"
                     variant="body2"
@@ -93,7 +95,6 @@ const ProfileChangePasswordDialog: React.FC<
                         <PasswordForm
                             formData={formData}
                             onChange={setFormData}
-                            showOldPassword={true}
                         />
                         <PasswordRequirementsList requirements={requirements} />
                     </form>
