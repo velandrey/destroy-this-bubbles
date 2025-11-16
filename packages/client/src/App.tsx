@@ -1,5 +1,5 @@
 import { ErrorPage } from '@pages/error';
-import { ForumPage } from '@pages/forum';
+import { ForumPage, TopicPage } from '@pages/forum';
 import { GamePage } from '@pages/game';
 import { LeaderBoardPage } from '@pages/leaderBoard';
 import { LoginPage } from '@pages/login';
@@ -19,6 +19,7 @@ const App = () => {
             <Route path="/game" element={<GamePage />} />
             <Route path="/leaderBoard" element={<LeaderBoardPage />} />
             <Route path="/forum" element={<ForumPage />} />
+            <Route path="/forum/topic/:id" element={<TopicPage />} />
             <Route path="/error" element={<ErrorPage />} />
             <Route path="*" element={<Navigate to="/error" />} />
         </Routes>
