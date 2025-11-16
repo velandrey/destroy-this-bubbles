@@ -1,17 +1,17 @@
 import { ApiURL } from '@constants/constants';
-import { useApi } from '@hooks/useApi';
+import { fetchApi } from '@utils/fetchApi';
 import { TPasswordChangeData, TProfile } from '@pages/profile/types';
 
 export const useProfile = () => {
     const auth = async (login: string, password: string) => {
-        return useApi('/auth/signin', {
+        return fetchApi('/auth/signin', {
             method: 'POST',
             data: { login, password },
         });
     };
 
     const getUserData = async (): Promise<TProfile> => {
-        const profileData = await useApi<TProfile>('/auth/user');
+        const profileData = await fetchApi<TProfile>('/auth/user');
 
         if (!profileData || typeof profileData !== 'object') {
             throw new Error('Invalid profile data received');
@@ -31,7 +31,7 @@ export const useProfile = () => {
     };
 
     const changeProfile = async (profileData: TProfile) => {
-        return await useApi('/user/profile', {
+        return await fetchApi('/user/profile', {
             method: 'PUT',
             data: profileData,
         });
@@ -41,7 +41,7 @@ export const useProfile = () => {
         const formData = new FormData();
         formData.append('avatar', file);
 
-        return await useApi('/user/profile/avatar', {
+        return await fetchApi('/user/profile/avatar', {
             method: 'PUT',
             data: formData,
             isFormData: true,
@@ -49,7 +49,7 @@ export const useProfile = () => {
     };
 
     const changePassword = async (passwordData: TPasswordChangeData) => {
-        return await useApi('/user/password', {
+        return await fetchApi('/user/password', {
             method: 'PUT',
             data: passwordData,
         });

@@ -20,5 +20,6 @@ module.exports = {
         '^@constants/(.*)$': '<rootDir>/src/constants/$1',
         '^@store/(.*)$': '<rootDir>/src/store/$1',
         '^@styles/(.*)$': '<rootDir>/src/styles/$1',
+        '^@utils/(.*)$': '<rootDir>/src/utils/$1',
     },
 };

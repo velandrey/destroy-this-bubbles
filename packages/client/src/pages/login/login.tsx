@@ -1,45 +1,42 @@
 import { Form } from '@components/form';
 import { Page } from '@components/page';
 import { Grid, Link } from '@mui/material';
-import { useCallback, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { LOGIN_INPUTS } from './constants';
 import styles from './styles.module.scss';
-import { signIn } from '@hooks/useLogin';
+import { signIn } from './api';
 
 const LoginPage = () => {
     const [loading, setLoading] = useState(false);
     const controllerRef = useRef<AbortController | null>(null);
     const navigate = useNavigate();
 
-    const handleSubmit = useCallback(
-        async (data: Record<string, string | File | null>) => {
-            setLoading(true);
-            const payload = {
-                login: (data.name as string) || '',
-                password: (data.password as string) || '',
-            };
-            controllerRef.current = new AbortController();
-            try {
-                const responce = await signIn(payload, {
-                    signal: controllerRef.current.signal,
-                });
-                if (responce === 'OK') {
-                    localStorage.setItem('is_auth', 'true');
-                    navigate('/profile');
-                }
-            } finally {
-                setLoading(false);
+    const handleSubmit = async (data: Record<string, string | File | null>) => {
+        setLoading(true);
+        const payload = {
+            login: (data.name as string) || '',
+            password: (data.password as string) || '',
+        };
+        controllerRef.current = new AbortController();
+        try {
+            const responce = await signIn(payload, {
+                signal: controllerRef.current.signal,
+            });
+            if (responce === 'OK') {
+                localStorage.setItem('is_auth', 'true');
+                navigate('/profile');
             }
-            return () => controllerRef.current?.abort();
-        },
-        []
-    );
+        } finally {
+            setLoading(false);
+        }
+        return () => controllerRef.current?.abort();
+    };
 
-    const handleReset = useCallback(async () => {
+    const handleReset = async () => {
         controllerRef.current?.abort();
-    }, []);
+    };
 
     return (
         <Page>
