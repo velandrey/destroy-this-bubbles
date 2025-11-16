@@ -1,6 +1,7 @@
+import { StatusAlert } from '@components/statusAlert';
 import { defaultAvatar } from '@constants/constants';
 import { useProfile } from '@hooks/useProfile';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
 import styles from './styles.module.scss';
 
@@ -15,6 +16,8 @@ const ProfileAvatarUpload: React.FC<TProfileAvatarUploadProps> = ({
     onAvatarChange,
     size = 120,
 }) => {
+    const [alertOpen, setAlertOpen] = useState<boolean>(false);
+    const [alertMessage, setAlertMessage] = useState<string>('');
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleAvatarClick = () => {
@@ -27,7 +30,8 @@ const ProfileAvatarUpload: React.FC<TProfileAvatarUploadProps> = ({
     ) => {
         const file = event.target.files?.[0];
         if (!file || !file.type.startsWith('image/')) {
-            alert('Выберите изображение!');
+            setAlertOpen(true);
+            setAlertMessage('Выберите изображение!');
             return;
         }
         try {
@@ -39,8 +43,9 @@ const ProfileAvatarUpload: React.FC<TProfileAvatarUploadProps> = ({
                 onAvatarChange();
             }
         } catch (error) {
+            setAlertOpen(true);
+            setAlertMessage('Не удалось загрузить аватар');
             console.error('Ошибка загрузки аватара:', error);
-            alert('Не удалось загрузить аватар');
         }
     };
 
@@ -71,6 +76,12 @@ const ProfileAvatarUpload: React.FC<TProfileAvatarUploadProps> = ({
                 accept="image/*"
                 onChange={handleAvatarChange}
                 className={styles.avatar__fileInput}
+            />
+            <StatusAlert
+                open={alertOpen}
+                message={alertMessage}
+                severity="success"
+                onClose={() => setAlertOpen(false)}
             />
         </div>
     );

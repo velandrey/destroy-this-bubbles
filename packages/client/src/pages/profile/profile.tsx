@@ -2,6 +2,7 @@ import { Page } from '@components/page';
 import ProfileAvatarUpload from '@components/profileAvatarUpload/profileAvatarUpload';
 import ProfileChangePasswordDialog from '@components/profileChangePasswordDialog/profileChangePasswordDialog';
 import ProfileForm from '@components/profileForm/profileForm';
+import { StatusAlert } from '@components/statusAlert';
 import { defaultAvatar } from '@constants/constants';
 import { useProfile } from '@hooks/useProfile';
 import { Button, Grid } from '@mui/material';
@@ -24,6 +25,8 @@ const ProfilePage = () => {
     });
     const [avatarUrl, setAvatarUrl] = useState<string>(defaultAvatar);
     const { getUserData, changeProfile, changePassword } = useProfile();
+    const [alertOpen, setAlertOpen] = useState<boolean>(false);
+    const [alertMessage, setAlertMessage] = useState<string>('');
 
     const getProfileData = async () => {
         try {
@@ -33,6 +36,8 @@ const ProfilePage = () => {
                 setAvatarUrl(profile.avatar);
             }
         } catch (err) {
+            setAlertOpen(true);
+            setAlertMessage('Не удалось получить данные профиля');
             console.log(err);
         }
     };
@@ -46,7 +51,7 @@ const ProfilePage = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await changeProfile({
+        const result = await changeProfile({
             first_name: profile.first_name,
             second_name: profile.second_name,
             display_name: profile.display_name,
@@ -54,7 +59,12 @@ const ProfilePage = () => {
             login: profile.login,
             email: profile.email,
         });
-        alert('Данные профиля успешно изменены');
+        setAlertOpen(true);
+        if (result) {
+            setAlertMessage('Данные профиля успешно изменены');
+        } else {
+            setAlertMessage('Ошибка изменения профиля');
+        }
     };
 
     const handleAvatarChange = async () => {
@@ -65,11 +75,16 @@ const ProfilePage = () => {
         oldPassword: string,
         newPassword: string
     ) => {
-        await changePassword({
+        const result = await changePassword({
             oldPassword: oldPassword,
             newPassword: newPassword,
         });
-        alert('Пароль успешно изменён');
+        setAlertOpen(true);
+        if (result) {
+            setAlertMessage('Пароль успешно изменён');
+        } else {
+            setAlertMessage('Ошибка изменения пароля');
+        }
     };
 
     useEffect(() => {
@@ -101,6 +116,12 @@ const ProfilePage = () => {
                 />
                 <ProfileChangePasswordDialog onSubmit={handlePasswordChange} />
             </Grid>
+            <StatusAlert
+                open={alertOpen}
+                message={alertMessage}
+                severity="success"
+                onClose={() => setAlertOpen(false)}
+            />
         </Page>
     );
 };
