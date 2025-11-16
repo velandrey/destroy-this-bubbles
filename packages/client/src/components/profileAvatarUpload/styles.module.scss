@@ -32,6 +32,10 @@
       opacity: 0;
       transition: opacity 0.3s ease;
     }
+    .avatar__overlay_image {
+      width: 40px;
+      height: 40px;
+    }
   }
 
   :hover .avatar__overlay {
