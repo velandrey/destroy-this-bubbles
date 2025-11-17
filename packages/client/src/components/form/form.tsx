@@ -40,10 +40,14 @@ const Form = <T extends TInputsMap>({
     const values = watch();
 
     const isSameAsDefault = (name: keyof TValues) => {
-        return (
-            values[name] === defaultValues[name] &&
-            defaultValues[name].length > 0
-        );
+        const defRaw = defaultValues[name];
+        const valRaw = values[name];
+
+        if (typeof defRaw !== 'string' || typeof valRaw !== 'string') {
+            return false;
+        }
+
+        return valRaw === defRaw && defRaw.length > 0;
     };
 
     const shouldShowError = (name: Path<TValues>) => {
