@@ -42,6 +42,7 @@ const Form = <T extends TInputsMap>({
     const isSameAsDefault = (name: keyof TValues) => {
         return (
             values[name] === defaultValues[name] &&
+            typeof defaultValues[name] === 'string' &&
             defaultValues[name].length > 0
         );
     };
