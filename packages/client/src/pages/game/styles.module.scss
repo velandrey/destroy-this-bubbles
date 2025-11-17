@@ -1,17 +1,6 @@
 .container {
     width: 100vw;
     height: 100vh;
-    canvas {
-        flex: 0 0 auto;
-        width: 800px;
-        height: 600px;
-        display: block;
-        margin: auto;
-        cursor: crosshair; 
-        }
-}
 
-.gameContainer{
-    height: 100vh;
-    padding: 20px;
+    display: flex;
 }
