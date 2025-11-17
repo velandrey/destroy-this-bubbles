@@ -20,13 +20,13 @@ export default class Circle {
         if (!this.active) return;
 
         if (this.growing) {
-            this.radius += (growthSpeed * deltaTime) / 1000;
+            this.radius = this.radius + (growthSpeed * deltaTime) / 1000;
             if (this.radius >= maxRadius) {
                 this.radius = maxRadius;
                 this.growing = false;
             }
         } else {
-            this.radius -= (growthSpeed * deltaTime) / 1000;
+            this.radius = this.radius - (growthSpeed * deltaTime) / 1000;
             if (this.radius <= minRadius) {
                 this.radius = 0;
                 this.active = false;

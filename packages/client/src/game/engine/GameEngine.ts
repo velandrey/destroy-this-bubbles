@@ -21,21 +21,22 @@ export class GameEngine {
     private isRunning = false;
     private score = 0;
     private restartButton: ButtonRect | null = null;
+    private rect: DOMRect;
 
     constructor(private canvas: HTMLCanvasElement) {
         this.ctx = canvas.getContext('2d')!;
         this.spawnLogic = new SpawnLogic(canvas.width, canvas.height);
         this.canvas.addEventListener('click', (e) => this.handleClick(e));
+        this.rect = this.canvas.getBoundingClientRect();
     }
 
     private handleClick(event: MouseEvent) {
         if (!this.isRunning) {
             if (this.restartButton) {
-                const rect = this.canvas.getBoundingClientRect();
-                const scaleX = this.canvas.width / rect.width;
-                const scaleY = this.canvas.height / rect.height;
-                const x = (event.clientX - rect.left) * scaleX;
-                const y = (event.clientY - rect.top) * scaleY;
+                const scaleX = this.canvas.width / this.rect.width;
+                const scaleY = this.canvas.height / this.rect.height;
+                const x = (event.clientX - this.rect.left) * scaleX;
+                const y = (event.clientY - this.rect.top) * scaleY;
 
                 if (
                     x >= this.restartButton.x &&
@@ -49,11 +50,10 @@ export class GameEngine {
             return;
         }
 
-        const rect = this.canvas.getBoundingClientRect();
-        const scaleX = this.canvas.width / rect.width;
-        const scaleY = this.canvas.height / rect.height;
-        const x = (event.clientX - rect.left) * scaleX;
-        const y = (event.clientY - rect.top) * scaleY;
+        const scaleX = this.canvas.width / this.rect.width;
+        const scaleY = this.canvas.height / this.rect.height;
+        const x = (event.clientX - this.rect.left) * scaleX;
+        const y = (event.clientY - this.rect.top) * scaleY;
 
         const result = checkHit(this.circles, x, y);
         if (!result.hit) {
