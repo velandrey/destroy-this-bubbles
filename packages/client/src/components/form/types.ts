@@ -1,5 +1,5 @@
 import { SubmitHandler } from 'react-hook-form';
-import { BaseSchema } from 'valibot';
+import { BaseIssue, BaseSchema } from 'valibot';
 
 type TInput = {
     label: string;
@@ -16,7 +16,7 @@ type TFormValues<T extends TInputsMap> = {
 
 type TFormProps<T extends TInputsMap> = {
     inputs: T;
-    schema: BaseSchema<any, TFormValues<T>, any>;
+    schema: BaseSchema<TFormValues<T>, TFormValues<T>, BaseIssue<unknown>>;
     submitBtnLabel: string;
     resetBtnLabel?: string;
     submitHandler: SubmitHandler<TFormValues<T>>;

@@ -1,6 +1,6 @@
 import { valibotResolver } from '@hookform/resolvers/valibot';
 import { Box, Button, TextField } from '@mui/material';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { DefaultValues, Path, useForm } from 'react-hook-form';
 
 import { TFormProps, TFormValues, TInputsMap } from './types';
@@ -19,7 +19,7 @@ const Form = <T extends TInputsMap>({
     const defaultValues = useMemo(() => {
         const configs = Object.entries(inputs).map(([name, config]) => [
             name,
-            config.defaultValue,
+            config.defaultValue?.trim() ?? '',
         ]);
         return Object.fromEntries(configs) as DefaultValues<TValues>;
     }, [inputs]);
@@ -28,7 +28,8 @@ const Form = <T extends TInputsMap>({
         register,
         handleSubmit,
         reset,
-        formState: { errors, isDirty },
+        watch,
+        formState: { errors, isDirty, dirtyFields, touchedFields, submitCount },
     } = useForm<TValues>({
         defaultValues,
         mode: 'onBlur',
@@ -36,8 +37,39 @@ const Form = <T extends TInputsMap>({
         resolver: valibotResolver(schema),
     });
 
-    const handleReset = () => {
+    const values = watch();
+
+    const isSameAsDefault = (name: keyof TValues) => {
+        return (
+            values[name] === defaultValues[name] &&
+            defaultValues[name].length > 0
+        );
+    };
+
+    const shouldShowError = (name: Path<TValues>) => {
+        if (!errors[name]) return false;
+
+        const touched = (
+            touchedFields as Partial<Record<Path<TValues>, boolean>>
+        )[name];
+        const dirty = (dirtyFields as Partial<Record<Path<TValues>, boolean>>)[
+            name
+        ];
+        const changed = !isSameAsDefault(name);
+
+        return changed && (submitCount > 0 || touched || dirty);
+    };
+
+    useEffect(() => {
         reset(defaultValues);
+    }, [defaultValues, reset]);
+
+    const handleReset = () => {
+        reset(defaultValues, {
+            keepErrors: false,
+            keepDirty: false,
+            keepTouched: false,
+        });
         resetHandler?.();
     };
 
@@ -50,6 +82,8 @@ const Form = <T extends TInputsMap>({
         >
             {Object.entries(inputs).map(([name, config]) => {
                 const inputName = name as Path<TValues>;
+                const showError = shouldShowError(inputName);
+
                 return (
                     <TextField
                         fullWidth
@@ -59,8 +93,17 @@ const Form = <T extends TInputsMap>({
                         type={config.type ?? 'text'}
                         variant={inputsVariant || 'outlined'}
                         {...register(inputName)}
-                        error={!!errors[inputName]}
-                        helperText={errors[inputName]?.message as string}
+                        error={showError}
+                        helperText={
+                            showError
+                                ? (errors[inputName]?.message as string)
+                                : ''
+                        }
+                        slotProps={{
+                            inputLabel: {
+                                shrink: true,
+                            },
+                        }}
                         sx={{ mb: '0.5rem' }}
                     />
                 );

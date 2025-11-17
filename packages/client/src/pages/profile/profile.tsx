@@ -1,15 +1,16 @@
+import { Form, TInputsMap } from '@components/form';
 import { Page } from '@components/page';
 import ProfileAvatarUpload from '@components/profileAvatarUpload/profileAvatarUpload';
 import ProfileChangePasswordDialog from '@components/profileChangePasswordDialog/profileChangePasswordDialog';
-import ProfileForm from '@components/profileForm/profileForm';
 import { StatusAlert } from '@components/statusAlert';
 import { defaultAvatar } from '@constants/constants';
 import { useProfile } from '@hooks/useProfile';
 import { Button, Grid } from '@mui/material';
 import { TProfile } from '@pages/profile/types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { PROFILE_INPUTS, PROFILE_SCHEMA } from './constants';
 import styles from './styles.module.scss';
 
 const ProfilePage = () => {
@@ -27,6 +28,17 @@ const ProfilePage = () => {
     const { getUserData, changeProfile, changePassword } = useProfile();
     const [alertOpen, setAlertOpen] = useState<boolean>(false);
     const [alertMessage, setAlertMessage] = useState<string>('');
+    const inputs: TInputsMap = useMemo(() => {
+        return Object.fromEntries(
+            Object.entries(PROFILE_INPUTS).map(([name, cfg]) => [
+                name,
+                {
+                    ...cfg,
+                    defaultValue: profile[name as keyof TProfile] ?? '',
+                },
+            ])
+        ) as TInputsMap;
+    }, [profile]);
 
     const getProfileData = async () => {
         try {
@@ -42,22 +54,14 @@ const ProfilePage = () => {
         }
     };
 
-    const handleInputChange = (field: keyof TProfile, value: string) => {
-        setProfile((prev) => ({
-            ...prev,
-            [field]: value,
-        }));
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleProfileChange = async (data: Record<string, string>) => {
         const result = await changeProfile({
-            first_name: profile.first_name,
-            second_name: profile.second_name,
-            display_name: profile.display_name,
-            phone: profile.phone,
-            login: profile.login,
-            email: profile.email,
+            first_name: data.first_name,
+            second_name: data.second_name,
+            display_name: data.display_name,
+            phone: data.phone,
+            login: data.login,
+            email: data.email,
         });
         setAlertOpen(true);
         if (result) {
@@ -109,10 +113,12 @@ const ProfilePage = () => {
                     onAvatarChange={handleAvatarChange}
                     size={120}
                 />
-                <ProfileForm
-                    profile={profile}
-                    onSubmit={handleSubmit}
-                    onInputChange={handleInputChange}
+                <Form
+                    submitBtnLabel="Сохранить изменения"
+                    inputs={inputs}
+                    schema={PROFILE_SCHEMA}
+                    submitHandler={handleProfileChange}
+                    className={styles.formContainer}
                 />
                 <ProfileChangePasswordDialog onSubmit={handlePasswordChange} />
             </Grid>
