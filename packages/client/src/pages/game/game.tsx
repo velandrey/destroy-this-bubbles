@@ -1,6 +1,5 @@
 import { Page } from '@components/page';
 import { Button } from '@mui/material';
-import Game from 'game/components/Game';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -46,7 +45,7 @@ const GamePage = () => {
             )}
 
             {gameState === 'playing' && (
-                <div className={styles.gameContainer}>
+                <div>
                     <Button
                         color="success"
                         variant="contained"
@@ -54,7 +53,6 @@ const GamePage = () => {
                     >
                         Назад к меню
                     </Button>
-                    <Game />
                 </div>
             )}
         </Page>
