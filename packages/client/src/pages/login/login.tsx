@@ -1,10 +1,10 @@
 import { Form } from '@components/form';
 import { Page } from '@components/page';
+import { useProfile } from '@hooks/useProfile';
 import { Grid, Link } from '@mui/material';
 
-import { LOGIN_INPUTS } from './constants';
+import { LOGIN_INPUTS, LOGIN_SCHEMA } from './constants';
 import styles from './styles.module.scss';
-import { useProfile } from '@hooks/useProfile';
 
 const LoginPage = () => {
     const handleSubmit = async (data: Record<string, string | File | null>) => {
@@ -14,7 +14,7 @@ const LoginPage = () => {
         // Start a.velikanov - код при необходимости можно удалять - размещён для тестирования работы Профиля
         const { auth } = useProfile();
         // @ts-ignore
-        await auth(data.name, data.password);
+        await auth(data.login, data.password);
         // END a.velikanov - код можно удалять - размещён для тестирования работы Профиля
     };
     return (
@@ -33,7 +33,8 @@ const LoginPage = () => {
                 <Form
                     submitBtnLabel="Войти"
                     inputs={LOGIN_INPUTS}
-                    onSubmit={handleSubmit}
+                    schema={LOGIN_SCHEMA}
+                    submitHandler={handleSubmit}
                     className={styles.formContainer}
                 />
                 <span className={styles.link}>

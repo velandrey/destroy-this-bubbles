@@ -9,7 +9,7 @@ import {
     trim,
 } from 'valibot';
 
-export const REGISTRATION_INPUTS: TInputsMap = {
+export const PROFILE_INPUTS: TInputsMap = {
     first_name: {
         label: 'Имя',
         placeholder: 'Введите имя',
@@ -18,9 +18,9 @@ export const REGISTRATION_INPUTS: TInputsMap = {
         label: 'Фамилия',
         placeholder: 'Введите фамилию',
     },
-    login: {
-        label: 'Логин',
-        placeholder: 'Введите логин',
+    display_name: {
+        label: 'Никнейм',
+        placeholder: 'Введите никнейм',
     },
     email: {
         label: 'Email',
@@ -32,14 +32,9 @@ export const REGISTRATION_INPUTS: TInputsMap = {
         placeholder: 'Введите телефон',
         type: 'tel',
     },
-    password: {
-        label: 'Пароль',
-        placeholder: 'Введите пароль',
-        type: 'password',
-    },
 } as const;
 
-export const REGISTRATION_SCHEMA = object({
+export const PROFILE_SCHEMA = object({
     first_name: pipe(
         string(),
         trim(),
@@ -60,23 +55,13 @@ export const REGISTRATION_SCHEMA = object({
             'Допустима только латиница/кириллица, только первая буква — заглавная'
         )
     ),
-    login: pipe(
-        string(),
-        trim(),
-        minLength(3, 'Логин не может быть короче 3 символов'),
-        maxLength(20, 'Логин не может быть длиннее 20 символов'),
-        regex(
-            /^[A-Za-z0-9_-]+$/,
-            'Допустимы только латинские буквы, цифры, дефис и подчеркивание'
-        ),
-        regex(/^(?!\d+$).+$/, 'Логин не может состоять только из цифр')
-    ),
+    display_name: pipe(string(), trim()),
     email: pipe(
         string(),
         trim(),
         regex(
             /^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.[a-zA-Z]+$/,
-            'Некорректный формат email'
+            'Некорректный email'
         )
     ),
     phone: pipe(
@@ -86,15 +71,5 @@ export const REGISTRATION_SCHEMA = object({
             /^\+?\d{10,15}$/,
             'Телефон должен содержать от 10 до 15 цифр и может начинаться с +'
         )
-    ),
-    password: pipe(
-        string(),
-        minLength(8, 'Пароль не может быть короче 8 символов'),
-        maxLength(40, 'Пароль не может быть длиннее 40 символов'),
-        regex(
-            /[A-ZА-яЁё]/,
-            'Пароль должен содержать хотя бы одну заглавную букву'
-        ),
-        regex(/\d/, 'Пароль должен содержать хотя бы одну цифру')
     ),
 });

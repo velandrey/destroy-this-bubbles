@@ -1,9 +1,11 @@
 .formContainer {
+    margin-top: 1.5rem;
+    width: 15rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
 .link {
