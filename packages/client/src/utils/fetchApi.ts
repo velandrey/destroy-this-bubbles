@@ -7,7 +7,7 @@ interface FetchOptions extends RequestInit {
 
 type ApiResponse<T> = T | string | undefined;
 
-export const useApi = async <T>(
+export const fetchApi = async <T>(
     url: string,
     options: FetchOptions = {}
 ): Promise<ApiResponse<T>> => {

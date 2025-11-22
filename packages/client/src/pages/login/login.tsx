@@ -2,21 +2,43 @@ import { Form } from '@components/form';
 import { Page } from '@components/page';
 import { useProfile } from '@hooks/useProfile';
 import { Grid, Link } from '@mui/material';
+import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { LOGIN_INPUTS, LOGIN_SCHEMA } from './constants';
 import styles from './styles.module.scss';
+import { signIn } from './api';
 
 const LoginPage = () => {
-    const handleSubmit = async (data: Record<string, string | File | null>) => {
-        // Отсюда обращения к API авторизации, пока не реализовано - console.log
-        console.log(data);
+    const [loading, setLoading] = useState(false);
+    const controllerRef = useRef<AbortController | null>(null);
+    const navigate = useNavigate();
 
-        // Start a.velikanov - код при необходимости можно удалять - размещён для тестирования работы Профиля
-        const { auth } = useProfile();
-        // @ts-ignore
-        await auth(data.login, data.password);
-        // END a.velikanov - код можно удалять - размещён для тестирования работы Профиля
+    const handleSubmit = async (data: Record<string, string | File | null>) => {
+        setLoading(true);
+        const payload = {
+            login: (data.name as string) || '',
+            password: (data.password as string) || '',
+        };
+        controllerRef.current = new AbortController();
+        try {
+            const responce = await signIn(payload, {
+                signal: controllerRef.current.signal,
+            });
+            if (responce === 'OK') {
+                localStorage.setItem('is_auth', 'true');
+                navigate('/profile');
+            }
+        } finally {
+            setLoading(false);
+        }
+        return () => controllerRef.current?.abort();
     };
+
+    const handleReset = async () => {
+        controllerRef.current?.abort();
+    };
+
     return (
         <Page>
             <Grid
@@ -33,8 +55,8 @@ const LoginPage = () => {
                 <Form
                     submitBtnLabel="Войти"
                     inputs={LOGIN_INPUTS}
-                    schema={LOGIN_SCHEMA}
-                    submitHandler={handleSubmit}
+                    onSubmit={handleSubmit}
+                    onReset={handleReset}
                     className={styles.formContainer}
                 />
                 <span className={styles.link}>
