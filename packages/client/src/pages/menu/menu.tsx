@@ -1,56 +1,49 @@
 import { Page } from '@components/page';
-import { Button } from '@mui/material';
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Button, Link } from '@mui/material';
 
+import {
+    GameTitle,
+    GameDescription,
+    GameRules,
+    GameGoal,
+    PlayText,
+    ProfileText,
+    ForumText,
+    LeaderboardText,
+} from './constants';
 import styles from './styles.module.scss';
 
-const MenuPage = () => {
-    const navigate = useNavigate();
+type TMenuItem = {
+    text: string;
+    path: string;
+};
+const MenuItem = ({ text, path }: TMenuItem): JSX.Element => (
+    <Link underline="none" href={path}>
+        {text}
+    </Link>
+);
 
+const MenuPage = () => {
     return (
         <Page className={styles.container}>
+            <nav className={styles.navigation}>
+                <MenuItem text={ProfileText} path="/game" />
+                <MenuItem text={LeaderboardText} path="/leaderBoard" />
+                <MenuItem text={ForumText} path="/profile" />
+            </nav>
+            <article className={styles.content}>
+                <h1>{GameTitle}</h1>
+                <p className={styles.discription}>{GameDescription}</p>
+                <p className={styles.discription}>{GameRules}</p>
+                <p className={styles.discription}>{GameGoal}</p>
+            </article>
             <Button
                 variant="contained"
                 color="primary"
-                onClick={() => navigate('/game')}
+                href="/game"
+                className={styles.playButton}
             >
-                Игра
-            </Button>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => navigate('/profile')}
-            >
-                Профиль
-            </Button>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => navigate('/leaderBoard')}
-            >
-                Таблица лидеров
-            </Button>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => navigate('/forum')}
-            >
-                Форум
-            </Button>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => navigate('/error')}
-            >
-                Ошибка
-            </Button>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => navigate('/login')}
-            >
-                Выход
+                {PlayText}
             </Button>
         </Page>
     );

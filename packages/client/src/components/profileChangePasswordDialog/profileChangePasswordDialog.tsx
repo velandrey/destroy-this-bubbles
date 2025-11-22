@@ -12,15 +12,15 @@ import {
     Link,
 } from '@mui/material';
 import { TProfileChangePasswordDialogProps } from '@pages/profile/types';
-import React from 'react';
+import React, { useState } from 'react';
 
 import styles from './styles.module.scss';
 
 const ProfileChangePasswordDialog: React.FC<
     TProfileChangePasswordDialogProps
 > = ({ onSubmit }) => {
-    const [open, setOpen] = React.useState<boolean>(false);
-    const [formData, setFormData] = React.useState<TPasswordFormData>({
+    const [open, setOpen] = useState<boolean>(false);
+    const [formData, setFormData] = useState<TPasswordFormData>({
         oldPassword: '',
         newPassword: '',
         confirmPassword: '',

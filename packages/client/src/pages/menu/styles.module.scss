@@ -1,6 +1,55 @@
+$accent-color: rgb(176, 25, 210);
+
 .container {
     display: flex;
     flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 40px;
+}
+
+.content {
+    text-align: center;
+    width: 50rem;
+
+    h1 {
+        color: $accent-color;
+        text-shadow: 0 0 1px white;
+    }
+}
+
+.discription {
+    text-align: justify;
+}
+
+.navigation {
+    display: flex;
     gap: 1rem;
-    align-items: start;
+    justify-content: flex-start;
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.playButton {
+    font-size: 2rem !important;
+    font-weight: bold !important;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba($accent-color, 0.5);
+    }
+
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 2rem rgba($accent-color, 0);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba($accent-color, 0);
+    }
 }
