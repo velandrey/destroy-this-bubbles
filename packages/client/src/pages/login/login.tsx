@@ -1,38 +1,47 @@
 import { Form } from '@components/form';
 import { Page } from '@components/page';
+import { useAppDispatch } from '@hooks/redux';
+import { useLoading } from '@hooks/useLoading';
+import { useNotification } from '@hooks/useNotification';
 import { useProfile } from '@hooks/useProfile';
 import { Grid, Link } from '@mui/material';
-import { useRef, useState } from 'react';
+import { setUser } from '@store/slices/userSlice';
+import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { signIn } from './api';
 import { LOGIN_INPUTS, LOGIN_SCHEMA } from './constants';
 import styles from './styles.module.scss';
-import { signIn } from './api';
 
 const LoginPage = () => {
-    const [loading, setLoading] = useState(false);
+    const dispatch = useAppDispatch();
+    const { showError } = useNotification();
+    const { startLoading, stopLoading } = useLoading();
     const controllerRef = useRef<AbortController | null>(null);
     const navigate = useNavigate();
+    const { getUserData } = useProfile();
 
     const handleSubmit = async (data: Record<string, string | File | null>) => {
-        setLoading(true);
+        startLoading('Выполняется вход...');
         const payload = {
             login: (data.name as string) || '',
             password: (data.password as string) || '',
         };
         controllerRef.current = new AbortController();
         try {
-            const responce = await signIn(payload, {
+            const response = await signIn(payload, {
                 signal: controllerRef.current.signal,
             });
-            if (responce === 'OK') {
-                localStorage.setItem('is_auth', 'true');
+            if (response === 'OK') {
+                const userData = await getUserData();
+                dispatch(setUser(userData));
                 navigate('/profile');
             }
+        } catch (error) {
+            showError('Ошибка авторизации');
         } finally {
-            setLoading(false);
+            stopLoading();
         }
-        return () => controllerRef.current?.abort();
     };
 
     const handleReset = async () => {
@@ -55,8 +64,9 @@ const LoginPage = () => {
                 <Form
                     submitBtnLabel="Войти"
                     inputs={LOGIN_INPUTS}
-                    onSubmit={handleSubmit}
-                    onReset={handleReset}
+                    schema={LOGIN_SCHEMA}
+                    submitHandler={handleSubmit}
+                    resetHandler={handleReset}
                     className={styles.formContainer}
                 />
                 <span className={styles.link}>

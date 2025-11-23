@@ -1,8 +1,11 @@
 import { ApiURL } from '@constants/constants';
-import { fetchApi } from '@utils/fetchApi';
+import { useAppDispatch } from '@hooks/redux';
 import { TPasswordChangeData, TProfile } from '@pages/profile/types';
+import { clearUser, setUser, updateUser } from '@store/slices/userSlice';
+import { fetchApi } from '@utils/fetchApi';
 
 export const useProfile = () => {
+    const dispatch = useAppDispatch();
     const auth = async (login: string, password: string) => {
         return fetchApi('/auth/signin', {
             method: 'POST',
@@ -11,30 +14,36 @@ export const useProfile = () => {
     };
 
     const getUserData = async (): Promise<TProfile> => {
-        const profileData = await fetchApi<TProfile>('/auth/user');
+        const userData = await fetchApi<TProfile>('/auth/user');
 
-        if (!profileData || typeof profileData !== 'object') {
+        if (!userData || typeof userData !== 'object') {
             throw new Error('Invalid profile data received');
         }
-
-        return {
-            first_name: profileData.first_name || '',
-            second_name: profileData.second_name || '',
-            display_name: profileData.display_name || '',
-            phone: profileData.phone || '',
-            login: profileData.login || '',
-            avatar: profileData.avatar
-                ? ApiURL + '/resources' + profileData.avatar
+        const userProfile: TProfile = {
+            first_name: userData.first_name || '',
+            second_name: userData.second_name || '',
+            display_name: userData.display_name || '',
+            phone: userData.phone || '',
+            login: userData.login || '',
+            avatar: userData.avatar
+                ? ApiURL + '/resources' + userData.avatar
                 : '',
-            email: profileData.email || '',
+            email: userData.email || '',
         };
+        dispatch(setUser(userProfile));
+
+        return userProfile;
     };
 
     const changeProfile = async (profileData: TProfile) => {
-        return await fetchApi('/user/profile', {
+        const result = await fetchApi('/user/profile', {
             method: 'PUT',
             data: profileData,
         });
+        if (result) {
+            dispatch(updateUser(profileData));
+        }
+        return result;
     };
 
     const changeAvatar = async (file: File) => {
@@ -55,8 +64,13 @@ export const useProfile = () => {
         });
     };
 
+    const logout = () => {
+        dispatch(clearUser());
+    };
+
     return {
         auth,
+        logout,
         getUserData,
         changeProfile,
         changeAvatar,
