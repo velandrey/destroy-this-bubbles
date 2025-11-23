@@ -24,7 +24,7 @@ const LoginPage = () => {
     const handleSubmit = async (data: Record<string, string | File | null>) => {
         startLoading('Выполняется вход...');
         const payload = {
-            login: (data.name as string) || '',
+            login: (data.login as string) || '',
             password: (data.password as string) || '',
         };
         controllerRef.current = new AbortController();
