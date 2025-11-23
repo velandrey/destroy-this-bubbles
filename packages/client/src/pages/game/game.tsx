@@ -1,6 +1,8 @@
 import { Page } from '@components/page';
+import { useGame } from '@hooks/useGame';
 import { Button } from '@mui/material';
 import GamePageGameOver from '@pages/game/gameOver/gameOver';
+import { GameResults } from '@store/slices/gameSlice';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,35 +12,26 @@ import styles from './styles.module.scss';
 
 const GamePage = () => {
     const navigate = useNavigate();
-
+    const { setGameResults, startGame, resetGame } = useGame(); // Состояния для результатов игры
     const [countdown, setCountdown] = useState(3);
     const [gameState, setGameState] = useState<
         'launcher' | 'countdown' | 'playing' | 'gameOver'
     >('launcher');
 
-    // Состояния для результатов игры
-    const [gameResults, setGameResults] = useState({
-        score: 0,
-        accuracy: 0,
-        totalTime: 0,
-    });
-
     const handleGameStart = () => {
+        startGame();
         setGameState('countdown');
     };
 
     // Функция завершения игры
-    const handleGameOver = (results: {
-        score: number;
-        accuracy: number;
-        totalTime: number;
-    }) => {
+    const handleGameOver = (results: GameResults) => {
         setGameResults(results);
         setGameState('gameOver');
     };
 
     // Функция перезапуска игры
     const handleRestart = () => {
+        resetGame();
         setCountdown(3);
         setGameState('countdown');
     };
@@ -47,14 +40,14 @@ const GamePage = () => {
     useEffect(() => {
         if (gameState === 'playing') {
             // Здесь будет реальная игровая логика
-            // Пока эмулируем завершение игры через 5 секунд
+            // Пока эмулируем завершение игры через 2 секунды
             const gameTimer = setTimeout(() => {
                 handleGameOver({
                     score: 42,
                     accuracy: 73,
                     totalTime: 31,
                 });
-            }, 5000);
+            }, 2000);
 
             return () => clearTimeout(gameTimer);
         }
@@ -98,12 +91,7 @@ const GamePage = () => {
             )}
 
             {gameState === 'gameOver' && (
-                <GamePageGameOver
-                    score={gameResults.score}
-                    accuracy={gameResults.accuracy}
-                    totalTime={gameResults.totalTime}
-                    onRestart={handleRestart}
-                />
+                <GamePageGameOver onRestart={handleRestart} />
             )}
         </Page>
     );
