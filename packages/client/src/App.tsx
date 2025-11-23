@@ -1,4 +1,6 @@
 import ErrorBoundary from '@components/errorBoundary/errorBoundary';
+import { LoadingSpinner } from '@components/loadingSpinner';
+import { NotificationContainer } from '@components/notificationContainer';
 import { ErrorPage } from '@pages/error';
 import { ForumPage } from '@pages/forum';
 import { GamePage } from '@pages/game';
@@ -12,6 +14,8 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 const App = () => {
     return (
         <ErrorBoundary>
+            <LoadingSpinner />
+            <NotificationContainer />
             <Routes>
                 <Route path="/" element={<MenuPage />} />
                 <Route path="/menu" element={<MenuPage />} />
