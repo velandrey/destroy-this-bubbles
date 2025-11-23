@@ -27,9 +27,9 @@ const MenuPage = () => {
     return (
         <Page className={styles.container}>
             <nav className={styles.navigation}>
-                <MenuItem text={ProfileText} path="/game" />
+                <MenuItem text={ProfileText} path="/profile" />
                 <MenuItem text={LeaderboardText} path="/leaderBoard" />
-                <MenuItem text={ForumText} path="/profile" />
+                <MenuItem text={ForumText} path="/forum" />
             </nav>
             <article className={styles.content}>
                 <h1>{GameTitle}</h1>
