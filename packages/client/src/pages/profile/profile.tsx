@@ -4,6 +4,7 @@ import ProfileAvatarUpload from '@components/profileAvatarUpload/profileAvatarUp
 import ProfileChangePasswordDialog from '@components/profileChangePasswordDialog/profileChangePasswordDialog';
 import { StatusAlert } from '@components/statusAlert';
 import { defaultAvatar } from '@constants/constants';
+import { ROUTES } from '@constants/routes';
 import { useProfile } from '@hooks/useProfile';
 import { Button, Grid } from '@mui/material';
 import { TProfile } from '@pages/profile/types';
@@ -102,7 +103,7 @@ const ProfilePage = () => {
             <Button
                 variant="contained"
                 color="primary"
-                onClick={() => navigate('/menu')}
+                onClick={() => navigate(ROUTES.MENU)}
             >
                 Меню
             </Button>

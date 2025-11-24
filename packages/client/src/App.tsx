@@ -1,4 +1,5 @@
 import ErrorBoundary from '@components/errorBoundary/errorBoundary';
+import { ROUTES } from '@constants/routes';
 import { ErrorPage } from '@pages/error';
 import { ForumPage } from '@pages/forum';
 import { GamePage } from '@pages/game';
@@ -8,7 +9,6 @@ import { MenuPage } from '@pages/menu';
 import { ProfilePage } from '@pages/profile';
 import { RegistrationPage } from '@pages/registration';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { ROUTES } from '@constants/routes';
 
 const App = () => {
     return (

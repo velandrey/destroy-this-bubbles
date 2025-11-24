@@ -1,13 +1,13 @@
 import { Form } from '@components/form';
 import { Page } from '@components/page';
-import { useProfile } from '@hooks/useProfile';
+import { ROUTES } from '@constants/routes';
 import { Grid, Link } from '@mui/material';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { LOGIN_INPUTS, LOGIN_SCHEMA } from './constants';
-import styles from './styles.module.scss';
 import { signIn } from './api';
+import { LOGIN_INPUTS } from './constants';
+import styles from './styles.module.scss';
 
 const LoginPage = () => {
     const [loading, setLoading] = useState(false);
@@ -27,7 +27,7 @@ const LoginPage = () => {
             });
             if (responce === 'OK') {
                 localStorage.setItem('is_auth', 'true');
-                navigate('/profile');
+                navigate(ROUTES.PROFILE);
             }
         } finally {
             setLoading(false);

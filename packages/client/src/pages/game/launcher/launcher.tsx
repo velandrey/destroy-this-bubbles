@@ -1,4 +1,5 @@
 import { GAME_DESCRIPTION } from '@constants/constants';
+import { ROUTES } from '@constants/routes';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,7 +21,10 @@ const GamePageLauncher = ({ handleGameStart }: TProps) => {
                         <li key={rule}>{rule}</li>
                     ))}
                 </ul>
-                <Button variant="outlined" onClick={() => navigate('/menu')}>
+                <Button
+                    variant="outlined"
+                    onClick={() => navigate(ROUTES.MENU)}
+                >
                     Назад к меню
                 </Button>
             </div>
