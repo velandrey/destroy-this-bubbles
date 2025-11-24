@@ -1,4 +1,5 @@
 import { Page } from '@components/page';
+import { ROUTES } from '@constants/routes';
 import { Box, Button, Container, Paper, Typography } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -65,7 +66,7 @@ const ErrorPage: React.FC<TErrorPageProps> = ({
     const displayMessage = errorContent.message;
 
     const handleGoHome = () => {
-        navigate('/');
+        navigate(ROUTES.MENU);
     };
 
     return (

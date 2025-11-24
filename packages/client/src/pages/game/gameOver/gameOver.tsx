@@ -1,5 +1,6 @@
 // game-over.tsx
-import { Box, Button, Typography, Paper, Stack } from '@mui/material';
+import { ROUTES } from '@constants/routes';
+import { Box, Button, Typography, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import styles from './styles.module.scss';
@@ -66,7 +67,7 @@ const GamePageGameOver = ({
                     <Button
                         variant="outlined"
                         size="large"
-                        onClick={() => navigate('/menu')}
+                        onClick={() => navigate(ROUTES.MENU)}
                         className={styles.actionButton}
                     >
                         В главное меню
