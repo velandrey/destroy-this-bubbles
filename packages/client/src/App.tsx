@@ -1,4 +1,5 @@
 import ErrorBoundary from '@components/errorBoundary/errorBoundary';
+import { ROUTES } from '@constants/routes';
 import { ErrorPage } from '@pages/error';
 import { ForumPage } from '@pages/forum';
 import { GamePage } from '@pages/game';

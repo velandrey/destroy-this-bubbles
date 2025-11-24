@@ -1,4 +1,5 @@
 import { Page } from '@components/page';
+import { ROUTES } from '@constants/routes';
 import { Button } from '@mui/material';
 import GamePageGameOver from '@pages/game/gameOver/gameOver';
 import React, { useEffect, useState } from 'react';
@@ -90,7 +91,7 @@ const GamePage = () => {
                     <Button
                         color="success"
                         variant="contained"
-                        onClick={() => navigate('/menu')}
+                        onClick={() => navigate(ROUTES.MENU)}
                     >
                         Назад к меню
                     </Button>
