@@ -9,7 +9,6 @@ import { MenuPage } from '@pages/menu';
 import { ProfilePage } from '@pages/profile';
 import { RegistrationPage } from '@pages/registration';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { ROUTES } from '@constants/routes';
 
 const App = () => {
     return (
