@@ -1,17 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export type GameResults = {
+export type TGameResults = {
     score: number;
     accuracy: number;
     totalTime: number;
 };
 
-type GameState = {
-    results: GameResults | null;
+type TGameState = {
+    results: TGameResults | null;
     isGameActive: boolean;
 };
 
-const initialState: GameState = {
+const initialState: TGameState = {
     results: null,
     isGameActive: false,
 };
@@ -20,7 +20,7 @@ const gameSlice = createSlice({
     name: 'game',
     initialState,
     reducers: {
-        setGameResults: (state, action: PayloadAction<GameResults>) => {
+        setGameResults: (state, action: PayloadAction<TGameResults>) => {
             state.results = action.payload;
             state.isGameActive = false;
         },
@@ -34,7 +34,7 @@ const gameSlice = createSlice({
         },
         updateGameScore: (
             state,
-            action: PayloadAction<Partial<GameResults>>
+            action: PayloadAction<Partial<TGameResults>>
         ) => {
             if (state.results) {
                 state.results = { ...state.results, ...action.payload };

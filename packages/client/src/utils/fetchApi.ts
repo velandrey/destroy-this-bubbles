@@ -5,12 +5,12 @@ interface FetchOptions extends RequestInit {
     isFormData?: boolean;
 }
 
-type ApiResponse<T> = T | string | undefined;
+type TApiResponse<T> = T | string | undefined;
 
 export const fetchApi = async <T>(
     url: string,
     options: FetchOptions = {}
-): Promise<ApiResponse<T>> => {
+): Promise<TApiResponse<T>> => {
     const {
         method = 'GET',
         data,

@@ -2,7 +2,7 @@ import { Page } from '@components/page';
 import { useGame } from '@hooks/useGame';
 import { Button } from '@mui/material';
 import GamePageGameOver from '@pages/game/gameOver/gameOver';
-import { GameResults } from '@store/slices/gameSlice';
+import { TGameResults } from '@store/slices/gameSlice';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -24,7 +24,7 @@ const GamePage = () => {
     };
 
     // Функция завершения игры
-    const handleGameOver = (results: GameResults) => {
+    const handleGameOver = (results: TGameResults) => {
         setGameResults(results);
         setGameState('gameOver');
     };

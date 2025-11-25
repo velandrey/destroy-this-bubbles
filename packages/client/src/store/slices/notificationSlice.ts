@@ -1,18 +1,18 @@
 import { AlertColor } from '@mui/material';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-type Notification = {
+type TNotification = {
     id: string;
     message: string;
     severity: AlertColor;
     autoHideDuration?: number;
 };
 
-type NotificationState = {
-    notifications: Notification[];
+type TNotificationState = {
+    notifications: TNotification[];
 };
 
-const initialState: NotificationState = {
+const initialState: TNotificationState = {
     notifications: [],
 };
 
@@ -22,7 +22,7 @@ const notificationSlice = createSlice({
     reducers: {
         addNotification: (
             state,
-            action: PayloadAction<Omit<Notification, 'id'>>
+            action: PayloadAction<Omit<TNotification, 'id'>>
         ) => {
             const id = Math.random().toString(36).substring(2, 9);
             state.notifications.push({

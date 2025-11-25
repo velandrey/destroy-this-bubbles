@@ -1,13 +1,13 @@
 import { useNotification } from '@hooks/useNotification';
 import { Snackbar, Alert } from '@mui/material';
 
-type NotificationContainerProps = {
+type TNotificationContainerProps = {
     autoHideDuration?: number;
 };
 
 const NotificationContainer = ({
     autoHideDuration = 6000,
-}: NotificationContainerProps) => {
+}: TNotificationContainerProps) => {
     const { notifications, hideNotification } = useNotification();
 
     const handleClose = (id: string) => () => {
