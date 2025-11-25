@@ -31,8 +31,6 @@ const MenuPage = () => {
                 <MenuItem text={ProfileText} path={ROUTES.PROFILE} />
                 <MenuItem text={LeaderboardText} path={ROUTES.LEADERBOARD} />
                 <MenuItem text={ForumText} path={ROUTES.FORUM} />
-                <MenuItem text={LeaderboardText} path="/leaderBoard" />
-                <MenuItem text={ForumText} path="/forum" />
             </nav>
             <article className={styles.content}>
                 <h1>{GameTitle}</h1>
