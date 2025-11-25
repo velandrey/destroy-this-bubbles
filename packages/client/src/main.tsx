@@ -7,6 +7,7 @@ import { darkTheme } from '@styles/theme';
 import { BrowserRouter } from 'react-router-dom';
 
 import App from './App';
+import { registerSW } from 'virtual:pwa-register';
 
 ReactDOM.hydrateRoot(
     document.getElementById('root') as HTMLElement,
@@ -20,18 +21,5 @@ ReactDOM.hydrateRoot(
     // </Provider>
 );
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker
-            .register('/sw.js')
-            .then((registration) => {
-                console.log(
-                    'ServiceWorker registration successful with scope: ',
-                    registration.scope
-                );
-            })
-            .catch((error: string) => {
-                console.log('ServiceWorker registration failed: ', error);
-            });
-    });
-}
+// Регистрируем Service Worker с авто обновлением
+registerSW({ immediate: true });

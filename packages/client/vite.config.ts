@@ -3,10 +3,10 @@ import path from 'path';
 import react from '@vitejs/plugin-react';
 import dotenv from 'dotenv';
 import { defineConfig } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa';
 
 dotenv.config();
 
-// https://vitejs.dev/config/
 export default defineConfig(async () => {
     const tsconfigPaths = (await import('vite-tsconfig-paths')).default;
     return {
@@ -24,10 +24,32 @@ export default defineConfig(async () => {
         build: {
             outDir: path.join(__dirname, 'dist/client'),
         },
-        // Подключить при использовании реального сср в будущем
-        // ssr: {
-        //     format: 'cjs',
-        // },
-        plugins: [react(), tsconfigPaths()],
+        plugins: [
+            react(),
+            tsconfigPaths(),
+            VitePWA({
+                strategies: 'injectManifest',
+                srcDir: 'src',
+                filename: 'sw.js',
+                registerType: 'autoUpdate',
+                devOptions: {
+                    enabled: true,
+                },
+                manifest: {
+                    name: 'Destroy This Bubbles',
+                    short_name: 'Bubbles',
+                    description: 'A simple bubble popping game',
+                    theme_color: '#ffffff',
+                    icons: [
+                        {
+                            src: 'vite.svg',
+                            sizes: 'any',
+                            type: 'image/svg+xml',
+                            purpose: 'any maskable',
+                        },
+                    ],
+                },
+            }),
+        ],
     };
 });
