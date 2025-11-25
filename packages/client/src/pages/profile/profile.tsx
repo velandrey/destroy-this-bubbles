@@ -6,6 +6,7 @@ import { defaultAvatar } from '@constants/constants';
 import { useAppDispatch, useAppSelector } from '@hooks/redux';
 import { useLoading } from '@hooks/useLoading';
 import { useNotification } from '@hooks/useNotification';
+import { ROUTES } from '@constants/routes';
 import { useProfile } from '@hooks/useProfile';
 import { Button, Grid } from '@mui/material';
 import { TProfile } from '@pages/profile/types';
@@ -107,7 +108,7 @@ const ProfilePage = () => {
             <Button
                 variant="contained"
                 color="primary"
-                onClick={() => navigate('/menu')}
+                onClick={() => navigate(ROUTES.MENU)}
             >
                 Меню
             </Button>

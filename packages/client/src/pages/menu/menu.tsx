@@ -1,4 +1,5 @@
 import { Page } from '@components/page';
+import { ROUTES } from '@constants/routes';
 import { Button, Link } from '@mui/material';
 
 import {
@@ -27,6 +28,9 @@ const MenuPage = () => {
     return (
         <Page className={styles.container}>
             <nav className={styles.navigation}>
+                <MenuItem text={ProfileText} path={ROUTES.PROFILE} />
+                <MenuItem text={LeaderboardText} path={ROUTES.LEADERBOARD} />
+                <MenuItem text={ForumText} path={ROUTES.FORUM} />
                 <MenuItem text={ProfileText} path="/profile" />
                 <MenuItem text={LeaderboardText} path="/leaderBoard" />
                 <MenuItem text={ForumText} path="/forum" />
@@ -40,7 +44,7 @@ const MenuPage = () => {
             <Button
                 variant="contained"
                 color="primary"
-                href="/game"
+                href={ROUTES.GAME}
                 className={styles.playButton}
             >
                 {PlayText}

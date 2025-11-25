@@ -1,6 +1,7 @@
 import ErrorBoundary from '@components/errorBoundary/errorBoundary';
 import { LoadingSpinner } from '@components/loadingSpinner';
 import { NotificationContainer } from '@components/notificationContainer';
+import { ROUTES } from '@constants/routes';
 import { ErrorPage } from '@pages/error';
 import { ForumPage } from '@pages/forum';
 import { GamePage } from '@pages/game';
@@ -17,23 +18,31 @@ const App = () => {
             <LoadingSpinner />
             <NotificationContainer />
             <Routes>
-                <Route path="/" element={<MenuPage />} />
-                <Route path="/menu" element={<MenuPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/registration" element={<RegistrationPage />} />
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/game" element={<GamePage />} />
-                <Route path="/leaderBoard" element={<LeaderBoardPage />} />
-                <Route path="/forum" element={<ForumPage />} />
+                <Route path={ROUTES.MENU} element={<MenuPage />} />
+                <Route path={ROUTES.LOGIN} element={<LoginPage />} />
                 <Route
-                    path="/error500"
+                    path={ROUTES.REGISTRATION}
+                    element={<RegistrationPage />}
+                />
+                <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
+                <Route path={ROUTES.GAME} element={<GamePage />} />
+                <Route
+                    path={ROUTES.LEADERBOARD}
+                    element={<LeaderBoardPage />}
+                />
+                <Route path={ROUTES.FORUM} element={<ForumPage />} />
+                <Route
+                    path={ROUTES.ERROR_500}
                     element={<ErrorPage errorCode={500} />}
                 />
                 <Route
-                    path="/error404"
+                    path={ROUTES.ERROR_404}
                     element={<ErrorPage errorCode={404} />}
                 />
-                <Route path="*" element={<Navigate to="/error404" />} />
+                <Route
+                    path={ROUTES.NOT_FOUND}
+                    element={<Navigate to={ROUTES.ERROR_404} />}
+                />
             </Routes>
         </ErrorBoundary>
     );
