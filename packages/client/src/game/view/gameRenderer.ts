@@ -1,5 +1,5 @@
-import { gameSettings } from 'game/config/gameSettings';
-import { GameState } from 'game/model/gameModel';
+import { gameSettings } from '../config/gameSettings';
+import { GameState } from '../model/gameModel';
 
 export class GameRenderer {
     private restartButton = null as null | {

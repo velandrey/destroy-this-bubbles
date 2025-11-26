@@ -1,5 +1,5 @@
-import { GameModel } from 'game/model/gameModel';
-import { GameRenderer } from 'game/view/gameRenderer';
+import { GameModel } from '../model/gameModel';
+import { GameRenderer } from '../view/gameRenderer';
 
 export class GameEngine {
     private model: GameModel;

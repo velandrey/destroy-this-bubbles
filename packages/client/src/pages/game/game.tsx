@@ -4,7 +4,7 @@ import { Button } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { GameEnter } from '../../../src/game/components';
+import { GameEnter } from '../../game/components';
 
 import { GamePageCountdown } from './countdown';
 import GamePageGameOver from './gameOver/gameOver';
