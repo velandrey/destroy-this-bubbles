@@ -21,5 +21,6 @@ module.exports = {
         '^@store/(.*)$': '<rootDir>/src/store/$1',
         '^@styles/(.*)$': '<rootDir>/src/styles/$1',
         '^@utils/(.*)$': '<rootDir>/src/utils/$1',
+        '^game/(.*)$': '<rootDir>/src/game/$1',
     },
 };
