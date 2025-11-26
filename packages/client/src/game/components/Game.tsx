@@ -2,7 +2,7 @@ import { GameEngine } from 'game/engine/gameEngine';
 import React from 'react';
 import { useEffect, useRef } from 'react';
 
-function Game() {
+function GameEnter() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -15,4 +15,4 @@ function Game() {
     return <canvas ref={canvasRef} width={800} height={600} />;
 }
 
-export default Game;
+export default GameEnter;

@@ -4,7 +4,7 @@ import { Button } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Game } from '../../game/components/index';
+import { GameEnter } from '../../../src/game/components';
 
 import { GamePageCountdown } from './countdown';
 import GamePageGameOver from './gameOver/gameOver';
@@ -97,7 +97,7 @@ const GamePage = () => {
                     >
                         Назад к меню
                     </Button>
-                    <Game />
+                    <GameEnter />
                 </div>
             )}
 
