@@ -10,6 +10,7 @@ module.exports = {
         __EXTERNAL_SERVER_URL__: process.env.EXTERNAL_SERVER_URL || 'http://localhost:3001',
         __INTERNAL_SERVER_URL__: process.env.INTERNAL_SERVER_URL || 'http://localhost:3001',
     },
+    moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json'],
     moduleNameMapper: {
         '\\.(scss|css)$': 'identity-obj-proxy',
         '^@slices/(.*)$': '<rootDir>/src/slices/$1',
@@ -21,5 +22,6 @@ module.exports = {
         '^@store/(.*)$': '<rootDir>/src/store/$1',
         '^@styles/(.*)$': '<rootDir>/src/styles/$1',
         '^@utils/(.*)$': '<rootDir>/src/utils/$1',
+        '^game/(.*)$': '<rootDir>/src/game/$1',
     },
 };

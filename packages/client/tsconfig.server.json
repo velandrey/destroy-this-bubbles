@@ -1,16 +1,17 @@
 {
-    "extends": "./tsconfig.json",
-    "compilerOptions": {
-        "composite": true,
-        "noEmit": false,
-        "outDir": "./dist/server",
-        "lib": ["DOM", "ES2019"],
-        "target": "ES2019",
-        "module": "CommonJS",
-        "moduleResolution": "node",
-        "esModuleInterop": true,
-        "types": ["react/jsx-runtime"]
-    },
-    "include": ["src/", "server"],
-    "exclude": ["src/**/*.test.*", "src/**/*.spec.*"]
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "noEmit": false,
+    "outDir": "./dist/server",
+    "lib": ["DOM", "ES2019"],
+    "target": "ES2019",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "types": ["react/jsx-runtime"]
+  },
+  "files": [],                   // ← ПОЛНОЕ ОБНУЛЕНИЕ СПИСКА ФАЙЛОВ РОДИТЕЛЯ
+  "include": ["server"],         // ← ЗАНОСИМ СЮДА ТОЛЬКО СЕРВЕРНЫЕ ФАЙЛЫ
+  "exclude": []
 }
