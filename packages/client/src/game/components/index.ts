@@ -1,2 +1,1 @@
-import GameEnter from './game';
-export { GameEnter };
+export { default as GameEnter } from './game';
