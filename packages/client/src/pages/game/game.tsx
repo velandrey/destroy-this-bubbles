@@ -1,9 +1,10 @@
 import { Page } from '@components/page';
 import { ROUTES } from '@constants/routes';
 import { Button } from '@mui/material';
-import { Game } from 'game/components';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { Game } from '../../game/components/index';
 
 import { GamePageCountdown } from './countdown';
 import GamePageGameOver from './gameOver/gameOver';
