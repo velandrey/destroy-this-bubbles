@@ -1,10 +1,11 @@
 import { Page } from '@components/page';
 import { ROUTES } from '@constants/routes';
+import { GameEnter } from '@game/components';
+import { useGame } from '@hooks/useGame';
 import { Button } from '@mui/material';
+import { TGameResults } from '@store/slices/gameSlice';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import { GameEnter } from '../../game/components';
 
 import { GamePageCountdown } from './countdown';
 import GamePageGameOver from './gameOver/gameOver';
@@ -41,14 +42,14 @@ const GamePage = () => {
     useEffect(() => {
         if (gameState === 'playing') {
             // Здесь будет реальная игровая логика
-            // Пока эмулируем завершение игры через 1 секунду
+            // Пока эмулируем завершение игры через 5 секунд
             const gameTimer = setTimeout(() => {
                 handleGameOver({
                     score: 42,
                     accuracy: 73,
                     totalTime: 31,
                 });
-            }, 1000);
+            }, 5000);
 
             return () => clearTimeout(gameTimer);
         }
