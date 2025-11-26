@@ -1,2 +1,2 @@
-import GameEnter from 'game/components/game';
+import GameEnter from './game';
 export { GameEnter };
