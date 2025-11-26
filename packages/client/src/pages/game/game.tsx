@@ -1,13 +1,13 @@
 import { Page } from '@components/page';
 import { ROUTES } from '@constants/routes';
-import { useGame } from '@hooks/useGame';
 import { Button } from '@mui/material';
-import GamePageGameOver from '@pages/game/gameOver/gameOver';
-import { TGameResults } from '@store/slices/gameSlice';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { GameEnter } from '../../game/components';
+
 import { GamePageCountdown } from './countdown';
+import GamePageGameOver from './gameOver/gameOver';
 import { GamePageLauncher } from './launcher';
 import styles from './styles.module.scss';
 
@@ -80,7 +80,7 @@ const GamePage = () => {
             )}
 
             {gameState === 'playing' && (
-                <div>
+                <div className={styles.gameContainer}>
                     <Button
                         color="success"
                         variant="contained"
@@ -88,6 +88,7 @@ const GamePage = () => {
                     >
                         Назад к меню
                     </Button>
+                    <GameEnter />
                 </div>
             )}
 
