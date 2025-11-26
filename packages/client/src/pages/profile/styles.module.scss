@@ -5,3 +5,13 @@
     align-items: center;
     min-height: 100vh;
 }
+
+.formContainer {
+    margin-top: 1.5rem;
+    width: 15rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}

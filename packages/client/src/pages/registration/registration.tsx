@@ -2,7 +2,7 @@ import { Form } from '@components/form';
 import { Page } from '@components/page';
 import { Grid, Link } from '@mui/material';
 
-import { REGISTRATION_INPUTS } from './constants';
+import { REGISTRATION_INPUTS, REGISTRATION_SCHEMA } from './constants';
 import styles from './styles.module.scss';
 
 const RegistrationPage = () => {
@@ -26,7 +26,8 @@ const RegistrationPage = () => {
                 <Form
                     submitBtnLabel="Зарегистрироваться"
                     inputs={REGISTRATION_INPUTS}
-                    onSubmit={handleSubmit}
+                    schema={REGISTRATION_SCHEMA}
+                    submitHandler={handleSubmit}
                     className={styles.formContainer}
                 />
                 <span className={styles.link}>

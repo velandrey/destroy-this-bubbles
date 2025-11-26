@@ -1,22 +1,44 @@
 import { Form } from '@components/form';
 import { Page } from '@components/page';
+import { ROUTES } from '@constants/routes';
 import { Grid, Link } from '@mui/material';
+import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
+import { signIn } from './api';
 import { LOGIN_INPUTS } from './constants';
 import styles from './styles.module.scss';
-import { useProfile } from '@hooks/useProfile';
 
 const LoginPage = () => {
-    const handleSubmit = async (data: Record<string, string | File | null>) => {
-        // Отсюда обращения к API авторизации, пока не реализовано - console.log
-        console.log(data);
+    const [loading, setLoading] = useState(false);
+    const controllerRef = useRef<AbortController | null>(null);
+    const navigate = useNavigate();
 
-        // Start a.velikanov - код при необходимости можно удалять - размещён для тестирования работы Профиля
-        const { auth } = useProfile();
-        // @ts-ignore
-        await auth(data.name, data.password);
-        // END a.velikanov - код можно удалять - размещён для тестирования работы Профиля
+    const handleSubmit = async (data: Record<string, string | File | null>) => {
+        setLoading(true);
+        const payload = {
+            login: (data.name as string) || '',
+            password: (data.password as string) || '',
+        };
+        controllerRef.current = new AbortController();
+        try {
+            const responce = await signIn(payload, {
+                signal: controllerRef.current.signal,
+            });
+            if (responce === 'OK') {
+                localStorage.setItem('is_auth', 'true');
+                navigate(ROUTES.PROFILE);
+            }
+        } finally {
+            setLoading(false);
+        }
+        return () => controllerRef.current?.abort();
     };
+
+    const handleReset = async () => {
+        controllerRef.current?.abort();
+    };
+
     return (
         <Page>
             <Grid
@@ -34,6 +56,7 @@ const LoginPage = () => {
                     submitBtnLabel="Войти"
                     inputs={LOGIN_INPUTS}
                     onSubmit={handleSubmit}
+                    onReset={handleReset}
                     className={styles.formContainer}
                 />
                 <span className={styles.link}>

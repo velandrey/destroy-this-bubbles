@@ -1,0 +1,56 @@
+$gameOver-color: #a81c1c;
+$accent-color: #00ff00;
+
+.gameOverContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.gameOverPaper {
+  padding: 2rem;
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.gameOverTitle {
+  color: $gameOver-color;
+  font-weight: bold;
+}
+
+.resultsContainer {
+  margin-top: 1rem;
+}
+
+
+.resultItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  font-size: 1.5rem;
+}
+
+.resultLabel {
+  font-weight: lighter;
+}
+
+.resultValue {
+  font-weight: bold;
+  color: $accent-color;
+}
+
+.actionsBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.actionButton {
+
+}
