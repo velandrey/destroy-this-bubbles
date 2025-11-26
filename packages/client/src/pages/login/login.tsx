@@ -2,11 +2,9 @@ import { Form } from '@components/form';
 import { Page } from '@components/page';
 import { ROUTES } from '@constants/routes';
 import { useAppDispatch } from '@hooks/redux';
-import { useLoading } from '@hooks/useLoading';
 import { useNotification } from '@hooks/useNotification';
 import { useProfile } from '@hooks/useProfile';
 import { Grid, Link } from '@mui/material';
-import { setUser } from '@store/slices/userSlice';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,14 +14,13 @@ import styles from './styles.module.scss';
 
 const LoginPage = () => {
     const dispatch = useAppDispatch();
-    const { showError } = useNotification();
-    const { startLoading, stopLoading } = useLoading();
+    const { showNotification, showError, showSuccess } = useNotification();
     const controllerRef = useRef<AbortController | null>(null);
     const navigate = useNavigate();
     const { getUserData } = useProfile();
 
     const handleSubmit = async (data: Record<string, string | File | null>) => {
-        startLoading('Выполняется вход...');
+        showNotification('Выполняется вход...');
         const payload = {
             login: (data.login as string) || '',
             password: (data.password as string) || '',
@@ -34,14 +31,13 @@ const LoginPage = () => {
                 signal: controllerRef.current.signal,
             });
             if (response === 'OK') {
-                const userData = await getUserData();
-                dispatch(setUser(userData));
-                navigate('/profile');
+                await getUserData();
+                navigate(ROUTES.PROFILE);
             }
         } catch (error) {
             showError('Ошибка авторизации');
         } finally {
-            stopLoading();
+            showSuccess('Успешная авторизация');
         }
     };
 

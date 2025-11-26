@@ -3,14 +3,11 @@ import { Page } from '@components/page';
 import ProfileAvatarUpload from '@components/profileAvatarUpload/profileAvatarUpload';
 import ProfileChangePasswordDialog from '@components/profileChangePasswordDialog/profileChangePasswordDialog';
 import { defaultAvatar } from '@constants/constants';
-import { useAppDispatch, useAppSelector } from '@hooks/redux';
-import { useLoading } from '@hooks/useLoading';
-import { useNotification } from '@hooks/useNotification';
 import { ROUTES } from '@constants/routes';
+import { useNotification } from '@hooks/useNotification';
 import { useProfile } from '@hooks/useProfile';
 import { Button, Grid } from '@mui/material';
 import { TProfile } from '@pages/profile/types';
-import { updateUser } from '@store/slices/userSlice';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,10 +16,15 @@ import styles from './styles.module.scss';
 
 const ProfilePage = () => {
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
-    const { startLoading, stopLoading } = useLoading();
-    const { showSuccess, showError } = useNotification();
-    const { user } = useAppSelector((state) => state.user);
+    const { showSuccess, showError, showNotification } = useNotification();
+    const {
+        user,
+        isLoading: profileLoading,
+        getUserData,
+        changeProfile,
+        changePassword,
+    } = useProfile();
+
     const [profile, setProfile] = useState<TProfile>({
         first_name: '',
         second_name: '',
@@ -32,8 +34,7 @@ const ProfilePage = () => {
         avatar: '',
         email: '',
     });
-    const [avatarUrl, setAvatarUrl] = useState<string>(defaultAvatar);
-    const { getUserData, changeProfile, changePassword } = useProfile();
+
     const inputs: TInputsMap = useMemo(() => {
         return Object.fromEntries(
             Object.entries(PROFILE_INPUTS).map(([name, cfg]) => [
@@ -47,8 +48,8 @@ const ProfilePage = () => {
     }, [profile]);
 
     const handleProfileChange = async (data: Record<string, string>) => {
-        startLoading('Сохранение изменений...');
         try {
+            showNotification('Сохранение данных...');
             const result = await changeProfile({
                 first_name: data.first_name,
                 second_name: data.second_name,
@@ -56,24 +57,11 @@ const ProfilePage = () => {
                 phone: data.phone,
                 login: data.login,
                 email: data.email,
-            });
-            if (result) {
-                dispatch(
-                    updateUser({
-                        first_name: data.first_name,
-                        second_name: data.second_name,
-                        display_name: data.display_name,
-                        phone: data.phone,
-                        login: data.login,
-                        email: data.email,
-                    })
-                );
-                showSuccess('Данные профиля успешно изменены');
-            } else {
-                showError('Ошибка изменения профиля');
-            }
-        } finally {
-            stopLoading();
+            }).unwrap();
+
+            showSuccess('Данные профиля успешно изменены');
+        } catch (error) {
+            showError('Ошибка изменения профиля');
         }
     };
 
@@ -81,27 +69,25 @@ const ProfilePage = () => {
         oldPassword: string,
         newPassword: string
     ) => {
-        const result = await changePassword({
-            oldPassword: oldPassword,
-            newPassword: newPassword,
-        });
-        if (result) {
+        try {
+            await changePassword({
+                oldPassword,
+                newPassword,
+            }).unwrap();
+
             showSuccess('Пароль успешно изменён');
-        } else {
+        } catch (error) {
             showError('Ошибка изменения пароля');
         }
     };
 
     useEffect(() => {
-        if (user) {
-            setProfile(user);
-            if (user.avatar) {
-                setAvatarUrl(user.avatar);
-            }
-        } else {
+        if (!user) {
             getUserData();
+        } else {
+            setProfile(user);
         }
-    }, [user]);
+    }, [user, getUserData]);
 
     return (
         <Page>
@@ -109,12 +95,16 @@ const ProfilePage = () => {
                 variant="contained"
                 color="primary"
                 onClick={() => navigate(ROUTES.MENU)}
+                disabled={profileLoading}
             >
                 Меню
             </Button>
             <Grid container className={styles.profile__grid}>
                 <h1>Профиль игрока</h1>
-                <ProfileAvatarUpload currentAvatar={avatarUrl} size={120} />
+                <ProfileAvatarUpload
+                    currentAvatar={user?.avatar || defaultAvatar}
+                    size={120}
+                />
                 <Form
                     submitBtnLabel="Сохранить изменения"
                     inputs={inputs}

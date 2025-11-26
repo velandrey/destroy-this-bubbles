@@ -1,3 +1,4 @@
+import { ROUTES } from '@constants/routes';
 import { useGame } from '@hooks/useGame';
 import { Box, Button, Typography, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -64,7 +65,7 @@ const GamePageGameOver = ({ onRestart }: TProps) => {
                     <Button
                         variant="outlined"
                         size="large"
-                        onClick={() => navigate('/menu')}
+                        onClick={() => navigate(ROUTES.MENU)}
                         className={styles.actionButton}
                     >
                         В главное меню

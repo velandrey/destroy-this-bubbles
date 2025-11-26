@@ -41,14 +41,14 @@ const GamePage = () => {
     useEffect(() => {
         if (gameState === 'playing') {
             // Здесь будет реальная игровая логика
-            // Пока эмулируем завершение игры через 2 секунды
+            // Пока эмулируем завершение игры через 1 секунду
             const gameTimer = setTimeout(() => {
                 handleGameOver({
                     score: 42,
                     accuracy: 73,
                     totalTime: 31,
                 });
-            }, 2000);
+            }, 1000);
 
             return () => clearTimeout(gameTimer);
         }

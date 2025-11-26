@@ -1,17 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 import gameReducer from '@store/slices/gameSlice';
-import loadingReducer from '@store/slices/loadingSlice';
 import notificationReducer from '@store/slices/notificationSlice';
-import userReducer from '@store/slices/userSlice';
+import profileReducer from '@store/slices/profileSlice';
 
 export const store = configureStore({
     reducer: {
         game: gameReducer,
-        loading: loadingReducer,
+        profile: profileReducer,
         notification: notificationReducer,
-        user: userReducer,
     },
 });
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type TRootState = ReturnType<typeof store.getState>;
+export type TAppDispatch = typeof store.dispatch;
