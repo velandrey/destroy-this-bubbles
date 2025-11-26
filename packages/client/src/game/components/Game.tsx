@@ -1,7 +1,6 @@
+import { GameEngine } from 'game/engine/gameEngine';
 import React from 'react';
 import { useEffect, useRef } from 'react';
-
-import { GameEngine } from '../engine/GameEngine';
 
 const Game: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);

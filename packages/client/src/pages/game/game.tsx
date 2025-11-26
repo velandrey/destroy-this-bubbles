@@ -1,12 +1,12 @@
 import { Page } from '@components/page';
 import { ROUTES } from '@constants/routes';
 import { Button } from '@mui/material';
-import GamePageGameOver from '@pages/game/gameOver/gameOver';
-import Game from 'game/components/Game';
+import { Game } from 'game/components';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { GamePageCountdown } from './countdown';
+import GamePageGameOver from './gameOver/gameOver';
 import { GamePageLauncher } from './launcher';
 import styles from './styles.module.scss';
 
