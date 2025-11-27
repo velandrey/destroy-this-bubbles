@@ -1,51 +1,46 @@
-import { StatusAlert } from '@components/statusAlert';
 import { defaultAvatar } from '@constants/constants';
+import { useNotification } from '@hooks/useNotification';
 import { useProfile } from '@hooks/useProfile';
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 
 import styles from './styles.module.scss';
 
 type TProfileAvatarUploadProps = {
     currentAvatar?: string;
-    onAvatarChange?: () => void;
     size?: number;
 };
 
 const ProfileAvatarUpload: React.FC<TProfileAvatarUploadProps> = ({
     currentAvatar,
-    onAvatarChange,
     size = 120,
 }) => {
-    const [alertOpen, setAlertOpen] = useState<boolean>(false);
-    const [alertMessage, setAlertMessage] = useState<string>('');
+    const { showSuccess, showError } = useNotification();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleAvatarClick = () => {
         fileInputRef.current?.click();
     };
-    const { changeAvatar } = useProfile();
+    const { changeAvatar, getUserData } = useProfile();
 
     const handleAvatarChange = async (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
         const file = event.target.files?.[0];
         if (!file || !file.type.startsWith('image/')) {
-            setAlertOpen(true);
-            setAlertMessage('Выберите изображение!');
+            showError('Выберите изображение!');
             return;
         }
         try {
             const isUpdated = await changeAvatar(file);
-            if (isUpdated && onAvatarChange) {
+            if (isUpdated) {
                 if (fileInputRef.current) {
                     fileInputRef.current.value = '';
                 }
-                onAvatarChange();
+                await getUserData();
+                showSuccess('Аватар успешно изменён!');
             }
         } catch (error) {
-            setAlertOpen(true);
-            setAlertMessage('Не удалось загрузить аватар');
-            console.error('Ошибка загрузки аватара:', error);
+            showError('Не удалось загрузить аватар');
         }
     };
 
@@ -76,12 +71,6 @@ const ProfileAvatarUpload: React.FC<TProfileAvatarUploadProps> = ({
                 accept="image/*"
                 onChange={handleAvatarChange}
                 className={styles.avatar__fileInput}
-            />
-            <StatusAlert
-                open={alertOpen}
-                message={alertMessage}
-                severity="success"
-                onClose={() => setAlertOpen(false)}
             />
         </div>
     );

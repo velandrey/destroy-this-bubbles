@@ -1,24 +1,22 @@
-// game-over.tsx
 import { ROUTES } from '@constants/routes';
+import { useGame } from '@hooks/useGame';
 import { Box, Button, Typography, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import styles from './styles.module.scss';
 
 type TProps = {
-    score: number;
-    accuracy: number;
-    totalTime: number;
     onRestart: () => void;
 };
 
-const GamePageGameOver = ({
-    score,
-    accuracy,
-    totalTime,
-    onRestart,
-}: TProps) => {
+const GamePageGameOver = ({ onRestart }: TProps) => {
     const navigate = useNavigate();
+    const { results } = useGame();
+    const { score, accuracy, totalTime } = results || {
+        score: 0,
+        accuracy: 0,
+        totalTime: 0,
+    };
 
     const formatTime = (seconds: number) => {
         const minutes = Math.floor(seconds / 60);

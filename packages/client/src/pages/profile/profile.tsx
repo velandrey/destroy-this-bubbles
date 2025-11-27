@@ -2,9 +2,9 @@ import { Form, TInputsMap } from '@components/form';
 import { Page } from '@components/page';
 import ProfileAvatarUpload from '@components/profileAvatarUpload/profileAvatarUpload';
 import ProfileChangePasswordDialog from '@components/profileChangePasswordDialog/profileChangePasswordDialog';
-import { StatusAlert } from '@components/statusAlert';
 import { defaultAvatar } from '@constants/constants';
 import { ROUTES } from '@constants/routes';
+import { useNotification } from '@hooks/useNotification';
 import { useProfile } from '@hooks/useProfile';
 import { Button, Grid } from '@mui/material';
 import { TProfile } from '@pages/profile/types';
@@ -16,6 +16,15 @@ import styles from './styles.module.scss';
 
 const ProfilePage = () => {
     const navigate = useNavigate();
+    const { showSuccess, showError, showNotification } = useNotification();
+    const {
+        user,
+        isLoading: profileLoading,
+        getUserData,
+        changeProfile,
+        changePassword,
+    } = useProfile();
+
     const [profile, setProfile] = useState<TProfile>({
         first_name: '',
         second_name: '',
@@ -25,10 +34,7 @@ const ProfilePage = () => {
         avatar: '',
         email: '',
     });
-    const [avatarUrl, setAvatarUrl] = useState<string>(defaultAvatar);
-    const { getUserData, changeProfile, changePassword } = useProfile();
-    const [alertOpen, setAlertOpen] = useState<boolean>(false);
-    const [alertMessage, setAlertMessage] = useState<string>('');
+
     const inputs: TInputsMap = useMemo(() => {
         return Object.fromEntries(
             Object.entries(PROFILE_INPUTS).map(([name, cfg]) => [
@@ -41,62 +47,47 @@ const ProfilePage = () => {
         ) as TInputsMap;
     }, [profile]);
 
-    const getProfileData = async () => {
-        try {
-            const profile = await getUserData();
-            setProfile(profile);
-            if (profile.avatar) {
-                setAvatarUrl(profile.avatar);
-            }
-        } catch (err) {
-            setAlertOpen(true);
-            setAlertMessage('Не удалось получить данные профиля');
-            console.log(err);
-        }
-    };
-
     const handleProfileChange = async (data: Record<string, string>) => {
-        const result = await changeProfile({
-            first_name: data.first_name,
-            second_name: data.second_name,
-            display_name: data.display_name,
-            phone: data.phone,
-            login: data.login,
-            email: data.email,
-        });
-        setAlertOpen(true);
-        if (result) {
-            setAlertMessage('Данные профиля успешно изменены');
-        } else {
-            setAlertMessage('Ошибка изменения профиля');
-        }
-    };
+        try {
+            showNotification('Сохранение данных...');
+            const result = await changeProfile({
+                first_name: data.first_name,
+                second_name: data.second_name,
+                display_name: data.display_name,
+                phone: data.phone,
+                login: data.login,
+                email: data.email,
+            }).unwrap();
 
-    const handleAvatarChange = async () => {
-        await getProfileData();
+            showSuccess('Данные профиля успешно изменены');
+        } catch (error) {
+            showError('Ошибка изменения профиля');
+        }
     };
 
     const handlePasswordChange = async (
         oldPassword: string,
         newPassword: string
     ) => {
-        const result = await changePassword({
-            oldPassword: oldPassword,
-            newPassword: newPassword,
-        });
-        setAlertOpen(true);
-        if (result) {
-            setAlertMessage('Пароль успешно изменён');
-        } else {
-            setAlertMessage('Ошибка изменения пароля');
+        try {
+            await changePassword({
+                oldPassword,
+                newPassword,
+            }).unwrap();
+
+            showSuccess('Пароль успешно изменён');
+        } catch (error) {
+            showError('Ошибка изменения пароля');
         }
     };
 
     useEffect(() => {
-        (async () => {
-            await getProfileData();
-        })();
-    }, []);
+        if (!user) {
+            getUserData();
+        } else {
+            setProfile(user);
+        }
+    }, [user, getUserData]);
 
     return (
         <Page>
@@ -104,14 +95,14 @@ const ProfilePage = () => {
                 variant="contained"
                 color="primary"
                 onClick={() => navigate(ROUTES.MENU)}
+                disabled={profileLoading}
             >
                 Меню
             </Button>
             <Grid container className={styles.profile__grid}>
                 <h1>Профиль игрока</h1>
                 <ProfileAvatarUpload
-                    currentAvatar={avatarUrl}
-                    onAvatarChange={handleAvatarChange}
+                    currentAvatar={user?.avatar || defaultAvatar}
                     size={120}
                 />
                 <Form
@@ -123,12 +114,6 @@ const ProfilePage = () => {
                 />
                 <ProfileChangePasswordDialog onSubmit={handlePasswordChange} />
             </Grid>
-            <StatusAlert
-                open={alertOpen}
-                message={alertMessage}
-                severity="success"
-                onClose={() => setAlertOpen(false)}
-            />
         </Page>
     );
 };

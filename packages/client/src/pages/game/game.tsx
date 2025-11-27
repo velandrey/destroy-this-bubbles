@@ -1,6 +1,8 @@
 import { Page } from '@components/page';
 import { ROUTES } from '@constants/routes';
+import { useGame } from '@hooks/useGame';
 import { Button } from '@mui/material';
+import { TGameResults } from '@store/slices/gameSlice';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,35 +15,26 @@ import styles from './styles.module.scss';
 
 const GamePage = () => {
     const navigate = useNavigate();
-
+    const { setGameResults, startGame, resetGame } = useGame(); // Состояния для результатов игры
     const [countdown, setCountdown] = useState(3);
     const [gameState, setGameState] = useState<
         'launcher' | 'countdown' | 'playing' | 'gameOver'
     >('launcher');
 
-    // Состояния для результатов игры
-    const [gameResults, setGameResults] = useState({
-        score: 0,
-        accuracy: 0,
-        totalTime: 0,
-    });
-
     const handleGameStart = () => {
+        startGame();
         setGameState('countdown');
     };
 
     // Функция завершения игры
-    const handleGameOver = (results: {
-        score: number;
-        accuracy: number;
-        totalTime: number;
-    }) => {
+    const handleGameOver = (results: TGameResults) => {
         setGameResults(results);
         setGameState('gameOver');
     };
 
     // Функция перезапуска игры
     const handleRestart = () => {
+        resetGame();
         setCountdown(3);
         setGameState('countdown');
     };
@@ -102,12 +95,7 @@ const GamePage = () => {
             )}
 
             {gameState === 'gameOver' && (
-                <GamePageGameOver
-                    score={gameResults.score}
-                    accuracy={gameResults.accuracy}
-                    totalTime={gameResults.totalTime}
-                    onRestart={handleRestart}
-                />
+                <GamePageGameOver onRestart={handleRestart} />
             )}
         </Page>
     );

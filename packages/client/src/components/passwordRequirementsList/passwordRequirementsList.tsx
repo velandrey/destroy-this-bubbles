@@ -4,12 +4,12 @@ import React from 'react';
 
 import styles from './styles.module.scss';
 
-interface PasswordRequirementsListProps {
+type TPasswordRequirementsListProps = {
     requirements: PasswordRequirement[];
     title?: string;
-}
+};
 
-const PasswordRequirementsList: React.FC<PasswordRequirementsListProps> = ({
+const PasswordRequirementsList: React.FC<TPasswordRequirementsListProps> = ({
     requirements,
     title = 'Требования к паролю:',
 }) => {

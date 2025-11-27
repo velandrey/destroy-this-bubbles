@@ -1,65 +1,31 @@
-import { ApiURL } from '@constants/constants';
-import { fetchApi } from '@utils/fetchApi';
 import { TPasswordChangeData, TProfile } from '@pages/profile/types';
+import {
+    getUserData,
+    changeProfile,
+    changeAvatar,
+    changePassword,
+    clearUser,
+} from '@store/slices/profileSlice';
+
+import { useAppDispatch, useAppSelector } from './redux';
 
 export const useProfile = () => {
-    const auth = async (login: string, password: string) => {
-        return fetchApi('/auth/signin', {
-            method: 'POST',
-            data: { login, password },
-        });
-    };
-
-    const getUserData = async (): Promise<TProfile> => {
-        const profileData = await fetchApi<TProfile>('/auth/user');
-
-        if (!profileData || typeof profileData !== 'object') {
-            throw new Error('Invalid profile data received');
-        }
-
-        return {
-            first_name: profileData.first_name || '',
-            second_name: profileData.second_name || '',
-            display_name: profileData.display_name || '',
-            phone: profileData.phone || '',
-            login: profileData.login || '',
-            avatar: profileData.avatar
-                ? ApiURL + '/resources' + profileData.avatar
-                : '',
-            email: profileData.email || '',
-        };
-    };
-
-    const changeProfile = async (profileData: TProfile) => {
-        return await fetchApi('/user/profile', {
-            method: 'PUT',
-            data: profileData,
-        });
-    };
-
-    const changeAvatar = async (file: File) => {
-        const formData = new FormData();
-        formData.append('avatar', file);
-
-        return await fetchApi('/user/profile/avatar', {
-            method: 'PUT',
-            data: formData,
-            isFormData: true,
-        });
-    };
-
-    const changePassword = async (passwordData: TPasswordChangeData) => {
-        return await fetchApi('/user/password', {
-            method: 'PUT',
-            data: passwordData,
-        });
-    };
+    const dispatch = useAppDispatch();
+    const { user, isAuth, isLoading, error } = useAppSelector(
+        (state) => state.profile
+    );
 
     return {
-        auth,
-        getUserData,
-        changeProfile,
-        changeAvatar,
-        changePassword,
+        user,
+        isAuth,
+        isLoading,
+        error,
+        getUserData: () => dispatch(getUserData()),
+        changeProfile: (profileData: TProfile) =>
+            dispatch(changeProfile(profileData)),
+        changeAvatar: (file: File) => dispatch(changeAvatar(file)),
+        changePassword: (passwordData: TPasswordChangeData) =>
+            dispatch(changePassword(passwordData)),
+        logout: () => dispatch(clearUser()),
     };
 };

@@ -1,4 +1,5 @@
 import ErrorBoundary from '@components/errorBoundary/errorBoundary';
+import { NotificationContainer } from '@components/notificationContainer';
 import { ROUTES } from '@constants/routes';
 import { ErrorPage } from '@pages/error';
 import { ForumPage } from '@pages/forum';
@@ -13,6 +14,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 const App = () => {
     return (
         <ErrorBoundary>
+            <NotificationContainer />
             <Routes>
                 <Route path={ROUTES.MENU} element={<MenuPage />} />
                 <Route path={ROUTES.LOGIN} element={<LoginPage />} />
