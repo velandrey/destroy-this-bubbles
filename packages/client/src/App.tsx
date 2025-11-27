@@ -1,5 +1,7 @@
 import ErrorBoundary from '@components/errorBoundary/errorBoundary';
 import { NotificationContainer } from '@components/notificationContainer';
+import { withAuth } from '@components/withAuth';
+import { useProfile } from '@hooks/useProfile';
 import { ROUTES } from '@constants/routes';
 import { ErrorPage } from '@pages/error';
 import { ForumPage } from '@pages/forum';
@@ -10,8 +12,19 @@ import { MenuPage } from '@pages/menu';
 import { ProfilePage } from '@pages/profile';
 import { RegistrationPage } from '@pages/registration';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const App = () => {
+    const { getUserData } = useProfile();
+    useEffect(() => {
+        if (localStorage.getItem('isAuth') === 'true') {
+            getUserData();
+        }
+    }, []);
+
+    const ProtectedProfilePage = withAuth(ProfilePage);
+    const ProtectedForumPage = withAuth(ForumPage);
+
     return (
         <ErrorBoundary>
             <NotificationContainer />
@@ -22,13 +35,16 @@ const App = () => {
                     path={ROUTES.REGISTRATION}
                     element={<RegistrationPage />}
                 />
-                <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
+                <Route
+                    path={ROUTES.PROFILE}
+                    element={<ProtectedProfilePage />}
+                />
                 <Route path={ROUTES.GAME} element={<GamePage />} />
                 <Route
                     path={ROUTES.LEADERBOARD}
                     element={<LeaderBoardPage />}
                 />
-                <Route path={ROUTES.FORUM} element={<ForumPage />} />
+                <Route path={ROUTES.FORUM} element={<ProtectedForumPage />} />
                 <Route
                     path={ROUTES.ERROR_500}
                     element={<ErrorPage errorCode={500} />}
