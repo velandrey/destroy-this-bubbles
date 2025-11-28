@@ -1,10 +1,8 @@
 import { Page } from '@components/page';
-import { ROUTES } from '@constants/routes';
 import { useGame } from '@hooks/useGame';
 import { Button } from '@mui/material';
 import { TGameResults } from '@store/slices/gameSlice';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { GameEnter } from '../../game/components';
 
@@ -14,7 +12,6 @@ import { GamePageLauncher } from './launcher';
 import styles from './styles.module.scss';
 
 const GamePage = () => {
-    const navigate = useNavigate();
     const { setGameResults, startGame, resetGame } = useGame(); // Состояния для результатов игры
     const [countdown, setCountdown] = useState(3);
     const [gameState, setGameState] = useState<
@@ -28,33 +25,18 @@ const GamePage = () => {
 
     // Функция завершения игры
     const handleGameOver = (results: TGameResults) => {
-        setGameResults(results);
-        setGameState('gameOver');
+        if (gameState === 'playing') {
+            setGameResults(results);
+            setGameState('gameOver');
+        }
     };
 
     // Функция перезапуска игры
     const handleRestart = () => {
         resetGame();
         setCountdown(3);
-        setGameState('countdown');
+        setGameState('launcher');
     };
-
-    // TODO временная эмуляция игрового процесса. После реализации игры код следует удалить.
-    useEffect(() => {
-        if (gameState === 'playing') {
-            // Здесь будет реальная игровая логика
-            // Пока эмулируем завершение игры через 5 секунд
-            const gameTimer = setTimeout(() => {
-                handleGameOver({
-                    score: 42,
-                    accuracy: 73,
-                    totalTime: 31,
-                });
-            }, 5000);
-
-            return () => clearTimeout(gameTimer);
-        }
-    }, [gameState]);
 
     useEffect(() => {
         if (gameState === 'countdown') {
@@ -86,11 +68,11 @@ const GamePage = () => {
                     <Button
                         color="success"
                         variant="contained"
-                        onClick={() => navigate(ROUTES.MENU)}
+                        onClick={handleRestart}
                     >
-                        Назад к меню
+                        Начать заново
                     </Button>
-                    <GameEnter />
+                    <GameEnter onGameOver={handleGameOver} />
                 </div>
             )}
 

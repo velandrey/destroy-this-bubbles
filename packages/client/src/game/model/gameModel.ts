@@ -1,4 +1,5 @@
-import { gameSettings } from 'game/config/gameSettings';
+import { TOnGameOverHandler } from '@game/components/Game';
+import { TGameSettings } from '@store/slices/gameSlice';
 import { checkHit } from 'game/logic/circle/hitLogic';
 import { SpawnLogic } from 'game/logic/circle/spownLogic';
 import Circle from 'game/objects/circle';
@@ -17,14 +18,21 @@ export class GameModel {
     private circles: Circle[] = [];
     private score = 0;
     private spawnLogic: SpawnLogic;
+    private gameOverHandler: TOnGameOverHandler;
 
     private isRunning = false;
     private startTime = 0;
     private lastTime = 0;
     private isGameOver = false;
 
-    constructor(private width: number, private height: number) {
-        this.spawnLogic = new SpawnLogic(width, height);
+    constructor(
+        width: number,
+        height: number,
+        onGameOver: TOnGameOverHandler,
+        private gameSettings: TGameSettings
+    ) {
+        this.spawnLogic = new SpawnLogic(width, height, this.gameSettings);
+        this.gameOverHandler = onGameOver;
     }
 
     start() {
@@ -46,7 +54,7 @@ export class GameModel {
         const elapsed = currentTime - this.startTime;
 
         // проверка на конец игры
-        if (elapsed >= gameSettings.game.gameDuration) {
+        if (elapsed >= this.gameSettings.game.gameDuration) {
             this.endGame();
             return;
         }
@@ -70,7 +78,7 @@ export class GameModel {
             this.score++;
 
             // может появиться новый круг
-            const maxCircles = gameSettings.spawn.maxCircles;
+            const maxCircles = this.gameSettings.spawn.maxCircles;
             const active = this.circles.filter((c) => c.isActive()).length;
 
             if (active < maxCircles) {
@@ -83,6 +91,9 @@ export class GameModel {
         this.isRunning = false;
         this.isGameOver = true;
         this.circles = [];
+        this.gameOverHandler({
+            score: this.score,
+        });
     }
 
     getState(currentTime: number): GameState {
@@ -92,7 +103,7 @@ export class GameModel {
 
         const timeRemaining = Math.max(
             0,
-            gameSettings.game.gameDuration / 1000 - Math.round(elapsed)
+            this.gameSettings.game.gameDuration / 1000 - Math.round(elapsed)
         );
 
         return {

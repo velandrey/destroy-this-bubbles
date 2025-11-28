@@ -1,5 +1,5 @@
-import { fetchApi } from '@utils/fetchApi';
 import { TAuthData } from '@pages/login/types';
+import { fetchApi } from '@utils/fetchApi';
 
 export async function signIn(
     data: TAuthData,

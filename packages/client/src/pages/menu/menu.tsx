@@ -1,6 +1,7 @@
 import { Page } from '@components/page';
 import { ROUTES } from '@constants/routes';
 import { Button, Link } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 import {
     GameTitle,
@@ -25,6 +26,7 @@ const MenuItem = ({ text, path }: TMenuItem): JSX.Element => (
 );
 
 const MenuPage = () => {
+    const navigate = useNavigate();
     return (
         <Page className={styles.container}>
             <nav className={styles.navigation}>
@@ -41,7 +43,7 @@ const MenuPage = () => {
             <Button
                 variant="contained"
                 color="primary"
-                href={ROUTES.GAME}
+                onClick={() => navigate(ROUTES.GAME)}
                 className={styles.playButton}
             >
                 {PlayText}

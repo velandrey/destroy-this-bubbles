@@ -1,4 +1,4 @@
-import { gameSettings } from '../config/gameSettings';
+import { TGameSettings } from '@store/slices/gameSlice';
 
 const popSound = new Audio('/assets/sounds/pop.mp3'); // путь от public
 export default class Circle {
@@ -10,13 +10,14 @@ export default class Circle {
         public x: number,
         public y: number,
         initialRadius: number,
-        public color: string
+        public color: string,
+        private config: TGameSettings['circle']
     ) {
         this.radius = initialRadius;
     }
 
     update(deltaTime: number) {
-        const { growthSpeed, maxRadius, minRadius } = gameSettings.circle;
+        const { growthSpeed, maxRadius, minRadius } = this.config;
         if (!this.active) return;
 
         if (this.growing) {

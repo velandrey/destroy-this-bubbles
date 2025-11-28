@@ -1,35 +1,39 @@
+import { defaultGameSettings } from '@game/config/defaultGameSettings';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-export type TGameSettings = {
-    mode: 'classic' | 'timeAttack';
-    difficulty: 'easy' | 'medium' | 'hard';
-    bubbleSpeed: number;
-    bubbleSpawnRate: number;
-    gameDuration: number;
-};
 
 export type TGameResults = {
     score: number;
-    accuracy: number;
-    totalTime: number;
+};
+
+export type TGameSettings = {
+    circle: {
+        minRadius: number;
+        maxRadius: number;
+        growthSpeed: number;
+        color: string;
+    };
+    spawn: {
+        interval: number;
+        maxCircles: number;
+    };
+    game: {
+        backgroundColor: string;
+        scoreOnHit: number;
+        scoreOnMiss: number;
+        gameDuration: number;
+    };
 };
 
 type TGameState = {
     results: TGameResults | null;
-    isGameActive: boolean;
     settings: TGameSettings;
+    isGameActive: boolean;
 };
 
 const initialState: TGameState = {
     results: null,
+    settings: defaultGameSettings,
     isGameActive: false,
-    settings: {
-        mode: 'classic',
-        difficulty: 'medium',
-        bubbleSpeed: 1,
-        bubbleSpawnRate: 1,
-        gameDuration: 60,
-    },
 };
 
 const gameSlice = createSlice({
@@ -48,6 +52,9 @@ const gameSlice = createSlice({
             state.results = null;
             state.isGameActive = false;
         },
+        resetSettings: (state) => {
+            state.settings = initialState.settings;
+        },
         updateGameScore: (
             state,
             action: PayloadAction<Partial<TGameResults>>
@@ -56,14 +63,20 @@ const gameSlice = createSlice({
                 state.results = { ...state.results, ...action.payload };
             }
         },
-        updateGameSettings: (
-            state,
-            action: PayloadAction<Partial<TGameSettings>>
-        ) => {
-            state.settings = { ...state.settings, ...action.payload };
+        updateMaxRadius: (state, action: PayloadAction<number>) => {
+            state.settings.circle.maxRadius = action.payload;
         },
-        resetGameSettings: (state) => {
-            state.settings = initialState.settings;
+        updateGrowthSpeed: (state, action: PayloadAction<number>) => {
+            state.settings.circle.growthSpeed = action.payload;
+        },
+        updateMaxCircles: (state, action: PayloadAction<number>) => {
+            state.settings.spawn.maxCircles = action.payload;
+        },
+        updateSpawnInterval: (state, action: PayloadAction<number>) => {
+            state.settings.spawn.interval = action.payload;
+        },
+        updateGameDuration: (state, action: PayloadAction<number>) => {
+            state.settings.game.gameDuration = action.payload;
         },
     },
 });
@@ -72,8 +85,12 @@ export const {
     setGameResults,
     startGame,
     resetGame,
+    resetSettings,
     updateGameScore,
-    updateGameSettings,
-    resetGameSettings,
+    updateMaxRadius,
+    updateGrowthSpeed,
+    updateMaxCircles,
+    updateSpawnInterval,
+    updateGameDuration,
 } = gameSlice.actions;
 export default gameSlice.reducer;

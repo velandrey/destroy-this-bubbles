@@ -1,4 +1,4 @@
-export const gameSettings = {
+export const defaultGameSettings = {
     // Размеры мишени
     circle: {
         minRadius: 1, // стартовый радиус при появлении

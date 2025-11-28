@@ -10,9 +10,11 @@
         "test": "jest ./"
     },
     "dependencies": {
+        "@base-ui-components/react": "^1.0.0-beta.7",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
         "@hookform/resolvers": "^5.2.2",
+        "@mui/icons-material": "^7.3.5",
         "@mui/material": "^7.3.5",
         "@reduxjs/toolkit": "^1.9.5",
         "@types/react-helmet": "^6.1.7",
