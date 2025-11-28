@@ -1,6 +1,5 @@
-import FloatingText from '@game/objects/floatingText';
-
 import { GameModel } from '../model/gameModel';
+import FloatingText from '../objects/floatingText';
 import { GameRenderer } from '../view/gameRenderer';
 
 export class GameEngine {

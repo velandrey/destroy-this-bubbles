@@ -1,8 +1,9 @@
-import FloatingText from '@game/objects/floatingText';
 import { gameSettings } from 'game/config/gameSettings';
 import { checkHit } from 'game/logic/circle/hitLogic';
 import { SpawnLogic } from 'game/logic/circle/spownLogic';
 import Circle from 'game/objects/circle';
+
+import FloatingText from '../objects/floatingText';
 
 const missSound = new Audio('/assets/sounds/miss.wav');
 
