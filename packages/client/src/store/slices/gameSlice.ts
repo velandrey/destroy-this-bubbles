@@ -11,6 +11,8 @@ export type TGameSettings = {
         maxRadius: number;
         growthSpeed: number;
         color: string;
+        totalLevels: number;
+        totalTimeLevels: number;
     };
     spawn: {
         interval: number;
