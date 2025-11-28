@@ -1,6 +1,5 @@
 import { Page } from '@components/page';
 import { ROUTES } from '@constants/routes';
-import { gameSettings } from '@game/config/gameSettings';
 import { useGame } from '@hooks/useGame';
 import { Button } from '@mui/material';
 import { TGameResults } from '@store/slices/gameSlice';
@@ -8,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { GameEnter } from '../../game/components';
+import { gameSettings } from '../../game/config/gameSettings';
 
 import { GamePageCountdown } from './countdown';
 import GamePageGameOver from './gameOver/gameOver';
