@@ -74,7 +74,7 @@ export class GameModel {
         const hit = checkHit(this.circles, x, y);
 
         if (!hit.hit) {
-            this.score = Math.max(0, this.score - 1);
+            this.score = Math.max(0, this.score - 10);
             missSound.currentTime = 0;
             missSound.play();
         } else {
