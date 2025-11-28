@@ -24,9 +24,15 @@ export class GameModel {
     private startTime = 0;
     private lastTime = 0;
     private isGameOver = false;
+    p;
+    private t_total: number;
 
     constructor(private width: number, private height: number) {
         this.spawnLogic = new SpawnLogic(width, height);
+        this.t_total =
+            (gameSettings.circle.maxRadius / gameSettings.circle.growthSpeed) *
+            2 *
+            1000;
     }
 
     start() {
@@ -86,18 +92,11 @@ export class GameModel {
                 totalRadiusLevels - Math.floor(distance / hitLevel);
             radiusLevel = Math.max(1, radiusLevel);
 
-            // Уровень за скорость (время с момента появления)
-            const t_total =
-                (gameSettings.circle.maxRadius /
-                    gameSettings.circle.growthSpeed) *
-                2 *
-                1000;
-            console.log(t_total);
             const totalTimeLevels = gameSettings.circle.totalTimeLevels;
             const elapsed = performance.now() - circle.createdAt;
             let speedLevel =
                 totalTimeLevels -
-                Math.floor((elapsed / t_total) * totalTimeLevels);
+                Math.floor((elapsed / this.t_total) * totalTimeLevels);
             speedLevel = Math.max(1, speedLevel);
 
             // Начисляем очки: базовые 10 + уровень по скорости + уровень по центру
@@ -105,7 +104,14 @@ export class GameModel {
             const gained = 10 + radiusLevel + speedLevel;
 
             this.score += gained;
-            console.log('10 ', radiusLevel, speedLevel, this.score);
+            console.log(`
+                Базовые очки - 10 
+                Очки за радиус попадания - ${radiusLevel}
+                Очки за время попадания - ${speedLevel}
+                Суммарно за шарик - ${gained}
+                Итоговый счет - ${this.score}
+                
+                `);
             // Всплывающий текст
             this.floatingTexts.push(
                 new FloatingText(circle.x, circle.y, `+${gained}`)
