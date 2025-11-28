@@ -24,7 +24,6 @@ export class GameModel {
     private startTime = 0;
     private lastTime = 0;
     private isGameOver = false;
-    p;
     private t_total: number;
 
     constructor(private width: number, private height: number) {
@@ -74,7 +73,7 @@ export class GameModel {
         const hit = checkHit(this.circles, x, y);
 
         if (!hit.hit) {
-            this.score = Math.max(0, this.score - 10);
+            this.score = Math.max(0, this.score - 1);
             missSound.currentTime = 0;
             missSound.play();
         } else {
