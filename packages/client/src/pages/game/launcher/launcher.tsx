@@ -32,8 +32,8 @@ const GamePageLauncher = ({ handleGameStart }: TProps) => {
     const resultsToRender = lastResults
         .slice(-5)
         .reverse()
-        .map((result) => (
-            <div key={result.timestamp}>
+        .map((result, index) => (
+            <div key={index}>
                 <p className={styles.date}>{result.timestamp}</p>
                 <p className={styles.info}>Очки: {result.score}</p>
             </div>
