@@ -1,4 +1,4 @@
-import { defaultGameSettings } from '@game/config/defaultGameSettings';
+import { defaultGameSettings } from '@store/slices/gameSlice';
 
 import { GameState } from '../model/gameModel';
 

@@ -1,5 +1,30 @@
-import { defaultGameSettings } from '@game/config/defaultGameSettings';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+export const defaultGameSettings = {
+    // Размеры мишени
+    circle: {
+        minRadius: 1, // стартовый радиус при появлении
+        maxRadius: 15, // максимальный радиус (до которого растёт)
+        growthSpeed: 5, // скорость увеличения радиуса (px в секунду)
+        color: 'red',
+        totalLevels: 10, // уровней попадания по мешени(радиус делится на сколько зон?);
+        totalTimeLevels: 10, // уровней попадания по времени
+    },
+
+    // Спавн мишеней
+    spawn: {
+        interval: 1000, // время между появлениями (мс)
+        maxCircles: 5, // максимальное количество активных кругов
+    },
+
+    // Параметры игры
+    game: {
+        backgroundColor: '#111', // фон канваса
+        scoreOnHit: 1, // очки за попадание
+        scoreOnMiss: -1, // штраф за промах
+        gameDuration: 30000, //продолжительность игры в мс
+    },
+};
 
 export type TGameResults = {
     score: number;
