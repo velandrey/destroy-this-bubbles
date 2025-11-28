@@ -1,5 +1,6 @@
 import { Page } from '@components/page';
 import { ROUTES } from '@constants/routes';
+import { gameSettings } from '@game/config/gameSettings';
 import { useGame } from '@hooks/useGame';
 import { Button } from '@mui/material';
 import { TGameResults } from '@store/slices/gameSlice';
@@ -50,7 +51,7 @@ const GamePage = () => {
                     accuracy: 73,
                     totalTime: 31,
                 });
-            }, 5000);
+            }, gameSettings.game.gameDuration + 0.1);
 
             return () => clearTimeout(gameTimer);
         }

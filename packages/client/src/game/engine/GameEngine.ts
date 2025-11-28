@@ -1,10 +1,12 @@
+import FloatingText from '@game/objects/floatingText';
+
 import { GameModel } from '../model/gameModel';
 import { GameRenderer } from '../view/gameRenderer';
 
 export class GameEngine {
     private model: GameModel;
     private renderer: GameRenderer;
-
+    private floatingTexts: FloatingText[] = [];
     private isRunning = false;
     private rect: DOMRect;
 

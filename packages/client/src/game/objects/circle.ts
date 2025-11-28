@@ -5,6 +5,11 @@ export default class Circle {
     public radius: number;
     private growing = true;
     private active = true;
+    public multiplierScore = 1;
+    private growthSpeed = gameSettings.circle.growthSpeed;
+    private maxRadius = gameSettings.circle.maxRadius;
+    private minRadius = gameSettings.circle.minRadius;
+    public createdAt: number;
 
     constructor(
         public x: number,
@@ -13,21 +18,21 @@ export default class Circle {
         public color: string
     ) {
         this.radius = initialRadius;
+        this.createdAt = performance.now();
     }
 
     update(deltaTime: number) {
-        const { growthSpeed, maxRadius, minRadius } = gameSettings.circle;
         if (!this.active) return;
 
         if (this.growing) {
-            this.radius = this.radius + (growthSpeed * deltaTime) / 1000;
-            if (this.radius >= maxRadius) {
-                this.radius = maxRadius;
+            this.radius = this.radius + (this.growthSpeed * deltaTime) / 1000;
+            if (this.radius >= this.maxRadius) {
+                this.radius = this.maxRadius;
                 this.growing = false;
             }
         } else {
-            this.radius = this.radius - (growthSpeed * deltaTime) / 1000;
-            if (this.radius <= minRadius) {
+            this.radius = this.radius - (this.growthSpeed * deltaTime) / 1000;
+            if (this.radius <= this.minRadius) {
                 this.radius = 0;
                 this.active = false;
             }
@@ -49,7 +54,24 @@ export default class Circle {
     containsPoint(px: number, py: number): boolean {
         const dx = px - this.x;
         const dy = py - this.y;
-        return Math.sqrt(dx * dx + dy * dy) <= this.radius;
+
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        // Промах
+        if (distance > this.radius) {
+            return false;
+        }
+
+        const totalLevels = gameSettings.circle.totalLevels;
+        const hitLevel = this.radius / totalLevels;
+
+        // ближе к центру → выше уровень
+        let level = totalLevels - Math.floor(distance / hitLevel);
+        level = Math.max(1, level);
+
+        this.multiplierScore = level;
+
+        return true;
     }
 
     pop() {
