@@ -13,7 +13,7 @@ export type GameState = {
     timeRemaining: number;
     isRunning: boolean;
     isGameOver: boolean;
-    floatingTexts: FloatingText[]; // ← добавили
+    floatingTexts: FloatingText[];
 };
 
 export class GameModel {
@@ -80,12 +80,12 @@ export class GameModel {
         } else {
             const circle = hit.circle!;
 
-            // Расстояние до центра круга (можно использовать для множителя)
+            // Расстояние до центра круга
             const dx = x - circle.x;
             const dy = y - circle.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
 
-            // Множитель за точность (уровни по радиусу, по желанию)
+            // Множитель за точность
             const totalRadiusLevels = gameSettings.circle.totalLevels;
             const hitLevel = circle.radius / totalRadiusLevels;
             let radiusLevel =

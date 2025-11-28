@@ -1,6 +1,6 @@
 import { gameSettings } from '../config/gameSettings';
 
-const popSound = new Audio('/assets/sounds/pop.mp3'); // путь от public
+const popSound = new Audio('/assets/sounds/pop.mp3');
 export default class Circle {
     public radius: number;
     private growing = true;
@@ -57,7 +57,6 @@ export default class Circle {
 
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        // Промах
         if (distance > this.radius) {
             return false;
         }
@@ -65,7 +64,6 @@ export default class Circle {
         const totalLevels = gameSettings.circle.totalLevels;
         const hitLevel = this.radius / totalLevels;
 
-        // ближе к центру → выше уровень
         let level = totalLevels - Math.floor(distance / hitLevel);
         level = Math.max(1, level);
 
@@ -76,7 +74,7 @@ export default class Circle {
 
     pop() {
         this.active = false;
-        popSound.currentTime = 0; // сброс проигрывания
+        popSound.currentTime = 0;
         popSound.play();
     }
 }

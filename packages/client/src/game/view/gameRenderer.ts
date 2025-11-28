@@ -25,7 +25,6 @@ export class GameRenderer {
         // круги
         state.circles.forEach((c) => c.draw(this.ctx));
 
-        // ВСПЛЫВАЮЩИЕ ТЕКСТЫ (добавляем здесь)
         state.floatingTexts.forEach((t) => {
             this.ctx.globalAlpha = t.opacity;
             this.ctx.fillStyle = 'white';
