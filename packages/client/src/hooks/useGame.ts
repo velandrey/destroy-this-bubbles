@@ -3,8 +3,8 @@ import {
     setGameResults,
     startGame,
     resetGame,
-    updateGameScore,
     TGameResults,
+    addLastResult,
 } from '@store/slices/gameSlice';
 
 import { useAppDispatch, useAppSelector } from './redux';
@@ -21,9 +21,9 @@ export const useGame = () => {
         settings,
         setGameResults: (results: TGameResults) =>
             dispatch(setGameResults(results)),
+        addLastResult: (results: TGameResults) =>
+            dispatch(addLastResult(results)),
         startGame: () => dispatch(startGame()),
         resetGame: () => dispatch(resetGame()),
-        updateGameScore: (updates: Partial<TGameResults>) =>
-            dispatch(updateGameScore(updates)),
     };
 };

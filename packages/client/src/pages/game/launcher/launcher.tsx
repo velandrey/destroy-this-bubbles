@@ -13,7 +13,7 @@ import {
 } from '@store/slices/gameSlice';
 import { useNavigate } from 'react-router-dom';
 
-import { DURATION_MARKS, mockLastTryPart } from './constants';
+import { DURATION_MARKS } from './constants';
 import styles from './styles.module.scss';
 
 type TProps = {
@@ -26,6 +26,18 @@ const GamePageLauncher = ({ handleGameStart }: TProps) => {
     const { circle, spawn, game } = useAppSelector(
         (state) => state.game.settings
     );
+    const { lastResults } = useAppSelector((state) => state.game);
+
+    // slice(-3) берет только последние 5 результатов (можно будет пофиксить, в т.ч. доработав визуал)
+    const resultsToRender = lastResults
+        .slice(-5)
+        .reverse()
+        .map((result) => (
+            <div key={result.timestamp}>
+                <p className={styles.date}>{result.timestamp}</p>
+                <p className={styles.info}>Очки: {result.score}</p>
+            </div>
+        ));
 
     return (
         <div className={styles.container}>
@@ -152,15 +164,7 @@ const GamePageLauncher = ({ handleGameStart }: TProps) => {
             </div>
             <div className={styles.lastTryPart}>
                 <h2 className={styles.title}>Предыдущие игры</h2>
-                {mockLastTryPart.lastGamesScore.map((game) => (
-                    <div key={game.date}>
-                        <p className={styles.date}>{game.date}</p>
-                        <p className={styles.info}>Очки: {game.score}</p>
-                        <p className={styles.info}>
-                            Точность: {game.accuracy}%
-                        </p>
-                    </div>
-                ))}
+                {resultsToRender.length > 0 ? resultsToRender : 'Пока пусто'}
             </div>
         </div>
     );

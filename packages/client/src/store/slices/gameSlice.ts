@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export type TGameResults = {
     score: number;
+    timestamp: string;
 };
 
 export type TGameSettings = {
@@ -28,12 +29,14 @@ export type TGameSettings = {
 
 type TGameState = {
     results: TGameResults | null;
+    lastResults: Array<TGameResults>;
     settings: TGameSettings;
     isGameActive: boolean;
 };
 
 const initialState: TGameState = {
     results: null,
+    lastResults: [],
     settings: defaultGameSettings,
     isGameActive: false,
 };
@@ -46,6 +49,9 @@ const gameSlice = createSlice({
             state.results = action.payload;
             state.isGameActive = false;
         },
+        addLastResult: (state, action: PayloadAction<TGameResults>) => {
+            state.lastResults.push(action.payload);
+        },
         startGame: (state) => {
             state.isGameActive = true;
             state.results = null;
@@ -56,14 +62,6 @@ const gameSlice = createSlice({
         },
         resetSettings: (state) => {
             state.settings = initialState.settings;
-        },
-        updateGameScore: (
-            state,
-            action: PayloadAction<Partial<TGameResults>>
-        ) => {
-            if (state.results) {
-                state.results = { ...state.results, ...action.payload };
-            }
         },
         updateMaxRadius: (state, action: PayloadAction<number>) => {
             state.settings.circle.maxRadius = action.payload;
@@ -85,10 +83,10 @@ const gameSlice = createSlice({
 
 export const {
     setGameResults,
+    addLastResult,
     startGame,
     resetGame,
     resetSettings,
-    updateGameScore,
     updateMaxRadius,
     updateGrowthSpeed,
     updateMaxCircles,

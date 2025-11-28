@@ -27,10 +27,6 @@ $secondary-color: #898484;
             h2 {
                 text-align: center;
             }
-
-            .resetSettingsButton {
-                
-            }
         }   
     }
 
@@ -50,7 +46,7 @@ $secondary-color: #898484;
         flex-direction: column;
         gap: 1rem;
         align-items: center;
-        justify-content: end;
+        justify-content: start;
 
         padding: 1rem;
         width: 25%;

@@ -11,6 +11,7 @@ export class GameEngine {
     private isRunning = false;
     private destroyed = false;
     private rect: DOMRect;
+    // для отписки от слушателя при вызове destroy()
     private clickHandler: (e: MouseEvent) => void;
 
     constructor(

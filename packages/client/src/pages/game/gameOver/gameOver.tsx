@@ -13,7 +13,7 @@ type TProps = {
 const GamePageGameOver = ({ onRestart }: TProps) => {
     const navigate = useNavigate();
     const { results } = useGame();
-    const { score } = results || {
+    const { score, timestamp } = results || {
         score: 0,
     };
 

@@ -1,5 +1,6 @@
 import { TOnGameOverHandler } from '@game/components/Game';
 import { TGameSettings } from '@store/slices/gameSlice';
+import { formatDate } from '@utils/formatDate';
 import { checkHit } from 'game/logic/circle/hitLogic';
 import { SpawnLogic } from 'game/logic/circle/spownLogic';
 import Circle from 'game/objects/circle';
@@ -93,6 +94,7 @@ export class GameModel {
         this.circles = [];
         this.gameOverHandler({
             score: this.score,
+            timestamp: formatDate(new Date()),
         });
     }
 

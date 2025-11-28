@@ -12,7 +12,7 @@ import { GamePageLauncher } from './launcher';
 import styles from './styles.module.scss';
 
 const GamePage = () => {
-    const { setGameResults, startGame, resetGame } = useGame(); // Состояния для результатов игры
+    const { setGameResults, startGame, resetGame, addLastResult } = useGame(); // Состояния для результатов игры
     const [countdown, setCountdown] = useState(3);
     const [gameState, setGameState] = useState<
         'launcher' | 'countdown' | 'playing' | 'gameOver'
@@ -27,6 +27,7 @@ const GamePage = () => {
     const handleGameOver = (results: TGameResults) => {
         if (gameState === 'playing') {
             setGameResults(results);
+            addLastResult(results);
             setGameState('gameOver');
         }
     };
