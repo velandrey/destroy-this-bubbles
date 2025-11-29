@@ -5,7 +5,6 @@ export default class Circle {
     public radius: number;
     private growing = true;
     private active = true;
-    public multiplierScore = 1;
     private growthSpeed = gameSettings.circle.growthSpeed;
     private maxRadius = gameSettings.circle.maxRadius;
     private minRadius = gameSettings.circle.minRadius;
@@ -66,8 +65,6 @@ export default class Circle {
 
         let level = totalLevels - Math.floor(distance / hitLevel);
         level = Math.max(1, level);
-
-        this.multiplierScore = level;
 
         return true;
     }

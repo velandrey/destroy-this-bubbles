@@ -24,15 +24,8 @@ export class GameRenderer {
 
         // круги
         state.circles.forEach((c) => c.draw(this.ctx));
-
-        state.floatingTexts.forEach((t) => {
-            this.ctx.globalAlpha = t.opacity;
-            this.ctx.fillStyle = 'white';
-            this.ctx.font = '24px Arial';
-            this.ctx.textAlign = 'center';
-            this.ctx.fillText(t.text, t.x, t.y);
-            this.ctx.globalAlpha = 1;
-        });
+        // очки за шарик
+        state.floatingTexts.forEach((t) => t.draw(this.ctx));
 
         // очки
         this.ctx.fillStyle = 'white';
