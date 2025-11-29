@@ -1,0 +1,72 @@
+$currentPlayerColor: rgb(67, 183, 225);
+$winnerColor: rgb(253, 193, 14);
+
+.container {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem 1rem;
+    align-items: center;
+}
+
+.table {
+    width: 40rem;
+    max-height: 25rem;
+    overflow-y: auto;
+    padding-right: 1rem;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.2rem 1rem;
+    border: 1px solid white;
+    border-radius: 1rem;
+
+    &.currentPlayer {
+        border: 1px solid $currentPlayerColor;
+        background-color: rgba($currentPlayerColor, 0.2);
+
+        .name {
+            color: $currentPlayerColor;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+    }
+
+    &.greatRank {
+        background-color: rgba($winnerColor, 0.1);
+        border: 1px solid $winnerColor;
+
+        .rank {
+            font-size: 2rem;
+            color: $winnerColor;
+        }
+
+    }
+}
+
+.rank {
+    width: 3rem;
+    text-align: right;
+    font-weight: 700;
+}
+
+
+.name {
+    flex: 1;
+}
+
+.points {
+    width: 6rem;
+    text-align: right;
+    font-weight: 600;
+}
+
+.bottomMarker {
+    width: 100%;
+    height: 1px;
+}
