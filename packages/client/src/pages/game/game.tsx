@@ -19,7 +19,6 @@ const GamePage = () => {
     const [gameState, setGameState] = useState<
         'launcher' | 'countdown' | 'playing' | 'gameOver'
     >('launcher');
-    useAuth();
 
     const handleGameStart = () => {
         startGame();
