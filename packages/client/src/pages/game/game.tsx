@@ -1,9 +1,10 @@
 import { Page } from '@components/page';
 import { ROUTES } from '@constants/routes';
+import { useFullscreen } from '@hooks/useFullscreen';
 import { useGame } from '@hooks/useGame';
 import { Button } from '@mui/material';
 import { TGameResults } from '@store/slices/gameSlice';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { GameEnter } from '../../game/components';
@@ -21,15 +22,25 @@ const GamePage = () => {
         'launcher' | 'countdown' | 'playing' | 'gameOver'
     >('launcher');
 
+    const gameRef = useRef<HTMLDivElement>(null);
+
+    const { isFullscreen, enter, exit } = useFullscreen<HTMLDivElement>();
+
     const handleGameStart = () => {
         startGame();
         setGameState('countdown');
+    };
+
+    const backToMenu = () => {
+        close();
+        navigate(ROUTES.MENU);
     };
 
     // Функция завершения игры
     const handleGameOver = (results: TGameResults) => {
         setGameResults(results);
         setGameState('gameOver');
+        exit();
     };
 
     // Функция перезапуска игры
@@ -61,6 +72,7 @@ const GamePage = () => {
             const timer = setInterval(() => {
                 setCountdown((prevCountdown) => prevCountdown - 1);
             }, 1000);
+            enter(gameRef.current);
 
             if (countdown === 0) {
                 clearInterval(timer);
@@ -73,30 +85,32 @@ const GamePage = () => {
 
     return (
         <Page className={styles.container}>
-            {gameState === 'launcher' && (
-                <GamePageLauncher handleGameStart={handleGameStart} />
-            )}
+            <div ref={gameRef}>
+                {gameState === 'launcher' && (
+                    <GamePageLauncher handleGameStart={handleGameStart} />
+                )}
 
-            {gameState === 'countdown' && (
-                <GamePageCountdown countdown={countdown} />
-            )}
+                {gameState === 'countdown' && (
+                    <GamePageCountdown countdown={countdown} />
+                )}
 
-            {gameState === 'playing' && (
-                <div className={styles.gameContainer}>
-                    <Button
-                        color="success"
-                        variant="contained"
-                        onClick={() => navigate(ROUTES.MENU)}
-                    >
-                        Назад к меню
-                    </Button>
-                    <GameEnter />
-                </div>
-            )}
+                {gameState === 'playing' && (
+                    <div className={styles.gameContainer}>
+                        <Button
+                            color="success"
+                            variant="contained"
+                            onClick={backToMenu}
+                        >
+                            Назад к меню
+                        </Button>
+                        <GameEnter />
+                    </div>
+                )}
 
-            {gameState === 'gameOver' && (
-                <GamePageGameOver onRestart={handleRestart} />
-            )}
+                {gameState === 'gameOver' && (
+                    <GamePageGameOver onRestart={handleRestart} />
+                )}
+            </div>
         </Page>
     );
 };
