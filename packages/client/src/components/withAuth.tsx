@@ -1,30 +1,27 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@constants/routes';
+import { useAuth } from '@hooks/useAuth';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const withAuth = <P extends object>(
     WrappedComponent: React.ComponentType<P>
 ) => {
     const AuthenticatedComponent: React.FC<P> = (props) => {
+        const { isAuth, isLoading } = useAuth();
         const navigate = useNavigate();
-        const isAuth = !!localStorage.getItem('isAuth');
 
-        React.useEffect(() => {
-            if (!isAuth) {
+        useEffect(() => {
+            if (!isLoading && !isAuth) {
                 navigate(ROUTES.LOGIN);
             }
-        }, [isAuth, navigate]);
+        }, [isAuth, isLoading, navigate]);
 
-        if (!isAuth) {
+        if (isLoading || !isAuth) {
             return null;
         }
 
         return <WrappedComponent {...props} />;
     };
-
-    AuthenticatedComponent.displayName = `withAuth(${
-        WrappedComponent.displayName || WrappedComponent.name
-    })`;
 
     return AuthenticatedComponent;
 };
