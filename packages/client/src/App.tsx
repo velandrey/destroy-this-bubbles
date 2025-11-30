@@ -3,7 +3,6 @@ import { NotificationContainer } from '@components/notificationContainer';
 import { withAuth } from '@components/withAuth';
 import { ROUTES } from '@constants/routes';
 import { useAppDispatch } from '@hooks/redux';
-import { CircularProgress, Box } from '@mui/material';
 import { ErrorPage } from '@pages/error';
 import { ForumPage } from '@pages/forum';
 import { GamePage } from '@pages/game';
@@ -13,43 +12,18 @@ import { MenuPage } from '@pages/menu';
 import { ProfilePage } from '@pages/profile';
 import { RegistrationPage } from '@pages/registration';
 import { getUserData } from '@store/slices/profileSlice';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 const App = () => {
     const dispatch = useAppDispatch();
-    const [isAppReady, setIsAppReady] = useState(false);
 
     useEffect(() => {
-        const initApp = async () => {
-            try {
-                await dispatch(getUserData()).unwrap();
-            } catch (e) {
-            } finally {
-                setIsAppReady(true);
-            }
-        };
-
-        initApp();
+        dispatch(getUserData());
     }, [dispatch]);
 
     const ProtectedProfilePage = withAuth(ProfilePage);
     const ProtectedForumPage = withAuth(ForumPage);
-
-    if (!isAppReady) {
-        return (
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: '100vh',
-                }}
-            >
-                <CircularProgress />
-            </Box>
-        );
-    }
 
     return (
         <ErrorBoundary>

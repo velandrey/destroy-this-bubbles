@@ -13,7 +13,7 @@ type TProfileState = {
 const initialState: TProfileState = {
     user: null,
     isAuth: false,
-    isLoading: false,
+    isLoading: true,
     error: null,
 };
 
