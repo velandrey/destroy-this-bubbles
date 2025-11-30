@@ -1,16 +1,6 @@
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '@constants/routes';
-import { useEffect } from 'react';
+import { useAppSelector } from './redux';
 
-export const useAuth = (redirectIfNotAuth = true) => {
-    const isAuth = localStorage.getItem('isAuth');
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (redirectIfNotAuth && !isAuth) {
-            navigate(ROUTES.LOGIN);
-        }
-    }, [isAuth, navigate, redirectIfNotAuth]);
-
-    return isAuth;
+export const useAuth = () => {
+    const { isAuth, isLoading } = useAppSelector((state) => state.profile);
+    return { isAuth, isLoading };
 };
