@@ -1,10 +1,11 @@
 import { TGameSettings } from '@store/slices/gameSlice';
 
-const popSound = new Audio('/assets/sounds/pop.mp3'); // путь от public
+const popSound = new Audio('/assets/sounds/pop.mp3');
 export default class Circle {
     public radius: number;
     private growing = true;
     private active = true;
+    public createdAt: number;
 
     constructor(
         public x: number,
@@ -14,6 +15,7 @@ export default class Circle {
         private config: TGameSettings['circle']
     ) {
         this.radius = initialRadius;
+        this.createdAt = performance.now();
     }
 
     update(deltaTime: number) {
@@ -50,12 +52,25 @@ export default class Circle {
     containsPoint(px: number, py: number): boolean {
         const dx = px - this.x;
         const dy = py - this.y;
-        return Math.sqrt(dx * dx + dy * dy) <= this.radius;
+
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance > this.radius) {
+            return false;
+        }
+
+        const { totalLevels } = this.config;
+        const hitLevel = this.radius / totalLevels;
+
+        let level = totalLevels - Math.floor(distance / hitLevel);
+        level = Math.max(1, level);
+
+        return true;
     }
 
     pop() {
         this.active = false;
-        popSound.currentTime = 0; // сброс проигрывания
+        popSound.currentTime = 0;
         popSound.play();
     }
 }

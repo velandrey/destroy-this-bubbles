@@ -5,6 +5,7 @@ import { TGameResults } from '@store/slices/gameSlice';
 import React, { useEffect, useState } from 'react';
 
 import { GameEnter } from '../../game/components';
+import { gameSettings } from '../../game/config/gameSettings';
 
 import { GamePageCountdown } from './countdown';
 import GamePageGameOver from './gameOver/gameOver';

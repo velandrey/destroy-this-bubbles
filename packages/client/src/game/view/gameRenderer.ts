@@ -18,6 +18,8 @@ export class GameRenderer {
 
         // круги
         state.circles.forEach((c) => c.draw(this.ctx));
+        // очки за шарик
+        state.floatingTexts.forEach((t) => t.draw(this.ctx));
 
         // очки
         this.ctx.fillStyle = 'white';

@@ -2,12 +2,13 @@ import { TOnGameOverHandler } from '@game/components/Game';
 import { TGameSettings } from '@store/slices/gameSlice';
 
 import { GameModel } from '../model/gameModel';
+import FloatingText from '../objects/floatingText';
 import { GameRenderer } from '../view/gameRenderer';
 
 export class GameEngine {
     private model: GameModel;
     private renderer: GameRenderer;
-
+    private floatingTexts: FloatingText[] = [];
     private isRunning = false;
     private destroyed = false;
     private rect: DOMRect;
