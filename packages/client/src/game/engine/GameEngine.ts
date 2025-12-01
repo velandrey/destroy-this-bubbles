@@ -1,3 +1,6 @@
+import { TOnGameOverHandler } from '@game/components/Game';
+import { TGameSettings } from '@store/slices/gameSlice';
+
 import { GameModel } from '../model/gameModel';
 import FloatingText from '../objects/floatingText';
 import { GameRenderer } from '../view/gameRenderer';
@@ -7,19 +10,32 @@ export class GameEngine {
     private renderer: GameRenderer;
     private floatingTexts: FloatingText[] = [];
     private isRunning = false;
+    private destroyed = false;
     private rect: DOMRect;
+    // для отписки от слушателя при вызове destroy()
+    private clickHandler: (e: MouseEvent) => void;
 
-    constructor(private canvas: HTMLCanvasElement) {
+    constructor(
+        private canvas: HTMLCanvasElement,
+        onGameOver: TOnGameOverHandler,
+        gameConfig: TGameSettings
+    ) {
         const ctx = canvas.getContext('2d');
         if (!ctx) {
             throw new Error('2D context not supported');
         }
-        this.model = new GameModel(canvas.width, canvas.height);
+        this.model = new GameModel(
+            canvas.width,
+            canvas.height,
+            onGameOver,
+            gameConfig
+        );
         this.renderer = new GameRenderer(canvas, ctx);
 
         this.rect = canvas.getBoundingClientRect();
 
-        canvas.addEventListener('click', (e) => this.handleClick(e));
+        this.clickHandler = (e) => this.handleClick(e);
+        canvas.addEventListener('click', this.clickHandler);
     }
 
     start() {
@@ -28,16 +44,23 @@ export class GameEngine {
         requestAnimationFrame((t) => this.loop(t));
     }
 
+    destroy() {
+        this.destroyed = true;
+        this.isRunning = false;
+        this.canvas.removeEventListener('click', this.clickHandler);
+    }
+
     private loop(time: number) {
-        if (!this.isRunning) return;
+        if (!this.isRunning || this.destroyed) return;
 
         this.model.update(time);
 
         const state = this.model.getState(time);
 
         if (state.isGameOver) {
-            this.renderer.renderGameOver();
-            this.isRunning = false;
+            if (!this.destroyed) {
+                this.isRunning = false;
+            }
             return;
         }
 
@@ -47,25 +70,6 @@ export class GameEngine {
     }
 
     private handleClick(event: MouseEvent) {
-        if (!this.isRunning) {
-            // обработка кнопки рестарта
-            const btn = this.renderer.getRestartButton();
-            if (btn) {
-                const { x, y } = this.getScaledPos(event);
-
-                if (
-                    x >= btn.x &&
-                    x <= btn.x + btn.width &&
-                    y >= btn.y &&
-                    y <= btn.y + btn.height
-                ) {
-                    this.start();
-                }
-            }
-            return;
-        }
-
-        // обычный клик — передать модели
         const { x, y } = this.getScaledPos(event);
         this.model.processClick(x, y);
     }
