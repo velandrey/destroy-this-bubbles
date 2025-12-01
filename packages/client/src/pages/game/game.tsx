@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { GameEnter } from '../../game/components';
+import { gameSettings } from '../../game/config/gameSettings';
 
 import { GamePageCountdown } from './countdown';
 import GamePageGameOver from './gameOver/gameOver';
@@ -50,7 +51,7 @@ const GamePage = () => {
                     accuracy: 73,
                     totalTime: 31,
                 });
-            }, 5000);
+            }, gameSettings.game.gameDuration + 0.1);
 
             return () => clearTimeout(gameTimer);
         }
