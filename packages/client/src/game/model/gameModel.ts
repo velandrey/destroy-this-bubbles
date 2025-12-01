@@ -150,7 +150,7 @@ export class GameModel {
             timeRemaining,
             isRunning: this.isRunning,
             isGameOver: this.isGameOver,
-            floatingTexts: this.floatingTexts, // ← добавили
+            floatingTexts: this.floatingTexts,
         };
     }
 }
