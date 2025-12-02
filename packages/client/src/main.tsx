@@ -9,6 +9,7 @@ import { BrowserRouter } from 'react-router-dom';
 import './styles/style.scss';
 
 import App from './App';
+import { registerSW } from 'virtual:pwa-register';
 
 ReactDOM.hydrateRoot(
     document.getElementById('root') as HTMLElement,
@@ -21,3 +22,6 @@ ReactDOM.hydrateRoot(
         </BrowserRouter>
     </Provider>
 );
+
+// Регистрируем Service Worker с авто обновлением
+registerSW({ immediate: true });
