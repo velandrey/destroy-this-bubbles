@@ -2,13 +2,13 @@ import { TOnGameOverHandler } from '@game/components/Game';
 import { TGameSettings } from '@store/slices/gameSlice';
 
 import { GameModel } from '../model/gameModel';
-import FloatingText from '../objects/floatingText';
 import { GameRenderer } from '../view/gameRenderer';
+
+const CONTEXT_ERROR_MESSAGE = '2D context not supported';
 
 export class GameEngine {
     private model: GameModel;
     private renderer: GameRenderer;
-    private floatingTexts: FloatingText[] = [];
     private isRunning = false;
     private destroyed = false;
     private rect: DOMRect;
@@ -22,7 +22,7 @@ export class GameEngine {
     ) {
         const ctx = canvas.getContext('2d');
         if (!ctx) {
-            throw new Error('2D context not supported');
+            throw new Error(CONTEXT_ERROR_MESSAGE);
         }
         this.model = new GameModel(
             canvas.width,
@@ -55,7 +55,7 @@ export class GameEngine {
 
         this.model.update(time);
 
-        const state = this.model.getState(time);
+        const state = this.model.currentGameState;
 
         if (state.isGameOver) {
             if (!this.destroyed) {
@@ -74,6 +74,7 @@ export class GameEngine {
         this.model.processClick(x, y);
     }
 
+    // converts viewport click coordinates into canvas space
     private getScaledPos(event: MouseEvent) {
         const scaleX = this.canvas.width / this.rect.width;
         const scaleY = this.canvas.height / this.rect.height;

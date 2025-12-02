@@ -16,9 +16,11 @@ export class SpawnLogic {
     update(currentTime: number, circles: Circle[]) {
         const { interval } = this.gameSettings.spawn;
 
-        if (currentTime - this.lastSpawnTime > interval) {
+        if (
+            currentTime - this.lastSpawnTime > interval &&
+            circles.length < this.gameSettings.spawn.maxCircles
+        ) {
             this.lastSpawnTime = currentTime;
-
             const circle = this.spawnCircle();
             circles.push(circle);
         }
