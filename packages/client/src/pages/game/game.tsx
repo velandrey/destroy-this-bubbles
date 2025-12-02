@@ -1,8 +1,9 @@
 import { Page } from '@components/page';
 import { useGame } from '@hooks/useGame';
 import { Button } from '@mui/material';
+import { useFullscreen } from '@hooks/useFullscreen';
 import { TGameResults } from '@store/slices/gameSlice';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 import { GameEnter } from '../../game/components';
 import { gameSettings } from '../../game/config/gameSettings';
@@ -18,6 +19,8 @@ const GamePage = () => {
     const [gameState, setGameState] = useState<
         'launcher' | 'countdown' | 'playing' | 'gameOver'
     >('launcher');
+    const gameRef = useRef<HTMLDivElement>(null);
+    const { isFullscreen, enter, exit } = useFullscreen<HTMLDivElement>();
 
     const handleGameStart = () => {
         startGame();
@@ -30,6 +33,7 @@ const GamePage = () => {
             setGameResults(results);
             addLastResult(results);
             setGameState('gameOver');
+            exit();
         }
     };
 
@@ -45,6 +49,7 @@ const GamePage = () => {
             const timer = setInterval(() => {
                 setCountdown((prevCountdown) => prevCountdown - 1);
             }, 1000);
+            enter(gameRef.current);
 
             if (countdown === 0) {
                 clearInterval(timer);
@@ -57,30 +62,32 @@ const GamePage = () => {
 
     return (
         <Page className={styles.container}>
-            {gameState === 'launcher' && (
-                <GamePageLauncher handleGameStart={handleGameStart} />
-            )}
+            <div ref={gameRef}>
+                {gameState === 'launcher' && (
+                    <GamePageLauncher handleGameStart={handleGameStart} />
+                )}
 
-            {gameState === 'countdown' && (
-                <GamePageCountdown countdown={countdown} />
-            )}
+                {gameState === 'countdown' && (
+                    <GamePageCountdown countdown={countdown} />
+                )}
 
-            {gameState === 'playing' && (
-                <div className={styles.gameContainer}>
-                    <Button
-                        color="success"
-                        variant="contained"
-                        onClick={handleRestart}
-                    >
-                        Начать заново
-                    </Button>
-                    <GameEnter onGameOver={handleGameOver} />
-                </div>
-            )}
+                {gameState === 'playing' && (
+                    <div className={styles.gameContainer}>
+                        <Button
+                            color="success"
+                            variant="contained"
+                            onClick={handleRestart}
+                        >
+                            Начать заново
+                        </Button>
+                        <GameEnter onGameOver={handleGameOver} />
+                    </div>
+                )}
 
-            {gameState === 'gameOver' && (
-                <GamePageGameOver onRestart={handleRestart} />
-            )}
+                {gameState === 'gameOver' && (
+                    <GamePageGameOver onRestart={handleRestart} />
+                )}
+            </div>
         </Page>
     );
 };
