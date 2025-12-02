@@ -33,11 +33,10 @@ const LoginPage = () => {
             if (response === 'OK') {
                 await getUserData();
                 navigate(ROUTES.PROFILE);
+                showSuccess('Успешная авторизация');
             }
         } catch (error) {
             showError('Ошибка авторизации');
-        } finally {
-            showSuccess('Успешная авторизация');
         }
     };
 
