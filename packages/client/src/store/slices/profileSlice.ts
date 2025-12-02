@@ -13,7 +13,7 @@ type TProfileState = {
 const initialState: TProfileState = {
     user: null,
     isAuth: false,
-    isLoading: false,
+    isLoading: true,
     error: null,
 };
 
@@ -113,6 +113,7 @@ const profileSlice = createSlice({
                 state.isLoading = false;
                 state.error =
                     action.error.message || 'Ошибка получения данных профиля';
+                state.isAuth = false;
             })
             // changeProfile
             .addCase(changeProfile.pending, (state) => {

@@ -1,4 +1,5 @@
 import { usePasswordValidation } from './usePasswordValidation';
 import { useProfile } from './useProfile';
+import { useAuth } from './useAuth';
 
-export { usePasswordValidation, useProfile };
+export { useAuth, usePasswordValidation, useProfile };
