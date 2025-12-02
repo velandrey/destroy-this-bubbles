@@ -25,6 +25,7 @@ const App = () => {
     const ProtectedProfilePage = withAuth(ProfilePage);
     const ProtectedForumPage = withAuth(ForumPage);
     const ProtectedGamePage = withAuth(GamePage);
+    const ProtectedTopicPage = withAuth(TopicPage);
 
     return (
         <ErrorBoundary>
@@ -46,6 +47,7 @@ const App = () => {
                     element={<LeaderBoardPage />}
                 />
                 <Route path={ROUTES.FORUM} element={<ProtectedForumPage />} />
+                <Route path={ROUTES.TOPIC} element={<ProtectedTopicPage />} />
                 <Route
                     path={ROUTES.ERROR_500}
                     element={<ErrorPage errorCode={500} />}
