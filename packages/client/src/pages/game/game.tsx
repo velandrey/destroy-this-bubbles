@@ -1,6 +1,5 @@
 import { Page } from '@components/page';
 import { useGame } from '@hooks/useGame';
-import { useAuth } from '@hooks/useAuth';
 import { Button } from '@mui/material';
 import { TGameResults } from '@store/slices/gameSlice';
 import React, { useEffect, useState } from 'react';
