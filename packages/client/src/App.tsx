@@ -4,7 +4,7 @@ import { withAuth } from '@components/withAuth';
 import { ROUTES } from '@constants/routes';
 import { useAppDispatch } from '@hooks/redux';
 import { ErrorPage } from '@pages/error';
-import { ForumPage } from '@pages/forum';
+import { ForumPage, TopicPage } from '@pages/forum';
 import { GamePage } from '@pages/game';
 import { LeaderBoardPage } from '@pages/leaderBoard';
 import { LoginPage } from '@pages/login';
