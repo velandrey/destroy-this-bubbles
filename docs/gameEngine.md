@@ -205,8 +205,8 @@ export const gameSettings = {
     },
     game: {
         backgroundColor: '#111',
-        scoreOnHit: 1,
-        scoreOnMiss: -1,
+        scoreOnHit: 10,
+        scoreOnMiss: 10,
         gameDuration: 30000
     }
 }

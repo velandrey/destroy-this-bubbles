@@ -9,7 +9,11 @@ const appContent = 'Профиль';
 
 // @ts-ignore
 global.fetch = jest.fn(() =>
-    Promise.resolve({ json: () => Promise.resolve('hey') })
+    Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: () => Promise.resolve('hey'),
+    })
 );
 
 test('Example test', async () => {

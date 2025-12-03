@@ -5,7 +5,7 @@ export default class Circle {
     public radius: number;
     private growing = true;
     private active = true;
-    public createdAt: number;
+    private createdAt: number;
 
     constructor(
         public x: number,
@@ -72,5 +72,9 @@ export default class Circle {
         this.active = false;
         popSound.currentTime = 0;
         popSound.play();
+    }
+
+    get lifetime() {
+        return performance.now() - this.createdAt;
     }
 }

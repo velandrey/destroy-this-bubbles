@@ -20,8 +20,8 @@ export const defaultGameSettings = {
     // Параметры игры
     game: {
         backgroundColor: '#111', // фон канваса
-        scoreOnHit: 1, // очки за попадание
-        scoreOnMiss: -1, // штраф за промах
+        scoreOnHit: 10, // очки за попадание
+        scoreOnMiss: 10, // штраф за промах
         gameDuration: 30000, //продолжительность игры в мс
     },
 };

@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MenuPage visual snapshot renders and matches snapshot (screenshot) 1`] = `
+<DocumentFragment>
+  <div>
+    <nav>
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-18rqtra-MuiTypography-root-MuiLink-root"
+        href="/profile"
+      >
+        Профиль
+      </a>
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-18rqtra-MuiTypography-root-MuiLink-root"
+        href="/leaderboard"
+      >
+        Таблица лидеров
+      </a>
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-18rqtra-MuiTypography-root-MuiLink-root"
+        href="/forum"
+      >
+        Форум
+      </a>
+    </nav>
+    <article>
+      <h1>
+        DESTROY THIS BUBBLES
+      </h1>
+      <p>
+        Город захлестнула волна озорных пузырей. Они хаотично появляются на поле, и только самые ловкие герои способны остановить их до того, как шкала безопасности опустится до нуля.
+      </p>
+      <p>
+        Пузыри всплывают в случайных точках экрана: чем быстрее реагируешь, тем меньше шансов, что они захватят пространство. Кликни по пузырю мышкой, чтобы лопнуть его и получить очки. Чем выше серия попаданий подряд, тем больше множитель к результату.
+      </p>
+      <p>
+        Цель — набрать максимум баллов за ограниченное время. Не дай пузырям переполнить поле, поддерживай комбо и докажи, что ты главный охотник на пузыри!
+      </p>
+    </article>
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary css-74d805-MuiButtonBase-root-MuiButton-root"
+      tabindex="0"
+      type="button"
+    >
+      Играть
+    </button>
+  </div>
+</DocumentFragment>
+`;

@@ -2,33 +2,36 @@ import { TOnGameOverHandler } from '@game/components/Game';
 import { TGameSettings } from '@store/slices/gameSlice';
 import { formatDate } from '@utils/formatDate';
 import { checkHit } from 'game/logic/circle/hitLogic';
-import { SpawnLogic } from 'game/logic/circle/spownLogic';
+import { SpawnLogic } from 'game/logic/circle/spawnLogic';
 import Circle from 'game/objects/circle';
 
 import FloatingText from '../objects/floatingText';
 
+const MILLISECONDS_IN_SECOND = 1000;
 const missSound = new Audio('/assets/sounds/miss.wav');
 
 export type GameState = {
     circles: Circle[];
     score: number;
-    timeRemaining: number;
+    secondsRemaining: number;
     isRunning: boolean;
     isGameOver: boolean;
     floatingTexts: FloatingText[];
 };
 
 export class GameModel {
+    private isRunning = false;
+    private isGameOver = false;
     private circles: Circle[] = [];
     private score = 0;
     private spawnLogic: SpawnLogic;
     private gameOverHandler: TOnGameOverHandler;
     private floatingTexts: FloatingText[] = [];
-    private isRunning = false;
     private startTime = 0;
-    private lastTime = 0;
-    private isGameOver = false;
-    private t_total: number;
+    private lastUpdateTime = 0;
+    private circleFullLifecycleMs: number;
+    private currentTime = 0;
+    private secondsRemaining = 0;
 
     constructor(
         width: number,
@@ -38,10 +41,12 @@ export class GameModel {
     ) {
         this.spawnLogic = new SpawnLogic(width, height, this.gameSettings);
         this.gameOverHandler = onGameOver;
-        this.t_total =
-            (gameSettings.circle.maxRadius / gameSettings.circle.growthSpeed) *
+        // полный цикл: рост до максимума и обратно до минимума - поэтому умножаем на 2
+        this.circleFullLifecycleMs =
+            (this.gameSettings.circle.maxRadius /
+                this.gameSettings.circle.growthSpeed) *
             2 *
-            1000;
+            MILLISECONDS_IN_SECOND;
     }
 
     start() {
@@ -49,92 +54,63 @@ export class GameModel {
         this.isGameOver = false;
         this.circles = [];
         this.score = 0;
+        this.floatingTexts = [];
 
-        this.startTime = performance.now();
-        this.lastTime = this.startTime;
+        const now = performance.now();
+        this.startTime = now;
+        this.lastUpdateTime = now;
+        this.secondsRemaining = Math.round(
+            this.gameSettings.game.gameDuration / MILLISECONDS_IN_SECOND
+        );
     }
 
     update(currentTime: number) {
         if (!this.isRunning) return;
 
-        const deltaTime = currentTime - this.lastTime;
-        this.lastTime = currentTime;
-
-        const elapsed = currentTime - this.startTime;
+        this.calculateRemainingTime(currentTime);
+        const deltaTime = currentTime - this.lastUpdateTime;
+        this.lastUpdateTime = currentTime;
 
         // проверка на конец игры
-        if (elapsed >= this.gameSettings.game.gameDuration) {
+        if (this.secondsRemaining === 0) {
             this.endGame();
             return;
         }
 
-        // обновление кругов
+        // обновление кругов и вспомогательных текстов
         this.spawnLogic.update(currentTime, this.circles);
         this.circles.forEach((c) => c.update(deltaTime));
         this.circles = this.circles.filter((c) => c.isActive());
-
-        // очки на канвасе
-        this.floatingTexts.forEach((t) => t.update(deltaTime));
-        this.floatingTexts = this.floatingTexts.filter((t) => t.isAlive());
+        this.floatingTexts = updateFloatingTexts({
+            texts: this.floatingTexts,
+            deltaTime,
+        });
     }
+
+    calculateRemainingTime(currentTime: number) {
+        const elapsedMs = currentTime - this.startTime;
+        const remainingMs = Math.max(
+            0,
+            this.gameSettings.game.gameDuration - elapsedMs
+        );
+        this.secondsRemaining = Math.round(
+            remainingMs / MILLISECONDS_IN_SECOND
+        );
+    }
+
     processClick(x: number, y: number) {
         if (!this.isRunning) return;
 
         const hit = checkHit(this.circles, x, y);
 
         if (!hit.hit) {
-            this.score = Math.max(0, this.score - 10);
-            missSound.currentTime = 0;
-            missSound.play();
-        } else {
-            const circle = hit.circle!;
-
-            // Расстояние до центра круга
-            const dx = x - circle.x;
-            const dy = y - circle.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            // Множитель за точность
-            const totalRadiusLevels = this.gameSettings.circle.totalLevels;
-            const hitLevel = circle.radius / totalRadiusLevels;
-            let radiusLevel =
-                totalRadiusLevels - Math.floor(distance / hitLevel);
-            radiusLevel = Math.max(1, radiusLevel);
-
-            const totalTimeLevels = this.gameSettings.circle.totalTimeLevels;
-            const elapsed = performance.now() - circle.createdAt;
-            let speedLevel =
-                totalTimeLevels -
-                Math.floor((elapsed / this.t_total) * totalTimeLevels);
-            speedLevel = Math.max(1, speedLevel);
-
-            // Начисляем очки: базовые 10 + уровень по скорости + уровень по центру
-
-            const gained = 10 + radiusLevel + speedLevel;
-
-            this.score += gained;
-            console.log(`
-                Базовые очки - 10 
-                Очки за радиус попадания - ${radiusLevel}
-                Очки за время попадания - ${speedLevel}
-                Суммарно за шарик - ${gained}
-                Итоговый счет - ${this.score}
-                
-                `);
-            // Всплывающий текст
-            this.floatingTexts.push(
-                new FloatingText(circle.x, circle.y, `+${gained}`)
-            );
-
-            circle.pop();
-
-            // Спавн нового круга
-            const maxCircles = this.gameSettings.spawn.maxCircles;
-            const active = this.circles.filter((c) => c.isActive()).length;
-            if (active < maxCircles) {
-                this.circles.push(this.spawnLogic.spawnCircle());
-            }
+            this.registerMiss();
+            return;
         }
+
+        const circle = hit.circle!;
+        this.registerHit(circle, x, y);
+        circle.pop();
     }
 
     private endGame() {
@@ -147,23 +123,119 @@ export class GameModel {
         });
     }
 
-    getState(currentTime: number): GameState {
-        const elapsed = this.isRunning
-            ? (currentTime - this.startTime) / 1000
-            : 0;
-
-        const timeRemaining = Math.max(
-            0,
-            this.gameSettings.game.gameDuration / 1000 - Math.round(elapsed)
-        );
-
+    get currentGameState(): GameState {
         return {
             circles: this.circles,
             score: this.score,
-            timeRemaining,
+            secondsRemaining: this.secondsRemaining,
             isRunning: this.isRunning,
             isGameOver: this.isGameOver,
             floatingTexts: this.floatingTexts,
         };
     }
+
+    private registerMiss() {
+        const { scoreOnMiss } = this.gameSettings.game;
+        this.score = Math.max(0, this.score - scoreOnMiss);
+        missSound.currentTime = 0;
+        void missSound.play();
+    }
+
+    private registerHit(circle: Circle, x: number, y: number) {
+        const accuracyLevel = calculateAccuracyLevel({
+            circleCenterX: circle.x,
+            circleCenterY: circle.y,
+            hitX: x,
+            hitY: y,
+            totalLevels: this.gameSettings.circle.totalLevels,
+            circleMaxRadius: this.gameSettings.circle.maxRadius,
+        });
+        const speedLevel = calculateSpeedLevel({
+            circleLifetime: circle.lifetime,
+            totalTimeLevels: this.gameSettings.circle.totalTimeLevels,
+            circleFullLifecycle: this.circleFullLifecycleMs,
+        });
+        const gained =
+            this.gameSettings.game.scoreOnHit + accuracyLevel + speedLevel;
+
+        this.score += gained;
+
+        // всплывающий текст показывает сколько очков получено
+        this.floatingTexts.push(
+            new FloatingText(circle.x, circle.y, `+${gained}`)
+        );
+    }
 }
+
+export const updateFloatingTexts = ({
+    texts,
+    deltaTime,
+}: {
+    texts: FloatingText[];
+    deltaTime: number;
+}): FloatingText[] => {
+    texts.forEach((t) => t.update(deltaTime));
+    return texts.filter((t) => t.isAlive());
+};
+
+export const calculateAccuracyLevel = ({
+    circleCenterX,
+    circleCenterY,
+    hitX,
+    hitY,
+    totalLevels,
+    circleMaxRadius,
+}: {
+    circleCenterX: number;
+    circleCenterY: number;
+    hitX: number;
+    hitY: number;
+    totalLevels: number;
+    circleMaxRadius: number;
+}) => {
+    // очки за близость к центру (ака точность) не учитывают размер круга в данный момент
+    // попасть в край маленького круга так же ценно, как и попасть в большой круг на таком же расстоянии от центра
+    const distanceFromCenter = calculateDistance({
+        ax: circleCenterX,
+        ay: circleCenterY,
+        bx: hitX,
+        by: hitY,
+    });
+    // это отношение - distanceFromCenter / circleMaxRadius = level / totalLevels
+    const level =
+        totalLevels -
+        Math.floor((distanceFromCenter / circleMaxRadius) * totalLevels);
+    return level;
+};
+
+export const calculateSpeedLevel = ({
+    circleLifetime,
+    totalTimeLevels,
+    circleFullLifecycle,
+}: {
+    circleLifetime: number;
+    totalTimeLevels: number;
+    circleFullLifecycle: number;
+}) => {
+    // это отношение - circleLife / circleFullLifecycle = level / totalTimeLevels
+    const level =
+        totalTimeLevels -
+        Math.floor((circleLifetime / circleFullLifecycle) * totalTimeLevels);
+    return level;
+};
+
+export const calculateDistance = ({
+    ax,
+    ay,
+    bx,
+    by,
+}: {
+    ax: number;
+    ay: number;
+    bx: number;
+    by: number;
+}) => {
+    const dx = bx - ax;
+    const dy = by - ay;
+    return Math.sqrt(dx * dx + dy * dy);
+};

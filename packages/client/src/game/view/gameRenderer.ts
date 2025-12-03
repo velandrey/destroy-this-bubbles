@@ -28,7 +28,7 @@ export class GameRenderer {
         this.ctx.fillText(`Score: ${state.score}`, 20, 20);
 
         // оставшееся время
-        const text = `Time: ${state.timeRemaining}s`;
+        const text = `Time: ${state.secondsRemaining}s`;
         this.ctx.textAlign = 'right';
         this.ctx.fillText(text, this.canvas.width - 20, 20);
     }
