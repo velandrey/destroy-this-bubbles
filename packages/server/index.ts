@@ -1,33 +1,40 @@
+import path from 'path';
+
 import cors from 'cors';
 import dotenv from 'dotenv';
 dotenv.config();
 
 import express from 'express';
 
-import { createClientAndConnect } from './db';
+import { renderPage } from './ssr/renderPage';
 
 const app = express();
 app.use(cors());
-const port = Number(process.env.SERVER_PORT) || 3001;
 
-createClientAndConnect();
+const port = Number(process.env.SERVER_PORT) || 4000;
 
-app.get('/friends', (_, res) => {
-    res.json([
-        { name: 'Саша', secondName: 'Панов' },
-        { name: 'Лёша', secondName: 'Садовников' },
-        { name: 'Серёжа', secondName: 'Иванов' },
-    ]);
+// Путь до собранного клиента (Vite build)
+const clientDistPath = path.resolve(__dirname, '../../client/dist/client');
+
+// Раздача статики: JS, CSS, манифест и т.п.
+app.use(express.static(clientDistPath, { index: false }));
+
+// Опционально: простая проверка живости сервера
+app.get('/health', (_req, res) => {
+    res.status(200).send('OK');
 });
 
-app.get('/user', (_, res) => {
-    res.json({ name: '</script>Степа', secondName: 'Степанов' });
-});
-
-app.get('/', (_, res) => {
-    res.json('👋 Howdy from the server :)');
+// Все остальные маршруты — SSR React-страницы
+app.get('*', (req, res) => {
+    try {
+        const html = renderPage(req.url);
+        res.status(200).contentType('text/html').send(html);
+    } catch (e) {
+        console.error('SSR render error:', e);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 app.listen(port, () => {
-    console.log(`  ➜ 🎸 Server is listening on port: ${port}`);
+    console.log(`  ➜ 🎸 SSR Server is listening on port: ${port}`);
 });
