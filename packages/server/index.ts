@@ -14,7 +14,7 @@ app.use(cors());
 const port = Number(process.env.SERVER_PORT) || 4000;
 
 // Путь до собранного клиента (Vite build)
-const clientDistPath = path.resolve(__dirname, '../../client/dist/client');
+const clientDistPath = path.resolve(process.cwd(), '../client/dist/client');
 
 // Раздача статики: JS, CSS, манифест и т.п.
 app.use(express.static(clientDistPath, { index: false }));
