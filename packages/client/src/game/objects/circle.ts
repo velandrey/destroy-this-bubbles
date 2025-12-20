@@ -1,8 +1,8 @@
 import { TGameSettings } from '@store/slices/gameSlice';
 
-const popSound = new Audio('/assets/sounds/pop.mp3');
 export default class Circle {
     public radius: number;
+    private popSound = new Audio('/assets/sounds/pop.mp3');
     private growing = true;
     private active = true;
     private createdAt: number;
@@ -70,8 +70,8 @@ export default class Circle {
 
     pop() {
         this.active = false;
-        popSound.currentTime = 0;
-        popSound.play();
+        this.popSound.currentTime = 0;
+        this.popSound.play();
     }
 
     get lifetime() {

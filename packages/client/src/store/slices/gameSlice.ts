@@ -66,7 +66,7 @@ const initialState: TGameState = {
     isGameActive: false,
 };
 
-const gameSlice = createSlice({
+export const gameSlice = createSlice({
     name: 'game',
     initialState,
     reducers: {
