@@ -1,6 +1,6 @@
 import { Page } from '@components/page';
 import { ROUTES } from '@constants/routes';
-import { Button, Link } from '@mui/material';
+import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -9,31 +9,13 @@ import {
     GameRules,
     GameGoal,
     PlayText,
-    ProfileText,
-    ForumText,
-    LeaderboardText,
 } from './constants';
 import styles from './styles.module.scss';
-
-type TMenuItem = {
-    text: string;
-    path: string;
-};
-const MenuItem = ({ text, path }: TMenuItem): JSX.Element => (
-    <Link underline="none" href={path}>
-        {text}
-    </Link>
-);
 
 const MenuPage = () => {
     const navigate = useNavigate();
     return (
         <Page className={styles.container}>
-            <nav className={styles.navigation}>
-                <MenuItem text={ProfileText} path={ROUTES.PROFILE} />
-                <MenuItem text={LeaderboardText} path={ROUTES.LEADERBOARD} />
-                <MenuItem text={ForumText} path={ROUTES.FORUM} />
-            </nav>
             <article className={styles.content}>
                 <h1>{GameTitle}</h1>
                 <p className={styles.discription}>{GameDescription}</p>

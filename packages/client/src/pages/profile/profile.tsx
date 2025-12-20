@@ -3,19 +3,16 @@ import { Page } from '@components/page';
 import ProfileAvatarUpload from '@components/profileAvatarUpload/profileAvatarUpload';
 import ProfileChangePasswordDialog from '@components/profileChangePasswordDialog/profileChangePasswordDialog';
 import { defaultAvatar } from '@constants/constants';
-import { ROUTES } from '@constants/routes';
 import { useNotification } from '@hooks/useNotification';
 import { useProfile } from '@hooks/useProfile';
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import { TProfile } from '@pages/profile/types';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { PROFILE_INPUTS, PROFILE_SCHEMA } from './constants';
 import styles from './styles.module.scss';
 
 const ProfilePage = () => {
-    const navigate = useNavigate();
     const { showSuccess, showError, showNotification } = useNotification();
     const {
         user,
@@ -91,14 +88,6 @@ const ProfilePage = () => {
 
     return (
         <Page>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => navigate(ROUTES.MENU)}
-                disabled={profileLoading}
-            >
-                Меню
-            </Button>
             <Grid container className={styles.profile__grid}>
                 <h1>Профиль игрока</h1>
                 <ProfileAvatarUpload

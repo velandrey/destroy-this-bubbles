@@ -21,7 +21,6 @@ export const getUserData = createAsyncThunk(
     'profile/getUserData',
     async (): Promise<TProfile> => {
         const userData = await fetchApi<TProfile>('/auth/user');
-
         if (!userData || typeof userData !== 'object') {
             throw new Error('Invalid profile data received');
         }

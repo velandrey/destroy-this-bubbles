@@ -2,7 +2,6 @@ import { configureStore } from '@reduxjs/toolkit';
 import gameReducer from '@store/slices/gameSlice';
 import notificationReducer from '@store/slices/notificationSlice';
 import profileReducer from '@store/slices/profileSlice';
-import { type GameState } from 'game/model/gameModel';
 
 export const store = configureStore({
     reducer: {
@@ -12,5 +11,5 @@ export const store = configureStore({
     },
 });
 
-export type TRootState = GameState;
+export type TRootState = ReturnType<typeof store.getState>;
 export type TAppDispatch = typeof store.dispatch;

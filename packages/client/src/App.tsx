@@ -1,4 +1,5 @@
 import ErrorBoundary from '@components/errorBoundary/errorBoundary';
+import { Header } from '@components/header';
 import { NotificationContainer } from '@components/notificationContainer';
 import { withAuth } from '@components/withAuth';
 import { ROUTES } from '@constants/routes';
@@ -30,6 +31,7 @@ const App = () => {
     return (
         <ErrorBoundary>
             <NotificationContainer />
+            <Header />
             <Routes>
                 <Route path={ROUTES.MENU} element={<MenuPage />} />
                 <Route path={ROUTES.LOGIN} element={<LoginPage />} />
