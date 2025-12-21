@@ -71,7 +71,9 @@ const LoginPage = () => {
                     {isOAuthLoading ? 'Загрузка...' : 'Войти через Яндекс'}
                 </Button>
                 <span className={styles.link}>
-                    Новый пользователь?{' '}
+                    <span className={styles.link_title}>
+                        Новый пользователь?
+                    </span>
                     <Link href={ROUTES.REGISTRATION}>Зарегистрироваться</Link>
                 </span>
             </Grid>

@@ -79,7 +79,7 @@ export const useOAuth = () => {
             });
             const responseText = typeof result === 'string' ? result : 'OK';
 
-            if (responseText === 'OK') {
+            if (result === 'OK') {
                 // Получаем данные пользователя
                 await getUserData();
                 showSuccess('Успешная авторизация через Yandex');
