@@ -10,7 +10,7 @@ const initialState: TLoadingState = {
     loadingText: undefined,
 };
 
-const loadingSlice = createSlice({
+export const loadingSlice = createSlice({
     name: 'loading',
     initialState,
     reducers: {

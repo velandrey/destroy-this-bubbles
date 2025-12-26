@@ -16,7 +16,7 @@ const initialState: TNotificationState = {
     notifications: [],
 };
 
-const notificationSlice = createSlice({
+export const notificationSlice = createSlice({
     name: 'notification',
     initialState,
     reducers: {
