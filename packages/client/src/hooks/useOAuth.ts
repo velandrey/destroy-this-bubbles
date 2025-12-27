@@ -83,7 +83,7 @@ export const useOAuth = () => {
                 // Получаем данные пользователя
                 await getUserData();
                 showSuccess('Успешная авторизация через Yandex');
-                navigate(ROUTES.PROFILE);
+                navigate(ROUTES.GAME);
             } else {
                 throw new Error('Ошибка авторизации: ' + responseText);
             }
