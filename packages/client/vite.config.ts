@@ -21,6 +21,9 @@ export default defineConfig(async () => {
                 process.env.INTERNAL_SERVER_URL
             ),
         },
+        ssr: {
+            format: 'cjs' as const,
+        },
         build: {
             outDir: path.join(__dirname, 'dist/client'),
         },

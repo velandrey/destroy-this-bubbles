@@ -8,7 +8,6 @@ import Circle from 'game/objects/circle';
 import FloatingText from '../objects/floatingText';
 
 const MILLISECONDS_IN_SECOND = 1000;
-const missSound = new Audio('/assets/sounds/miss.wav');
 
 export type GameState = {
     circles: Circle[];
@@ -21,6 +20,7 @@ export type GameState = {
 
 export class GameModel {
     private isRunning = false;
+    private missSound = new Audio('/assets/sounds/miss.wav');
     private isGameOver = false;
     private circles: Circle[] = [];
     private score = 0;
@@ -137,8 +137,8 @@ export class GameModel {
     private registerMiss() {
         const { scoreOnMiss } = this.gameSettings.game;
         this.score = Math.max(0, this.score - scoreOnMiss);
-        missSound.currentTime = 0;
-        void missSound.play();
+        this.missSound.currentTime = 0;
+        this.missSound.play();
     }
 
     private registerHit(circle: Circle, x: number, y: number) {

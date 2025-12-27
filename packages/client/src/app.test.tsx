@@ -1,4 +1,4 @@
-import { store } from '@store/index';
+import { createStore } from './store';
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
@@ -6,6 +6,8 @@ import { MemoryRouter } from 'react-router-dom';
 import App from './App';
 
 const appContent = 'Профиль';
+
+const store = createStore();
 
 // @ts-ignore
 global.fetch = jest.fn(() =>

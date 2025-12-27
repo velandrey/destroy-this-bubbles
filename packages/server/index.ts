@@ -3,7 +3,6 @@ import path from 'path';
 import cors from 'cors';
 import dotenv from 'dotenv';
 dotenv.config();
-
 import express from 'express';
 
 import { renderPage } from './ssr/renderPage';
@@ -25,10 +24,11 @@ app.get('/health', (_req, res) => {
 });
 
 // Все остальные маршруты — SSR React-страницы
-app.get('*', (req, res) => {
+app.get('*', async (req, res) => {
+    const url = req.originalUrl;
     try {
-        const html = renderPage(req.url);
-        res.status(200).contentType('text/html').send(html);
+        const html = await renderPage(url);
+        res.status(200).contentType('text/html').end(html);
     } catch (e) {
         console.error('SSR render error:', e);
         res.status(500).send('Internal Server Error');

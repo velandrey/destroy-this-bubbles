@@ -83,7 +83,7 @@ export const changePassword = createAsyncThunk(
     }
 );
 
-const profileSlice = createSlice({
+export const profileSlice = createSlice({
     name: 'profile',
     initialState,
     reducers: {
