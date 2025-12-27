@@ -1,7 +1,7 @@
 import { OAuthURL } from '@constants/constants';
 import { ROUTES } from '@constants/routes';
 import { fetchApi } from '@utils/fetchApi';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useNotification } from './useNotification';
@@ -96,21 +96,9 @@ export const useOAuth = () => {
         }
     };
 
-    // Проверяем code в URL при загрузке компонента
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
-        if (code) {
-            handleOAuthCallback(code);
-            // Очищаем URL от code параметра
-            const url = new URL(window.location.href);
-            url.searchParams.delete('code');
-            window.history.replaceState({}, document.title, url.toString());
-        }
-    }, []);
-
     return {
         initiateOAuth,
+        handleOAuthCallback,
         isLoading,
     };
 };
