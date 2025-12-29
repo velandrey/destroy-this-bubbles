@@ -3,8 +3,9 @@ import { Page } from '@components/page';
 import { ROUTES } from '@constants/routes';
 import { useAppDispatch } from '@hooks/redux';
 import { useNotification } from '@hooks/useNotification';
+import { useOAuth } from '@hooks/useOAuth';
 import { useProfile } from '@hooks/useProfile';
-import { Grid, Link } from '@mui/material';
+import { Button, Grid, Link } from '@mui/material';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,6 +19,7 @@ const LoginPage = () => {
     const controllerRef = useRef<AbortController | null>(null);
     const navigate = useNavigate();
     const { getUserData } = useProfile();
+    const { initiateOAuth, isLoading: isOAuthLoading } = useOAuth();
 
     const handleSubmit = async (data: Record<string, string | File | null>) => {
         showNotification('Выполняется вход...');
@@ -44,18 +46,13 @@ const LoginPage = () => {
         controllerRef.current?.abort();
     };
 
+    const handleYandexLogin = () => {
+        initiateOAuth();
+    };
+
     return (
         <Page>
-            <Grid
-                container
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    minHeight: '100vh',
-                }}
-            >
+            <Grid container className={styles.login_box}>
                 <h1>Авторизация</h1>
                 <Form
                     submitBtnLabel="Войти"
@@ -65,9 +62,19 @@ const LoginPage = () => {
                     resetHandler={handleReset}
                     className={styles.formContainer}
                 />
+                <Button
+                    variant="outlined"
+                    onClick={handleYandexLogin}
+                    disabled={isOAuthLoading}
+                    className={styles.oauthLink}
+                >
+                    {isOAuthLoading ? 'Загрузка...' : 'Войти через Яндекс'}
+                </Button>
                 <span className={styles.link}>
-                    Новый пользователь?
-                    <Link href="/registration">Зарегистрироваться</Link>
+                    <span className={styles.link_title}>
+                        Новый пользователь?
+                    </span>
+                    <Link href={ROUTES.REGISTRATION}>Зарегистрироваться</Link>
                 </span>
             </Grid>
         </Page>

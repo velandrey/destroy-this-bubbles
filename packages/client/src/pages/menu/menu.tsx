@@ -1,6 +1,8 @@
 import { Page } from '@components/page';
 import { ROUTES } from '@constants/routes';
-import { Button, Link } from '@mui/material';
+import { useOAuth } from '@hooks/useOAuth';
+import { Button } from '@mui/material';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -9,31 +11,28 @@ import {
     GameRules,
     GameGoal,
     PlayText,
-    ProfileText,
-    ForumText,
-    LeaderboardText,
 } from './constants';
 import styles from './styles.module.scss';
 
-type TMenuItem = {
-    text: string;
-    path: string;
-};
-const MenuItem = ({ text, path }: TMenuItem): JSX.Element => (
-    <Link underline="none" href={path}>
-        {text}
-    </Link>
-);
-
 const MenuPage = () => {
     const navigate = useNavigate();
+    const { handleOAuthCallback } = useOAuth();
+
+    // Эффект на случай OAuth авторизации - проверяем code в URL при загрузке компонента
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        if (code) {
+            handleOAuthCallback(code);
+            // Очищаем URL от code параметра
+            const url = new URL(window.location.href);
+            url.searchParams.delete('code');
+            window.history.replaceState({}, document.title, url.toString());
+        }
+    }, []);
+
     return (
         <Page className={styles.container}>
-            <nav className={styles.navigation}>
-                <MenuItem text={ProfileText} path={ROUTES.PROFILE} />
-                <MenuItem text={LeaderboardText} path={ROUTES.LEADERBOARD} />
-                <MenuItem text={ForumText} path={ROUTES.FORUM} />
-            </nav>
             <article className={styles.content}>
                 <h1>{GameTitle}</h1>
                 <p className={styles.discription}>{GameDescription}</p>

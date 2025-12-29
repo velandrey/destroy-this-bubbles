@@ -69,14 +69,6 @@ const ForumPage = () => {
 
     return (
         <Page className={styles.container}>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => navigate(ROUTES.MENU)}
-                sx={{ mb: 2 }}
-            >
-                Назад
-            </Button>
             <Typography variant="h4" gutterBottom>
                 Форум
             </Typography>

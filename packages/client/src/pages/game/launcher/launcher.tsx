@@ -1,6 +1,5 @@
 import { NumberField } from '@components/numberField';
 import { GAME_DESCRIPTION } from '@constants/constants';
-import { ROUTES } from '@constants/routes';
 import { useAppDispatch, useAppSelector } from '@hooks/redux';
 import { Button, List, ListItem, ListItemText, Slider } from '@mui/material';
 import {
@@ -42,15 +41,6 @@ const GamePageLauncher = ({ handleGameStart }: TProps) => {
     return (
         <div className={styles.container}>
             <div className={styles.configurationPart}>
-                <nav>
-                    <Button
-                        variant="contained"
-                        color="success"
-                        onClick={() => navigate(ROUTES.MENU)}
-                    >
-                        Главное меню
-                    </Button>
-                </nav>
                 <div className={styles.settings}>
                     <h2>Настройки игры</h2>
                     <List>

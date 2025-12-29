@@ -1,5 +1,6 @@
+import { useAuth } from './useAuth';
+import { useOAuth } from './useOAuth';
 import { usePasswordValidation } from './usePasswordValidation';
 import { useProfile } from './useProfile';
-import { useAuth } from './useAuth';
 
-export { useAuth, usePasswordValidation, useProfile };
+export { useAuth, usePasswordValidation, useProfile, useOAuth };

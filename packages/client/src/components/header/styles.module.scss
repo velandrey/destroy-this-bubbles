@@ -1,0 +1,36 @@
+.header_toolbar {
+
+}
+.header_logo {
+    font-size: 1.5rem;
+    white-space: nowrap;
+    font-weight: bold;
+    cursor: pointer;
+}
+.navigation {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    width: 100%;
+    margin-left: 3rem;
+}
+.header_profile {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+.header_profile_nav{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+}
+.header_avatar {
+    width: .5rem;
+    height: .5rem;
+}
+.header_login {
+    font-size: 1.2rem;
+    font-weight: bold;
+    white-space: nowrap;
+}

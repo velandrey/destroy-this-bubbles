@@ -7,4 +7,5 @@ export const GAME_DESCRIPTION = {
     ],
 };
 export const ApiURL = 'https://ya-praktikum.tech/api/v2';
+export const OAuthURL = 'https://oauth.yandex.ru';
 export const defaultAvatar = '/images/profile/user.webp';

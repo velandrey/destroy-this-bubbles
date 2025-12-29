@@ -3,26 +3,6 @@
 exports[`MenuPage visual snapshot renders and matches snapshot (screenshot) 1`] = `
 <DocumentFragment>
   <div>
-    <nav>
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-18rqtra-MuiTypography-root-MuiLink-root"
-        href="/profile"
-      >
-        Профиль
-      </a>
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-18rqtra-MuiTypography-root-MuiLink-root"
-        href="/leaderboard"
-      >
-        Таблица лидеров
-      </a>
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-18rqtra-MuiTypography-root-MuiLink-root"
-        href="/forum"
-      >
-        Форум
-      </a>
-    </nav>
     <article>
       <h1>
         DESTROY THIS BUBBLES
