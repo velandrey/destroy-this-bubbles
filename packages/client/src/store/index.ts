@@ -1,9 +1,10 @@
 import { combineSlices, configureStore } from '@reduxjs/toolkit';
-
-import { gameSlice } from './slices/gameSlice';
-import { loadingSlice } from './slices/loadingSlice';
-import { notificationSlice } from './slices/notificationSlice';
-import { profileSlice } from './slices/profileSlice';
+import { gameSlice } from '@store/slices/gameSlice';
+import { leaderboardSlice } from '@store/slices/leaderboardSlice';
+import { loadingSlice } from '@store/slices/loadingSlice';
+import { notificationSlice } from '@store/slices/notificationSlice';
+import { profileSlice } from '@store/slices/profileSlice';
+import { usersSlice } from '@store/slices/usersSlice';
 
 declare global {
     interface Window {
@@ -15,7 +16,9 @@ const rootReducer = combineSlices(
     gameSlice,
     loadingSlice,
     notificationSlice,
-    profileSlice
+    profileSlice,
+    leaderboardSlice,
+    usersSlice
 );
 
 export const createStore = (preloadedState?: Partial<TRootState>) =>
