@@ -1,12 +1,13 @@
 import { Page } from '@components/page';
-import { useGame } from '@hooks/useGame';
-import { Button } from '@mui/material';
 import { useFullscreen } from '@hooks/useFullscreen';
+import { useGame } from '@hooks/useGame';
+import { useLeaderboard } from '@hooks/useLeaderboard';
+import { useProfile } from '@hooks/useProfile';
+import { Button } from '@mui/material';
 import { TGameResults } from '@store/slices/gameSlice';
 import React, { useEffect, useState, useRef } from 'react';
 
 import { GameEnter } from '../../game/components';
-import { gameSettings } from '../../game/config/gameSettings';
 
 import { GamePageCountdown } from './countdown';
 import GamePageGameOver from './gameOver/gameOver';
@@ -14,7 +15,10 @@ import { GamePageLauncher } from './launcher';
 import styles from './styles.module.scss';
 
 const GamePage = () => {
-    const { setGameResults, startGame, resetGame, addLastResult } = useGame(); // Состояния для результатов игры
+    const { setGameResults, startGame, resetGame, addLastResult } = useGame();
+    const { setRecord } = useLeaderboard();
+    const { user } = useProfile();
+
     const [countdown, setCountdown] = useState(3);
     const [gameState, setGameState] = useState<
         'launcher' | 'countdown' | 'playing' | 'gameOver'
@@ -31,6 +35,10 @@ const GamePage = () => {
     const handleGameOver = (results: TGameResults) => {
         if (gameState === 'playing') {
             setGameResults(results);
+            setRecord({
+                score: results.score,
+                userLogin: user?.login || '',
+            });
             addLastResult(results);
             setGameState('gameOver');
             exit();

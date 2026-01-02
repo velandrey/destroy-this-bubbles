@@ -27,6 +27,7 @@ const App = () => {
     const ProtectedForumPage = withAuth(ForumPage);
     const ProtectedGamePage = withAuth(GamePage);
     const ProtectedTopicPage = withAuth(TopicPage);
+    const ProtectedLeaderBoardPage = withAuth(LeaderBoardPage);
 
     return (
         <ErrorBoundary>
@@ -46,7 +47,7 @@ const App = () => {
                 <Route path={ROUTES.GAME} element={<ProtectedGamePage />} />
                 <Route
                     path={ROUTES.LEADERBOARD}
-                    element={<LeaderBoardPage />}
+                    element={<ProtectedLeaderBoardPage />}
                 />
                 <Route path={ROUTES.FORUM} element={<ProtectedForumPage />} />
                 <Route path={ROUTES.TOPIC} element={<ProtectedTopicPage />} />
