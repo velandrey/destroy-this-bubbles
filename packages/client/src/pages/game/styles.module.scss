@@ -12,6 +12,9 @@
 }
 
 .gameContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
     height: 100vh;
     padding: 20px;
     align-items: center;

@@ -1,7 +1,17 @@
 import { NumberField } from '@components/numberField';
 import { GAME_DESCRIPTION } from '@constants/constants';
 import { useAppDispatch, useAppSelector } from '@hooks/redux';
-import { Button, List, ListItem, ListItemText, Slider } from '@mui/material';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    List,
+    ListItem,
+    ListItemText,
+    Slider,
+} from '@mui/material';
 import {
     updateGameDuration,
     updateGrowthSpeed,
@@ -10,7 +20,7 @@ import {
     updateSpawnInterval,
     resetSettings,
 } from '@store/slices/gameSlice';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 import { DURATION_MARKS } from './constants';
 import styles from './styles.module.scss';
@@ -20,29 +30,34 @@ type TProps = {
 };
 
 const GamePageLauncher = ({ handleGameStart }: TProps) => {
-    const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { circle, spawn, game } = useAppSelector(
         (state) => state.game.settings
     );
-    const { lastResults } = useAppSelector((state) => state.game);
-
-    // slice(-3) берет только последние 5 результатов (можно будет пофиксить, в т.ч. доработав визуал)
-    const resultsToRender = lastResults
-        .slice(-5)
-        .reverse()
-        .map((result, index) => (
-            <div key={index}>
-                <p className={styles.date}>{result.timestamp}</p>
-                <p className={styles.info}>Очки: {result.score}</p>
-            </div>
-        ));
+    const [settingsOpen, setSettingsOpen] = useState(false);
 
     return (
         <div className={styles.container}>
-            <div className={styles.configurationPart}>
-                <div className={styles.settings}>
-                    <h2>Настройки игры</h2>
+            <div className={styles.startPart}>
+                <div className={styles.gameTitle} onClick={handleGameStart}>
+                    {GAME_DESCRIPTION.name}
+                </div>
+                <Button
+                    variant="outlined"
+                    className={styles.settingsButton}
+                    onClick={() => setSettingsOpen(true)}
+                >
+                    Настройки игры
+                </Button>
+            </div>
+            <Dialog
+                open={settingsOpen}
+                onClose={() => setSettingsOpen(false)}
+                fullWidth
+                maxWidth="sm"
+            >
+                <DialogTitle>Настройки игры</DialogTitle>
+                <DialogContent className={styles.settingsDialogContent}>
                     <List>
                         <ListItem>
                             <ListItemText primary="Максимальный размер мишени (пикс)" />
@@ -133,29 +148,23 @@ const GamePageLauncher = ({ handleGameStart }: TProps) => {
                                 primary="Продолжительность игры"
                             />
                         </ListItem>
-                        <ListItem>
-                            <Button
-                                fullWidth
-                                className={styles.resetSettingsButton}
-                                variant="contained"
-                                color="primary"
-                                onClick={() => dispatch(resetSettings())}
-                            >
-                                По умолчанию
-                            </Button>
-                        </ListItem>
                     </List>
-                </div>
-            </div>
-            <div className={styles.startPart}>
-                <div className={styles.gameTitle} onClick={handleGameStart}>
-                    {GAME_DESCRIPTION.name}
-                </div>
-            </div>
-            <div className={styles.lastTryPart}>
-                <h2 className={styles.title}>Предыдущие игры</h2>
-                {resultsToRender.length > 0 ? resultsToRender : 'Пока пусто'}
-            </div>
+                </DialogContent>
+                <DialogActions className={styles.settingsDialogActions}>
+                    <Button
+                        variant="outlined"
+                        onClick={() => dispatch(resetSettings())}
+                    >
+                        По умолчанию
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={() => setSettingsOpen(false)}
+                    >
+                        Готово
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };
