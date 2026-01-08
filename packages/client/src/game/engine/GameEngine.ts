@@ -11,7 +11,6 @@ export class GameEngine {
     private renderer: GameRenderer;
     private isRunning = false;
     private destroyed = false;
-    private rect: DOMRect;
     // для отписки от слушателя при вызове destroy()
     private clickHandler: (e: MouseEvent) => void;
 
@@ -31,8 +30,6 @@ export class GameEngine {
             gameConfig
         );
         this.renderer = new GameRenderer(canvas, ctx);
-
-        this.rect = canvas.getBoundingClientRect();
 
         this.clickHandler = (e) => this.handleClick(e);
         canvas.addEventListener('click', this.clickHandler);
@@ -76,12 +73,13 @@ export class GameEngine {
 
     // converts viewport click coordinates into canvas space
     private getScaledPos(event: MouseEvent) {
-        const scaleX = this.canvas.width / this.rect.width;
-        const scaleY = this.canvas.height / this.rect.height;
+        const rect = this.canvas.getBoundingClientRect();
+        const scaleX = this.canvas.width / rect.width;
+        const scaleY = this.canvas.height / rect.height;
 
         return {
-            x: (event.clientX - this.rect.left) * scaleX,
-            y: (event.clientY - this.rect.top) * scaleY,
+            x: (event.clientX - rect.left) * scaleX,
+            y: (event.clientY - rect.top) * scaleY,
         };
     }
 }
