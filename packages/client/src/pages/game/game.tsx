@@ -52,12 +52,20 @@ const GamePage = () => {
         setGameState('launcher');
     };
 
+    const handleFullscreenToggle = () => {
+        if (isFullscreen) {
+            exit();
+            return;
+        }
+
+        enter(gameRef.current);
+    };
+
     useEffect(() => {
         if (gameState === 'countdown') {
             const timer = setInterval(() => {
                 setCountdown((prevCountdown) => prevCountdown - 1);
             }, 1000);
-            enter(gameRef.current);
 
             if (countdown === 0) {
                 clearInterval(timer);
@@ -71,6 +79,17 @@ const GamePage = () => {
     return (
         <Page className={styles.container}>
             <div ref={gameRef}>
+                <div className={styles.fullscreenAction}>
+                    <Button
+                        color="info"
+                        variant="contained"
+                        onClick={handleFullscreenToggle}
+                    >
+                        {isFullscreen
+                            ? 'Выйти из полного экрана'
+                            : 'Полный экран'}
+                    </Button>
+                </div>
                 {gameState === 'launcher' && (
                     <GamePageLauncher handleGameStart={handleGameStart} />
                 )}

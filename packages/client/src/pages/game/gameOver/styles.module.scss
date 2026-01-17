@@ -1,5 +1,6 @@
 $gameOver-color: #a81c1c;
 $accent-color: #00ff00;
+$secondary-color: #898484;
 
 .gameOverContainer {
   display: flex;
@@ -46,11 +47,47 @@ $accent-color: #00ff00;
 
 .actionsBox {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: stretch;
   margin-top: 2rem;
 }
 
 .actionButton {
 
+}
+
+.previousResults {
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+.previousResultsTitle {
+  margin-bottom: 0.5rem;
+}
+
+.previousResultsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.previousResultsItem {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  color: $secondary-color;
+}
+
+.previousResultsDate {
+  font-style: italic;
+}
+
+.previousResultsScore {
+  font-weight: bold;
+  color: $accent-color;
+}
+
+.previousResultsEmpty {
+  color: $secondary-color;
 }

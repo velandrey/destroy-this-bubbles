@@ -1,17 +1,28 @@
 .container {
     width: 100vw;
     height: 100vh;
+    position: relative;
     canvas {
         flex: 0 0 auto;
         width: 800px;
         height: 600px;
         display: block;
         margin: auto;
-        cursor: crosshair; 
+        cursor: crosshair;
         }
 }
 
+.fullscreenAction {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 2;
+}
+
 .gameContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
     height: 100vh;
     padding: 20px;
     align-items: center;
