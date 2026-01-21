@@ -18,7 +18,7 @@ services:
 
     server:
         container_name: prakticum-server
-        image: prackicum-server
+        image: prakticum-server
         build:
             context: .
             dockerfile: Dockerfile.server
@@ -50,6 +50,7 @@ services:
         POSTGRES_DB: ${POSTGRES_DB}
       volumes:
         - pgdata:/var/lib/postgresql/data
+        - ./db/init:/docker-entrypoint-initdb.d
       healthcheck:
         test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
         interval: 5s
