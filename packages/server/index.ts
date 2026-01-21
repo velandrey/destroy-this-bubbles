@@ -5,13 +5,17 @@ import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
 
-import { createClientAndConnect, ensureSiteThemes, logSiteThemes } from './db';
+import { ensureSiteThemes, logSiteThemes } from './db';
+import { connectDB } from './config/db';
+import { router } from './routes';
 import { renderPage } from './ssr/renderPage';
 import themeRouter from './routes/theme';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use('/api', router);
 
 const port = Number(process.env.SERVER_PORT) || 4000;
 
@@ -41,11 +45,10 @@ app.get('*', async (req, res) => {
 });
 
 async function start() {
-    const client = await createClientAndConnect();
-    if (!client) {
-        console.error('  ➜ Could not connect to Postgres, exiting');
+    connectDB().catch((error) => {
+        console.error('Failed to connect to database:', error);
         process.exit(1);
-    }
+    });
 
     await ensureSiteThemes();
     await logSiteThemes();

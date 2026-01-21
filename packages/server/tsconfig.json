@@ -1,7 +1,5 @@
 {
     "compilerOptions": {
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
         "composite": true,
         "target": "es2019",
         "module": "commonjs",
@@ -19,13 +17,15 @@
         "noUnusedParameters": true,
         "noUnusedLocals": true,
         "forceConsistentCasingInFileNames": true,
-        "lib": ["es2019", "esnext.asynciterable", "dom"],
+        "lib": ["es2019"],
         "types": ["node", "jest"],
         "baseUrl": ".",
         "paths": {
-        "*": ["types/*"]
+        "@types/*": ["types/*"]
         },
         "outDir": "dist",
-        "jsx": "react-jsx"
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true, 
+        "jsx": "preserve"
     }
 }
