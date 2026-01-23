@@ -1,4 +1,5 @@
 import { Form, TInputsMap } from '@components/form';
+import { Geolocation } from '@components/geolocation';
 import { Page } from '@components/page';
 import ProfileAvatarUpload from '@components/profileAvatarUpload/profileAvatarUpload';
 import ProfileChangePasswordDialog from '@components/profileChangePasswordDialog/profileChangePasswordDialog';
@@ -102,6 +103,7 @@ const ProfilePage = () => {
                     className={styles.formContainer}
                 />
                 <ProfileChangePasswordDialog onSubmit={handlePasswordChange} />
+                <Geolocation />
             </Grid>
         </Page>
     );
