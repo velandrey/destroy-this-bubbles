@@ -9,6 +9,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 
 import { ApiURL } from './constants';
 import { authMiddleware } from './middlewares/authMiddleware';
+import { createClientAndConnect } from './db';
 import { renderPage } from './ssr/renderPage';
 
 const app = express();
@@ -98,6 +99,19 @@ app.get('*', async (req, res) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`  ➜ 🎸 SSR Server is listening on port: ${port}`);
+async function start() {
+    const client = await createClientAndConnect();
+    if (!client) {
+        console.error('  ➜ Could not connect to Postgres, exiting');
+        process.exit(1);
+    }
+
+    app.listen(port, () => {
+        console.log(`  ➜ 🎸 SSR Server is listening on port: ${port}`);
+    });
+}
+
+start().catch((e) => {
+    console.error(e);
+    process.exit(1);
 });
