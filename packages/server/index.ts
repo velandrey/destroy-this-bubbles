@@ -5,11 +5,13 @@ import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
 
-import { createClientAndConnect } from './db';
+import { createClientAndConnect, ensureSiteThemes, logSiteThemes } from './db';
 import { renderPage } from './ssr/renderPage';
+import themeRouter from './routes/theme';
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 const port = Number(process.env.SERVER_PORT) || 4000;
 
@@ -23,6 +25,8 @@ app.use(express.static(clientDistPath, { index: false }));
 app.get('/health', (_req, res) => {
     res.status(200).send('OK');
 });
+
+app.use('/v1/theme', themeRouter);
 
 // Все остальные маршруты — SSR React-страницы
 app.get('*', async (req, res) => {
@@ -42,6 +46,9 @@ async function start() {
         console.error('  ➜ Could not connect to Postgres, exiting');
         process.exit(1);
     }
+
+    await ensureSiteThemes();
+    await logSiteThemes();
 
     app.listen(port, () => {
         console.log(`  ➜ 🎸 SSR Server is listening on port: ${port}`);
