@@ -33,7 +33,7 @@ app.use(
 app.use(
     '/api/oauth',
     createProxyMiddleware({
-        target: `${ApiURL}/auth`,
+        target: `${ApiURL}/oauth`,
         changeOrigin: true,
         cookieDomainRewrite: '',
     })
