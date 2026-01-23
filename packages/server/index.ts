@@ -1,33 +1,68 @@
 import path from 'path';
 
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
-import { renderPage } from './ssr/renderPage';
-import { authMiddleware } from './middlewares/auth';
 import { ApiURL } from './constants';
+import { authMiddleware } from './middlewares/authMiddleware';
+import { renderPage } from './ssr/renderPage';
 
 const app = express();
 app.use(cors());
+app.use(cookieParser());
 
 const port = Number(process.env.SERVER_PORT) || 4000;
 
 // Путь до собранного клиента (Vite build)
 const clientDistPath = path.resolve(process.cwd(), '../client/dist/client');
 
-// Здесь проксируем нужные защищенные кастомные ручки. /forum - предварительно, для примера.
+// Прокси для перенаправления запросов связанных с аутентификацей на API яндекса
 app.use(
-    '/forum',
-    authMiddleware,
+    '/api/auth',
     createProxyMiddleware({
-        target: ApiURL,
+        target: `${ApiURL}/auth`,
         changeOrigin: true,
         cookieDomainRewrite: '',
     })
 );
+
+app.use(
+    '/api/oauth',
+    createProxyMiddleware({
+        target: `${ApiURL}/auth`,
+        changeOrigin: true,
+        cookieDomainRewrite: '',
+    })
+);
+
+// Приватные ручки с проксированием на внешний API
+app.use(
+    '/api/user',
+    authMiddleware,
+    createProxyMiddleware({
+        target: `${ApiURL}/user`,
+        changeOrigin: true,
+        cookieDomainRewrite: '',
+    })
+);
+
+app.use(
+    '/api/leaderboard',
+    authMiddleware,
+    createProxyMiddleware({
+        target: `${ApiURL}/leaderboard`,
+        changeOrigin: true,
+        cookieDomainRewrite: '',
+    })
+);
+
+// Свои ручки, без прокси, приватные - с authMiddleware, публичные - без
+app.use('/api/leaderboard', authMiddleware);
+app.use('/api/forum', authMiddleware);
 
 // Раздача статики: JS, CSS, манифест и т.п.
 app.use(express.static(clientDistPath, { index: false }));
@@ -37,7 +72,21 @@ app.get('/health', (_req, res) => {
     res.status(200).send('OK');
 });
 
-// Все остальные маршруты — SSR React-страницы
+// Приватные страницы
+const privatePages = ['/forum', '/profile', '/leaderboard'];
+
+app.get(privatePages, authMiddleware, async (req, res) => {
+    const url = req.originalUrl;
+    try {
+        const html = await renderPage(url);
+        res.status(200).contentType('text/html').end(html);
+    } catch (e) {
+        console.error('SSR render error:', e);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Все остальные маршруты — публичные
 app.get('*', async (req, res) => {
     const url = req.originalUrl;
     try {
