@@ -17,17 +17,20 @@ services:
           - SERVER_PORT=${SERVER_PORT}
     server:
         container_name: prakticum-server
-        image: prackicum-server
+        image: prakticum-server
         build:
             context: .
             dockerfile: Dockerfile.server
             args:
-              SERVER_PORT: ${SERVER_PORT}
+                SERVER_PORT: ${SERVER_PORT}
         restart: always
         ports:
             - "${SERVER_PORT}:${SERVER_PORT}"
         environment:
-          SERVER_PORT: ${SERVER_PORT}
+            SERVER_PORT: ${SERVER_PORT}
+        depends_on:
+            postgres:
+                condition: service_healthy
 
     postgres:
       image: postgres:14
@@ -39,4 +42,8 @@ services:
         POSTGRES_DB: ${POSTGRES_DB}
       volumes:
         - ./tmp/pgdata:/var/lib/postgresql/data
-
+      healthcheck:
+        test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+        interval: 5s
+        timeout: 3s
+        retries: 5
