@@ -4,8 +4,11 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
 import { renderPage } from './ssr/renderPage';
+import { authMiddleware } from './middlewares/auth';
+import { ApiURL } from './constants';
 
 const app = express();
 app.use(cors());
@@ -14,6 +17,17 @@ const port = Number(process.env.SERVER_PORT) || 4000;
 
 // Путь до собранного клиента (Vite build)
 const clientDistPath = path.resolve(process.cwd(), '../client/dist/client');
+
+// Здесь проксируем нужные защищенные кастомные ручки. /forum - предварительно, для примера.
+app.use(
+    '/forum',
+    authMiddleware,
+    createProxyMiddleware({
+        target: ApiURL,
+        changeOrigin: true,
+        cookieDomainRewrite: '',
+    })
+);
 
 // Раздача статики: JS, CSS, манифест и т.п.
 app.use(express.static(clientDistPath, { index: false }));
