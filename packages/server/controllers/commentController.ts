@@ -72,32 +72,6 @@ export const getCommentsByTopic = async (
     }
 };
 
-export const getCommentById = async (
-    req: AuthRequest,
-    res: Response
-): Promise<void> => {
-    try {
-        const { id } = req.params;
-
-        if (!id) {
-            res.status(400).json({ error: 'Требуется ID комментария' });
-            return;
-        }
-
-        const comment = await Comment.findByPk(Number(id));
-
-        if (!comment) {
-            res.status(404).json({ error: 'Комментарий не найден' });
-            return;
-        }
-
-        res.json(comment);
-    } catch (error) {
-        console.error('Ошибка получения комментария:', error);
-        res.status(500).json({ error: 'Внутренняя ошибка сервера' });
-    }
-};
-
 export const updateComment = async (
     req: AuthRequest,
     res: Response

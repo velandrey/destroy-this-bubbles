@@ -63,32 +63,6 @@ export const getAllTopics = async (
     }
 };
 
-export const getTopicById = async (
-    req: AuthRequest,
-    res: Response
-): Promise<void> => {
-    try {
-        const { id } = req.params;
-
-        if (!id) {
-            res.status(400).json({ error: 'Требуется ID темы' });
-            return;
-        }
-
-        const topic = await Topic.findByPk(Number(id));
-
-        if (!topic) {
-            res.status(404).json({ error: 'Тема не найдена' });
-            return;
-        }
-
-        res.json(topic);
-    } catch (error) {
-        console.error('Ошибка получения темы:', error);
-        res.status(500).json({ error: 'Внутренняя ошибка сервера' });
-    }
-};
-
 export const updateTopic = async (
     req: AuthRequest,
     res: Response

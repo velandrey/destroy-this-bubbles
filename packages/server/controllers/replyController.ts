@@ -72,32 +72,6 @@ export const getRepliesByComment = async (
     }
 };
 
-export const getReplyById = async (
-    req: AuthRequest,
-    res: Response
-): Promise<void> => {
-    try {
-        const { id } = req.params;
-
-        if (!id) {
-            res.status(400).json({ error: 'Требуется ID ответа' });
-            return;
-        }
-
-        const reply = await Reply.findByPk(Number(id));
-
-        if (!reply) {
-            res.status(404).json({ error: 'Ответ не найден' });
-            return;
-        }
-
-        res.json(reply);
-    } catch (error) {
-        console.error('Ошибка получения ответа:', error);
-        res.status(500).json({ error: 'Внутренняя ошибка сервера' });
-    }
-};
-
 export const updateReply = async (
     req: AuthRequest,
     res: Response
