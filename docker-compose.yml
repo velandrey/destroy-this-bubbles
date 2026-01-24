@@ -15,6 +15,7 @@ services:
         environment:
           - CLIENT_PORT=${CLIENT_PORT}
           - SERVER_PORT=${SERVER_PORT}
+
     server:
         container_name: prakticum-server
         image: prakticum-server
@@ -27,13 +28,20 @@ services:
         ports:
             - "${SERVER_PORT}:${SERVER_PORT}"
         environment:
-            SERVER_PORT: ${SERVER_PORT}
+          SERVER_PORT: ${SERVER_PORT}
+          POSTGRES_HOST: ${POSTGRES_HOST}
+          POSTGRES_PORT: ${POSTGRES_PORT}
+          POSTGRES_USER: ${POSTGRES_USER}
+          POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+          POSTGRES_DB: ${POSTGRES_DB}
         depends_on:
             postgres:
                 condition: service_healthy
 
     postgres:
+      container_name: prakticum-postgres
       image: postgres:14
+      restart: always
       ports:
         - "${POSTGRES_PORT}:${POSTGRES_PORT}"
       environment:
@@ -41,9 +49,14 @@ services:
         POSTGRES_USER: ${POSTGRES_USER}
         POSTGRES_DB: ${POSTGRES_DB}
       volumes:
-        - ./tmp/pgdata:/var/lib/postgresql/data
+        - pgdata:/var/lib/postgresql/data
+        - ./db/init:/docker-entrypoint-initdb.d
       healthcheck:
-        test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+        test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
         interval: 5s
-        timeout: 3s
-        retries: 5
+        timeout: 5s
+        retries: 10
+
+volumes:
+  pgdata:
+
