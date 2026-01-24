@@ -2,6 +2,22 @@ import type { RequestHandler, Request } from 'express';
 
 import { ApiURL } from '../constants';
 
+interface IUserData {
+    id: number;
+    first_name: string;
+    second_name: string;
+    display_name: string;
+    phone: string;
+    login: string;
+    avatar: string;
+    email: string;
+}
+
+export interface IAuthenticatedRequest extends Request {
+    userId?: number;
+    user?: IUserData;
+}
+
 const hasAuthCookie = (request: Request): boolean => {
     if (!request.cookies) {
         return false;
@@ -31,6 +47,13 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
 
         if (!response.ok) {
             return res.status(401).json({ message: 'Unauthorized' });
+        }
+
+        const user: IUserData = await response.json();
+
+        if (user) {
+            (req as IAuthenticatedRequest).userId = user.id;
+            (req as IAuthenticatedRequest).user = user;
         }
 
         return next();

@@ -8,8 +8,8 @@ import express from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
 import { ApiURL } from './constants';
-import { authMiddleware } from './middlewares/authMiddleware';
 import { createClientAndConnect } from './db';
+import { authMiddleware } from './middlewares/authMiddleware';
 import { renderPage } from './ssr/renderPage';
 
 const app = express();
@@ -64,6 +64,21 @@ app.use(
 // Свои ручки, без прокси, приватные - с authMiddleware, публичные - без
 app.use('/api/leaderboard', authMiddleware);
 app.use('/api/forum', authMiddleware);
+
+/* Для примера - проверка userId из запроса для доступа к конкретной ручке
+    app.delete('/api/topics/:id, authMiddleware, (req, res) => {
+        const { id } = req.params;
+
+        const topic = await TopicModel.findByPk(id);
+
+        if (req.userId !== topic.userId) {
+            res.status(403).json({
+                error: 'Вы можете удялть только свои темы ',
+            });
+            return;
+        }
+    })
+*/
 
 // Раздача статики: JS, CSS, манифест и т.п.
 app.use(express.static(clientDistPath, { index: false }));
