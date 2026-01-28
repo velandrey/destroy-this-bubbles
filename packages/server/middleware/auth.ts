@@ -1,39 +1,65 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import type { RequestHandler, Request } from 'express';
 
-interface AuthRequest extends Request {
+import { ApiURL } from '../constants';
+
+interface IUserData {
+    id: number;
+    first_name: string;
+    second_name: string;
+    display_name: string;
+    phone: string;
+    login: string;
+    avatar: string;
+    email: string;
+}
+
+export interface IAuthenticatedRequest extends Request {
     userId?: number;
+    user?: IUserData;
 }
 
-interface JwtPayload {
-    userId: number;
-}
+const hasAuthCookie = (request: Request): boolean => {
+    if (!request.cookies) {
+        return false;
+    }
 
-export const requireAuth = (
-    req: AuthRequest,
-    res: Response,
-    next: NextFunction
-): void => {
+    const { authCookie, uuid } = request.cookies ?? {};
+
+    return Boolean(authCookie && uuid);
+};
+
+export const requireAuth: RequestHandler = async (req, res, next) => {
+    if (!hasAuthCookie(req)) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+    const cookieHeader = Object.entries(req.cookies ?? {})
+        .map(([key, value]) => `${key}=${value}`)
+        .join('; ');
+
     try {
-        const authHeader = req.headers.authorization;
+        const response = await fetch(`${ApiURL}/auth/user`, {
+            method: 'GET',
+            headers: {
+                cookie: cookieHeader,
+                accept: 'application/json',
+            },
+        });
 
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            res.status(403).json({ error: 'Неавторизован. Требуется токен.' });
-            return;
+        if (!response.ok) {
+            return res.status(401).json({ message: 'Unauthorized' });
         }
 
-        const token = authHeader.substring(7);
-        const jwtSecret =
-            process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+        const user = (await response.json()) as IUserData;
 
-        try {
-            const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
-            req.userId = decoded.userId;
-            next();
-        } catch (error) {
-            res.status(403).json({ error: 'Неавторизован. Неверный токен.' });
+        if (user) {
+            (req as IAuthenticatedRequest).userId = user.id;
+            (req as IAuthenticatedRequest).user = user;
         }
+
+        return next();
     } catch (error) {
-        res.status(403).json({ error: 'Неавторизован.' });
+        return res
+            .status(500)
+            .json({ message: 'Auth service is not available' });
     }
 };

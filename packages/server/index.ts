@@ -1,20 +1,65 @@
 import path from 'path';
 
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
 
 import { ensureSiteThemes, logSiteThemes } from './db';
+import { requireAuth } from './middleware/auth';
 import { connectDB } from './config/db';
 import { router } from './routes';
 import { renderPage } from './ssr/renderPage';
 import themeRouter from './routes/theme';
+import { createProxyMiddleware } from 'http-proxy-middleware';
+import { ApiURL } from './constants';
 
 const app = express();
+app.use(cookieParser());
 app.use(cors());
+
+// Проксирование запросов к Yandex API
+app.use(
+    '/api/auth',
+    createProxyMiddleware({
+        target: `${ApiURL}/auth`,
+        changeOrigin: true,
+        cookieDomainRewrite: '',
+    })
+);
+
+app.use(
+    '/api/oauth',
+    createProxyMiddleware({
+        target: `${ApiURL}/oauth`,
+        changeOrigin: true,
+        cookieDomainRewrite: '',
+    })
+);
+
+app.use(
+    '/api/user',
+    requireAuth,
+    createProxyMiddleware({
+        target: `${ApiURL}/user`,
+        changeOrigin: true,
+        cookieDomainRewrite: '',
+    })
+);
+
+app.use(
+    '/api/leaderboard',
+    createProxyMiddleware({
+        target: `${ApiURL}/leaderboard`,
+        changeOrigin: true,
+        cookieDomainRewrite: '',
+    })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/v1/theme', themeRouter);
 app.use('/api', router);
 
 const port = Number(process.env.SERVER_PORT) || 4000;
@@ -30,9 +75,21 @@ app.get('/health', (_req, res) => {
     res.status(200).send('OK');
 });
 
-app.use('/v1/theme', themeRouter);
+// Приватные страницы
+const privatePages = ['/forum', '/profile', '/leaderboard'];
 
-// Все остальные маршруты — SSR React-страницы
+app.get(privatePages, requireAuth, async (req, res) => {
+    const url = req.originalUrl;
+    try {
+        const html = await renderPage(url);
+        res.status(200).contentType('text/html').end(html);
+    } catch (e) {
+        console.error('SSR render error:', e);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Все остальные маршруты — публичные
 app.get('*', async (req, res) => {
     const url = req.originalUrl;
     try {

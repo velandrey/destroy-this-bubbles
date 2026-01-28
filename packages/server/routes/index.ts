@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import * as authController from '../controllers/authController';
+// import * as authController from '../controllers/authController';
 import * as commentController from '../controllers/commentController';
 import * as reactionController from '../controllers/reactionController';
 import * as replyController from '../controllers/replyController';
@@ -9,8 +9,10 @@ import { requireAuth } from '../middleware/auth';
 
 export const router = Router();
 
-router.post('/auth/register', authController.register);
-router.post('/auth/login', authController.login);
+// Пока убрал наши ручки аутентификации, т.к. сейчас весь клиент завязан на API Яндекса
+// Поэтому пока все запросы с клиента на ../api/auth ../api/user и т.п. проксируются на внешний API
+// router.post('/auth/register', authController.register);
+// router.post('/auth/login', authController.login);
 
 router.post('/topics', requireAuth, topicController.createTopic);
 router.get('/topics', topicController.getAllTopics);
