@@ -32,11 +32,10 @@ export const createClientAndConnect = async (): Promise<Sequelize | null> => {
     try {
         await sequelize.authenticate();
         await sequelize.sync();
-
         console.log('  ➜ 🎸 Connected to the database via Sequelize');
         return sequelize;
     } catch (e) {
-        console.error(e);
+        console.error('Ошибка БД:', e);
     }
 
     return null;
