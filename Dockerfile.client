@@ -1,6 +1,24 @@
-FROM nginx:1.25-alpine
+ARG NODE_VERSION=20
+ARG CLIENT_PORT=80
 
-COPY packages/client/nginx.conf /etc/nginx/nginx.conf
+FROM node:$NODE_VERSION-buster as base
 
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+WORKDIR /app
+
+FROM base as builder
+COPY package.json yarn.lock
+RUN yarn install --frozen-lockfile
+
+COPY . .
+
+RUN yarn lerna bootstrap
+RUN yarn build --scope=client
+
+FROM nginx:latest as production
+WORKDIR /app
+
+COPY --from=builder /app/packages/client/dist/ /app/
+COPY --from=builder /app/packages/client/nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE $CLIENT_PORT
+CMD [ "nginx", "-g", "daemon off;" ]

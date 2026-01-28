@@ -28,7 +28,7 @@ const hasAuthCookie = (request: Request): boolean => {
     return Boolean(authCookie && uuid);
 };
 
-export const authMiddleware: RequestHandler = async (req, res, next) => {
+export const requireAuth: RequestHandler = async (req, res, next) => {
     if (!hasAuthCookie(req)) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
@@ -49,7 +49,7 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
             return res.status(401).json({ message: 'Unauthorized' });
         }
 
-        const user: IUserData = await response.json();
+        const user = (await response.json()) as IUserData;
 
         if (user) {
             (req as IAuthenticatedRequest).userId = user.id;

@@ -5,23 +5,21 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
-import { createProxyMiddleware } from 'http-proxy-middleware';
 
-import { ApiURL } from './constants';
-import { createClientAndConnect } from './db';
-import { authMiddleware } from './middlewares/authMiddleware';
+import { ensureSiteThemes, logSiteThemes } from './db';
+import { requireAuth } from './middleware/auth';
+import { connectDB } from './config/db';
+import { router } from './routes';
 import { renderPage } from './ssr/renderPage';
+import themeRouter from './routes/theme';
+import { createProxyMiddleware } from 'http-proxy-middleware';
+import { ApiURL } from './constants';
 
 const app = express();
-app.use(cors());
 app.use(cookieParser());
+app.use(cors());
 
-const port = Number(process.env.SERVER_PORT) || 4000;
-
-// Путь до собранного клиента (Vite build)
-const clientDistPath = path.resolve(process.cwd(), '../client/dist/client');
-
-// Прокси для перенаправления запросов связанных с аутентификацей на API яндекса
+// Проксирование запросов к Yandex API
 app.use(
     '/api/auth',
     createProxyMiddleware({
@@ -40,10 +38,9 @@ app.use(
     })
 );
 
-// Приватные ручки с проксированием на внешний API
 app.use(
     '/api/user',
-    authMiddleware,
+    requireAuth,
     createProxyMiddleware({
         target: `${ApiURL}/user`,
         changeOrigin: true,
@@ -53,7 +50,6 @@ app.use(
 
 app.use(
     '/api/leaderboard',
-    authMiddleware,
     createProxyMiddleware({
         target: `${ApiURL}/leaderboard`,
         changeOrigin: true,
@@ -61,24 +57,15 @@ app.use(
     })
 );
 
-// Свои ручки, без прокси, приватные - с authMiddleware, публичные - без
-app.use('/api/leaderboard', authMiddleware);
-app.use('/api/forum', authMiddleware);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use('/v1/theme', themeRouter);
+app.use('/api', router);
 
-/* Для примера - проверка userId из запроса для доступа к конкретной ручке
-    app.delete('/api/topics/:id, authMiddleware, (req, res) => {
-        const { id } = req.params;
+const port = Number(process.env.SERVER_PORT) || 4000;
 
-        const topic = await TopicModel.findByPk(id);
-
-        if (req.userId !== topic.userId) {
-            res.status(403).json({
-                error: 'Вы можете удялть только свои темы ',
-            });
-            return;
-        }
-    })
-*/
+// Путь до собранного клиента (Vite build)
+const clientDistPath = path.resolve(process.cwd(), '../client/dist/client');
 
 // Раздача статики: JS, CSS, манифест и т.п.
 app.use(express.static(clientDistPath, { index: false }));
@@ -91,7 +78,7 @@ app.get('/health', (_req, res) => {
 // Приватные страницы
 const privatePages = ['/forum', '/profile', '/leaderboard'];
 
-app.get(privatePages, authMiddleware, async (req, res) => {
+app.get(privatePages, requireAuth, async (req, res) => {
     const url = req.originalUrl;
     try {
         const html = await renderPage(url);
@@ -115,11 +102,13 @@ app.get('*', async (req, res) => {
 });
 
 async function start() {
-    const client = await createClientAndConnect();
-    if (!client) {
-        console.error('  ➜ Could not connect to Postgres, exiting');
+    connectDB().catch((error) => {
+        console.error('Failed to connect to database:', error);
         process.exit(1);
-    }
+    });
+
+    await ensureSiteThemes();
+    await logSiteThemes();
 
     app.listen(port, () => {
         console.log(`  ➜ 🎸 SSR Server is listening on port: ${port}`);

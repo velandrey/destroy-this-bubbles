@@ -5,9 +5,12 @@ import serializeJavascript from 'serialize-javascript';
 
 export async function renderPage(_url: string): Promise<string> {
     /* Путь до собранной клиентской директории */
-    const clientDistPath = path.resolve(process.cwd(), '../client/dist/client');
+    const clientDistPath = path.resolve(
+        process.cwd(),
+        '../../client/dist/client'
+    );
     /* Путь до собранной клиентской директории под SSR */
-    const SSRDistPath = path.resolve(process.cwd(), '../client/dist/server');
+    const SSRDistPath = path.resolve(process.cwd(), '../../client/dist/server');
 
     const indexHtmlPath = path.resolve(clientDistPath, 'index.html');
     const entryServerPath = path.resolve(SSRDistPath, 'entry-server.js');
