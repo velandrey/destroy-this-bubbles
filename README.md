@@ -1,137 +1,121 @@
-Видео с демонстрацией проекта  
-[https://disk.yandex.ru/i/a6ZPOhAZ-JmxNg](https://disk.yandex.ru/i/a6ZPOhAZ-JmxNg)
+# Destroy This Bubbles
 
-### Как запускать?
+Монорепозиторий с браузерной игрой на `canvas`, SSR-клиентом на React и Node.js-сервером с PostgreSQL.
 
-#### Локальная разработка:
+## Что реализовано
+- Игра с пузырями: таймер, попадания/промахи, плавающие очки, полноэкранный режим, настраиваемые параметры.
+- Таблица лидеров через API Яндекс.Практикума (`/leaderboard`).
+- Авторизация через логин/пароль и OAuth Яндекса.
+- Профиль пользователя: редактирование данных, смена пароля, загрузка аватара, геолокация.
+- SSR-рендеринг React на сервере и гидратация на клиенте.
+- PWA (service worker + precache/runtime cache).
+- Backend API для форума и тем оформления (`/api/*`, `/v1/theme/*`).
 
-1.  Убедитесь, что у вас установлен `node` и `docker`
+## Архитектура
+- `packages/client`: React + Vite + Redux Toolkit + MUI + Emotion, SSR entry (`src/entry-server.tsx`), PWA (`src/sw.js`).
+- `packages/server`: Express + SSR отдача HTML + прокси к внешнему API + REST API форума/реакций + API тем.
+- `postgres` в Docker для хранения серверных сущностей (`topics/comments/replies/reactions`, `site_theme/user_theme`).
 
-2.  Выполните команду `yarn bootstrap` - это обязательный шаг, без него ничего работать не будет :)
+Поток запросов:
+- Клиент отправляет запросы на `/api/*`.
+- Сервер проксирует `auth/oauth/user/leaderboard` на `https://ya-praktikum.tech/api/v2`.
+- Сервер обрабатывает собственные endpoints форума и тем локально.
 
-3.  Выполните команду `yarn dev` - запустит и клиент, и сервер
+## Текущие ограничения
+- UI форума в клиенте пока работает на `mockData` и не подключён к backend-ручкам форума.
+- Страница регистрации пока не отправляет данные на сервер (только `console.log`).
+- SQL-миграции в `db/001_init.sql` не используются, схема создаётся через `sequelize.sync()`.
 
+## Стек и зависимости
+- Node.js `>=18` (в Docker используется Node 20).
+- Yarn + Lerna Workspaces.
+- Клиент: React 18, TypeScript, Vite 4, Redux Toolkit, React Router, MUI, Emotion, `vite-plugin-pwa`.
+- Сервер: Express, Sequelize, PostgreSQL (`pg`), `http-proxy-middleware`, `cookie-parser`, `cors`.
+- Качество кода: ESLint, Prettier, Jest, Lefthook.
 
-#### Запуск отдельных частей:
+## Структура
+```text
+.
+├── packages/
+│   ├── client/      # SPA + SSR hydration + game UI
+│   └── server/      # Express SSR + API + proxy
+├── docs/            # Техническая документация
+├── db/              # SQL-заготовки (сейчас не используются в рантайме)
+├── docker-compose.yml
+└── README.md
+```
 
-*   `yarn dev --scope=client` - запустить только клиент
+## Быстрый старт (локально)
+1. Установите `Node.js >=18`, `yarn`, `docker`.
+2. Проверьте и при необходимости отредактируйте `.env`.
+3. Выполните:
+   ```bash
+   yarn bootstrap
+   yarn dev
+   ```
+4. Для запуска отдельных пакетов:
+   ```bash
+   yarn dev:client
+   yarn dev:server
+   ```
 
-*   `yarn dev --scope=server` - запустить только сервер
+## Сборка и проверка
+```bash
+yarn test
+yarn lint
+yarn format
+yarn build
+```
 
+Запуск preview:
+```bash
+yarn preview --scope=client
+yarn preview --scope=server
+```
 
-#### Production в Docker:
+## Docker
+`docker-compose` поднимает 3 сервиса: `client` (nginx), `server` (node), `postgres`.
 
-1.  Выполните `node init.js` для создания .env файла
+Подготовка и запуск:
+```bash
+node init.js
+docker compose up --build
+```
 
-2.  Настройте переменные окружения в `.env` при необходимости
-
-3.  Запустите `docker compose up` - запустит три сервиса:
-
-    *   nginx, раздающий клиентскую статику (клиент)
-
-    *   node.js сервер (сервер)
-
-    *   postgres, вашу базу данных (база данных)
-
-
-#### Запуск отдельных сервисов в Docker:
-
-*   `docker compose up client` - только клиент
-
-*   `docker compose up server` - только сервер
-
-*   `docker compose up postgres` - только база данных
-
-
-### Как добавить зависимости?
-
-В этом проекте используется `monorepo` на основе [`lerna`](https://github.com/lerna/lerna)
-
-Чтобы добавить зависимость для клиента:
-
-`yarn lerna add {your\_dep} \--scope client`
-
-Для сервера:
-
-`yarn lerna add {your\_dep} \--scope server`
-
-И для клиента и для сервера:
-
-`yarn lerna add {your\_dep}`
-
-Если вы хотите добавить dev зависимость, проделайте то же самое, но с флагом `dev`:
-
-`yarn lerna add {your\_dep} \--dev \--scope server`
-
-### Тесты
-
-Для клиента используется [`react-testing-library`](https://testing-library.com/docs/react-testing-library/intro/)
-
-`yarn test`
-
-### Линтинг
-
-`yarn lint`
-
-### Форматирование prettier
-
-`yarn format`
-
-### Production build
-
-`yarn build`
-
-И чтобы посмотреть что получилось:
-
-`yarn preview \--scope client`
-`yarn preview \--scope server`
-
-### Docker команды
-
-*   `docker compose build` - пересобрать образы
-
-*   `docker compose up -d` - запуск в фоновом режиме
-
-*   `docker compose down` - остановка контейнеров
-
-*   `docker compose logs` - просмотр логов
-
-*   `docker compose logs -f` - просмотр логов в реальном времени
-
-
-## Хуки
-
-В проекте используется [lefthook](https://github.com/evilmartians/lefthook) для pre-commit проверок. Если очень-очень нужно пропустить проверки, используйте `--no-verify` (но не злоупотребляйте :)
-
-## Автодеплой статики на vercel
-
-Зарегистрируйте аккаунт на [vercel](https://vercel.com/). Следуйте [инструкции](https://vitejs.dev/guide/static-deploy.html#vercel-for-git). В качестве `root directory` укажите `packages/client`.
-
-Все ваши PR будут автоматически деплоиться на vercel. URL вам предоставит деплоящий бот.
+Полезные команды:
+```bash
+docker compose up -d
+docker compose down
+docker compose logs
+docker compose logs -f server
+```
 
 ## Переменные окружения
+Основные параметры (`.env`):
+- `CLIENT_PORT` — внешний порт клиента.
+- `SERVER_PORT` — порт backend.
+- `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` — подключение к БД.
+- `EXTERNAL_SERVER_URL` — серверный URL для локальной разработки клиента.
+- `INTERNAL_SERVER_URL` — серверный URL внутри docker-сети.
 
-Проект использует переменные окружения из `.env` файла. Для первого запуска выполните `node init.js`, который создаст `.env` на основе `.env.sample`.
+Примечание: текущий `init.js` создаёт только директорию `tmp/pgdata` и не генерирует `.env`.
 
-Основные переменные:
+## NPM-скрипты (корень)
+- `yarn bootstrap` — установка зависимостей и bootstrap workspace.
+- `yarn dev` — dev-режим всех пакетов.
+- `yarn dev:client` — dev только клиента.
+- `yarn dev:server` — dev только сервера.
+- `yarn build` — сборка клиента, SSR и сервера.
+- `yarn test` — тесты по пакетам.
+- `yarn lint` — линтинг по пакетам.
+- `yarn format` — форматирование по пакетам.
 
-*   `POSTGRES_*` - настройки базы данных
+## Git hooks
+Используется `lefthook` (`pre-commit`):
+- ESLint для `*.ts, *.tsx`
+- Prettier для `*.ts, *.tsx, *.css`
 
-*   `SERVER_PORT` - порт сервера (по умолчанию 3001)
-
-*   `CLIENT_PORT` - порт клиента (по умолчанию 80)
-
-*   `INTERNAL_SERVER_URL` - URL сервера внутри Docker сети
-
-*   `EXTERNAL_SERVER_URL` - URL сервера для локальной разработки
-
-
-## Ой, ничего не работает :(
-
-1.  Проверьте что выполнили `yarn bootstrap`
-
-2.  Убедитесь что все переменные окружения установлены в `.env`
-
-3.  Проверьте логи: `docker compose logs` или `yarn dev` ошибки
-
-4.  Откройте issue, я приду :)
+## Дополнительная документация
+- `docs/README.md`
+- `docs/scenario.md`
+- `docs/gameEngine.md`
