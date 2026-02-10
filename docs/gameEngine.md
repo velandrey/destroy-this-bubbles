@@ -1,213 +1,99 @@
-# Документация игровых модулей
+# Документация игрового движка
 
-## GameEngine
+## Общая схема
+Игровой контур разделён на 3 слоя:
+- `GameEngine` — связывает canvas, модель и рендерер, управляет циклом `requestAnimationFrame`.
+- `GameModel` — вся бизнес-логика: таймер, очки, спавн, клики, завершение игры.
+- `GameRenderer` — только отрисовка состояния на canvas.
 
-### Назначение
-`GameEngine` управляет игровым процессом: временем, отрисовкой, обработкой кликов, подсчётом очков и состоянием игры.
+Дополнительные модули:
+- `SpawnLogic` — генерация целей.
+- `Circle` — объект цели (рост, сжатие, попадание, звук).
+- `FloatingText` — визуализация начисленных очков.
+- `checkHit` — проверка попадания по активным целям.
 
-### Основные задачи
-- запуск и остановка игры  
-- обработка попаданий и промахов  
-- спавн кругов  
-- обновление и отрисовка объектов  
-- отображение таймера и счёта  
-- кнопка перезапуска
+## Жизненный цикл
+1. `GameEnter` создаёт `GameEngine(canvas, onGameOver, gameSettings)` и вызывает `start()`.
+2. `GameEngine.start()` запускает `GameModel.start()` и игровой цикл.
+3. На каждом кадре:
+   - `model.update(time)`;
+   - чтение `model.currentGameState`;
+   - `renderer.renderGame(state)`.
+4. При окончании времени `GameModel.endGame()` вызывает `onGameOver({ score, timestamp })`.
+5. React-страница сохраняет результат в Redux и отправляет его в leaderboard.
 
-### Пример использования
-```ts
-	if (!canvasRef.current) return;
-	const engine = new GameEngine(canvasRef.current);
-	engine.start();
-```
+## Класс `GameEngine`
 
----
+### Задачи
+- Инициализировать `GameModel` и `GameRenderer`.
+- Конвертировать координаты клика из viewport в систему координат canvas.
+- Передавать клики в модель (`processClick`).
+- Останавливать цикл и отписываться от `click` в `destroy()`.
 
-## Класс GameEngine
+### Ключевые методы
+- `start()` — старт игры и цикла кадров.
+- `loop(time)` — обновление модели + отрисовка, пока игра активна.
+- `handleClick(event)` — обработка клика через `model.processClick`.
+- `destroy()` — остановка и очистка слушателей.
 
-### Аргументы конструктора
-|           Имя           | Описание                                     |
-|:-----------------------:|:-------------------------------------------- |
-|         **ctx**         | 2D контекст на котором будет рисоваться игра |
-|       spawnLogic        | Логика спавна кругов                         |
-| canvas.addEventListener | Обработка кликов по канвасу                  |
-|          rect           | Положение канваса для обработки кликов       |
+## Класс `GameModel`
 
-### start()
-Запускает игру, сбрасывает время и запускает цикл обновления.
+### Состояние
+- `circles: Circle[]`
+- `floatingTexts: FloatingText[]`
+- `score: number`
+- `secondsRemaining: number`
+- флаги `isRunning`, `isGameOver`
 
-```ts
-start() {
-    this.clear()
-    this.startTime = performance.now()
-    this.lastTime = this.startTime
-    this.isRunning = true
-    requestAnimationFrame((time) => this.loop(time))
-}
-```
+### Что делает `update(currentTime)`
+- Считает оставшееся время.
+- Спавнит новые круги через `SpawnLogic`.
+- Обновляет существующие круги и удаляет неактивные.
+- Обновляет и фильтрует плавающие тексты.
+- Завершает игру при `secondsRemaining === 0`.
 
-### loop()
-Основной цикл игры, вызывается через `requestAnimationFrame`.
-Обрабатывает время генерации кадра через deltaTime
+### Обработка клика
+- `checkHit(circles, x, y)` ищет цель под курсором.
+- Если промах:
+  - штраф `scoreOnMiss`;
+  - звук промаха;
+  - счёт не уходит ниже нуля.
+- Если попадание:
+  - вычисляются бонусы точности и скорости;
+  - добавляется `scoreOnHit + accuracyLevel + speedLevel`;
+  - создаётся `FloatingText("+N")`;
+  - цель помечается как уничтоженная.
 
-```ts
-private loop(currentTime: number) {
-    const deltaTime = currentTime - this.lastTime
-    const elapsedTime = currentTime - this.startTime
+### Формула очков
+- `gained = scoreOnHit + accuracyLevel + speedLevel`
+- `accuracyLevel` зависит от расстояния до центра цели.
+- `speedLevel` зависит от времени жизни цели (раньше клик — выше бонус).
 
-    if (elapsedTime >= gameSettings.game.gameDuration) {
-        this.endGame()
-        return
-    }
+## `SpawnLogic`
+- Следит за интервалом появления (`spawn.interval`).
+- Ограничивает число целей (`spawn.maxCircles`).
+- Создаёт цели в случайной позиции в границах canvas с учётом `maxRadius`.
 
-    this.update(deltaTime, currentTime)
-    this.draw(currentTime)
+## `Circle`
+- Растёт от `minRadius` до `maxRadius`, затем сжимается.
+- При достижении минимума деактивируется.
+- `containsPoint(x, y)` проверяет попадание внутрь текущего радиуса.
+- `pop()` деактивирует цель и проигрывает звук попадания.
+- `lifetime` используется для расчёта бонуса скорости.
 
-    requestAnimationFrame((time) => this.loop(time))
-}
-```
+## `GameRenderer`
+- Очищает canvas фоном.
+- Рисует цели и плавающие тексты.
+- Показывает HUD:
+  - `Score: ...`
+  - `Time: ...s`
 
-### handleClick()
-Обрабатывает клики — попадание/промах, логика restart-кнопки.
-Логика определения попадания, вызывается в методах checkHit затем, containsPoint:
-- Для каждого круга вычисляется расстояние до центра от координат клика. Если меньше радиуса, то круг помечается для удаления, при следующем кадре.
-- Проигрывается звук попадания.
-- При промахе проигрывается звук промаха.
+Примечание: цвет фона берётся из `defaultGameSettings.game.backgroundColor`.
 
-```ts
-private handleClick(event: MouseEvent) {
-    const x = ...
-    const y = ...
-    const result = checkHit(this.circles, x, y)
+## Настройки (`TGameSettings`)
+Базовые значения берутся из `defaultGameSettings` (Redux slice `game`):
+- `circle`: `minRadius`, `maxRadius`, `growthSpeed`, `color`, `totalLevels`, `totalTimeLevels`
+- `spawn`: `interval`, `maxCircles`
+- `game`: `backgroundColor`, `scoreOnHit`, `scoreOnMiss`, `gameDuration`
 
-    if (!result.hit) {
-        this.score -= 1
-    } else {
-        this.score += 1
-    }
-}
-```
-
----
-
-## Circle
-
-### Назначение
-Объект-мишень. Растёт до максимума, затем уменьшается и исчезает.
-
-### Пример создания:
-```ts
-const circle = new Circle(100, 120, 5, 'red')
-```
-
-### update()
-Растит и уменьшает круг.
-
-```ts
-update(deltaTime: number) {
-    if (this.growing) {
-        this.radius += growthSpeed * deltaTime / 1000
-    } else {
-        this.radius -= growthSpeed * deltaTime / 1000
-    }
-}
-```
-
-### draw()
-Отрисовывает круг.
-
-```ts
-draw(ctx: CanvasRenderingContext2D) {
-    ctx.beginPath()
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
-    ctx.fill()
-}
-```
-
-### containsPoint()
-Проверяет попадание в круг.
-
-```ts
-containsPoint(px: number, py: number) {
-    const dx = px - this.x
-    const dy = py - this.y
-    return Math.sqrt(dx*dx + dy*dy) <= this.radius
-}
-```
-
----
-
-## checkHit()
-
-### Назначение
-Определяет, попал ли пользователь в один из кругов.
-
-### Пример:
-```ts
-const result = checkHit(circles, x, y)
-if (result.hit) console.log('Попадание!')
-```
-
-### Код:
-```ts
-export function checkHit(circles, x, y) {
-    for (const circle of circles) {
-        if (circle.containsPoint(x, y)) {
-            circle.pop()
-            return { hit: true, circle }
-        }
-    }
-    return { hit: false }
-}
-```
-
----
-
-## SpawnLogic
-
-### Назначение
-Управляет созданием кругов на канвасе с случайными координатами.
-
-### Пример:
-```ts
-const spawner = new SpawnLogic(canvas.width, canvas.height)
-const circle = spawner.spawnCircle()
-```
-
-### spawnCircle()
-Создаёт круг со случайной позицией.
-
-```ts
-spawnCircle() {
-    const x = Math.random() * (this.canvasWidth - maxRadius * 2) + maxRadius
-    const y = Math.random() * (this.canvasHeight - maxRadius * 2) + maxRadius
-    return new Circle(x, y, minRadius, color)
-}
-```
-
----
-
-## gameSettings
-
-### Назначение
-Конфигурация игры — параметры круга, спавна и длительности игры.
-
-```ts
-export const gameSettings = {
-    circle: {
-        minRadius: 1,
-        maxRadius: 15,
-        growthSpeed: 5,
-        color: 'red'
-    },
-    spawn: {
-        interval: 1000,
-        maxCircles: 5
-    },
-    game: {
-        backgroundColor: '#111',
-        scoreOnHit: 10,
-        scoreOnMiss: 10,
-        gameDuration: 30000
-    }
-}
-```
+Эти параметры меняются пользователем в лаунчере перед стартом игры.
