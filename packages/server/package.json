@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",
-    "cookie-parser": "^1.4.7",
     "@sequelize/postgres": "^7.0.0-alpha.47",
     "bcrypt": "^5.1.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.2",
@@ -52,7 +52,7 @@
     "prettier": "^2.7.1",
     "rimraf": "^6.1.2",
     "ts-jest": "^29.4.6",
-    "ts-node": "^1.7.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.4.2"
   },
   "license": "MIT"
