@@ -1,20 +1,23 @@
 ARG NODE_VERSION=20
 ARG CLIENT_PORT=80
 
-FROM node:$NODE_VERSION-buster as base
+FROM node:$NODE_VERSION-buster AS base
 
 WORKDIR /app
 
-FROM base as builder
-COPY package.json yarn.lock
+FROM base AS builder
+# Copy root and workspace package.json so yarn installs full tree (including lerna)
+COPY package.json yarn.lock ./
+COPY packages/client/package.json packages/client/
+COPY packages/server/package.json packages/server/
 RUN yarn install --frozen-lockfile
 
 COPY . .
 
-RUN yarn lerna bootstrap
+RUN npx lerna bootstrap
 RUN yarn build --scope=client
 
-FROM nginx:latest as production
+FROM nginx:latest AS production
 WORKDIR /app
 
 COPY --from=builder /app/packages/client/dist/ /app/

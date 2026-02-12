@@ -16,6 +16,22 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import { ApiURL } from './constants';
 
 const app = express();
+const cspValue =
+    "default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'unsafe-inline'; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ya-praktikum.tech https://oauth.yandex.ru; media-src 'self'; worker-src 'self' blob:; manifest-src 'self';";
+
+app.use((req, res, next) => {
+    const accept = String(req.headers.accept ?? '');
+
+    const isHtmlRequest =
+        (req.method === 'GET' || req.method === 'HEAD') &&
+        accept.includes('text/html');
+
+    if (isHtmlRequest) {
+        res.setHeader('Content-Security-Policy', cspValue);
+    }
+
+    next();
+});
 app.use(cookieParser());
 app.use(cors());
 
