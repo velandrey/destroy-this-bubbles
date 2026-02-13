@@ -9,11 +9,14 @@ services:
             dockerfile: Dockerfile.client
         restart: always
         ports:
+            - "80:80"
             - "${CLIENT_PORT}:443"
         volumes:
-            - ./certs:/etc/nginx/ssl:ro
+            - certbot_conf:/etc/letsencrypt:ro
+            - certbot_www:/var/www/certbot:ro
         environment:
           - SERVER_PORT=${SERVER_PORT}
+          - LETSENCRYPT_DOMAIN=${LETSENCRYPT_DOMAIN}
 
     server:
         container_name: prakticum-server
@@ -56,5 +59,13 @@ services:
         timeout: 5s
         retries: 10
 
+    certbot:
+        image: certbot/certbot
+        volumes:
+            - certbot_conf:/etc/letsencrypt
+            - certbot_www:/var/www/certbot
+
 volumes:
   pgdata:
+  certbot_conf:
+  certbot_www:
