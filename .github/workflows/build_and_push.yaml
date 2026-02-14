@@ -54,5 +54,6 @@ jobs:
           key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
           script: |
             cd ${{ secrets.VM_DEPLOY_PATH }}
+            docker compose -f docker-compose.vm.yml down
             docker compose -f docker-compose.vm.yml pull
             docker compose -f docker-compose.vm.yml up -d --build
