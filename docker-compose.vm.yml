@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  client:
+    container_name: prakticum-client
+    image: ghcr.io/velandrey/destroy-this-bubbles/client:${IMAGE_TAG:-latest}
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    # volumes:
+    #   - ./certs:/etc/nginx/ssl:ro
+    environment:
+      - SERVER_PORT=3001
+
+  server:
+    container_name: prakticum-server
+    image: ghcr.io/velandrey/destroy-this-bubbles/server:${IMAGE_TAG:-latest}
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      - SERVER_PORT=3001
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    container_name: prakticum-postgres
+    image: postgres:14
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pgdata:
