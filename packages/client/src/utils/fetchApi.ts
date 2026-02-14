@@ -1,5 +1,16 @@
 import { ApiURL } from '@constants/constants';
 
+export class ApiError<T = unknown> extends Error {
+    status: number;
+    data?: T;
+
+    constructor(status: number, message: string, data?: T) {
+        super(message);
+        this.status = status;
+        this.data = data;
+    }
+}
+
 interface FetchOptions extends RequestInit {
     data?: unknown;
     isFormData?: boolean;
@@ -35,22 +46,22 @@ export const fetchApi = async <T>(
         config.body = isFormData ? (data as BodyInit) : JSON.stringify(data);
     }
 
-    try {
-        const response = await fetch(`${ApiURL}${url}`, config);
+    const response = await fetch(`${ApiURL}${url}`, config);
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+    const contentType = response.headers.get('content-type');
+    const isJson = contentType?.includes('application/json');
 
-        const contentType = response.headers.get('content-type');
+    const responseData = isJson
+        ? await response.json().catch(() => undefined)
+        : await response.text().catch(() => undefined);
 
-        if (contentType && contentType.includes('application/json')) {
-            return (await response.json()) as T;
-        } else {
-            return await response.text();
-        }
-    } catch (error) {
-        console.error(`API request failed: ${url}`, error);
-        throw error;
+    if (!response.ok) {
+        throw new ApiError(
+            response.status,
+            `HTTP error ${response.status}`,
+            responseData
+        );
     }
+
+    return responseData as T;
 };
