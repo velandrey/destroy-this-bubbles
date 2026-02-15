@@ -7,8 +7,8 @@ const {
     POSTGRES_USER,
     POSTGRES_PASSWORD,
     POSTGRES_DB,
-    POSTGRES_HOST = 'localhost',
-    POSTGRES_PORT = '5432',
+    POSTGRES_HOST,
+    POSTGRES_PORT,
 } = process.env;
 
 export const sequelize = new Sequelize(
