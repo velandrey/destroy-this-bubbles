@@ -20,6 +20,10 @@ jest.mock('@components/page', () => ({
     }) => <div className={className}>{children}</div>,
 }));
 
+jest.mock('@components/speakButton', () => ({
+    SpeakButton: () => null,
+}));
+
 describe('MenuPage visual snapshot', () => {
     test('renders and matches snapshot (screenshot)', () => {
         const { asFragment } = render(
