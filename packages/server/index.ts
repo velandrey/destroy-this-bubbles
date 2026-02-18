@@ -8,7 +8,8 @@ import express from 'express';
 
 import { ensureSiteThemes, logSiteThemes } from './db';
 import { requireAuth } from './middleware/auth';
-import { connectDB } from './config/db';
+// import { connectDB } from './config/db';
+import { createClientAndConnect } from './db';
 import { router } from './routes';
 import { renderPage } from './ssr/renderPage';
 import themeRouter from './routes/theme';
@@ -118,7 +119,7 @@ app.get('*', async (req, res) => {
 });
 
 async function start() {
-    connectDB().catch((error) => {
+    createClientAndConnect().catch((error) => {
         console.error('Failed to connect to database:', error);
         process.exit(1);
     });

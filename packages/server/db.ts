@@ -16,9 +16,9 @@ export const sequelize = new Sequelize({
     dialect: 'postgres',
     host: POSTGRES_HOST || 'postgres',
     port: Number(POSTGRES_PORT),
-    username: POSTGRES_USER,
-    password: POSTGRES_PASSWORD,
-    database: POSTGRES_DB,
+    username: POSTGRES_USER || 'postgres',
+    password: POSTGRES_PASSWORD || 'postgres',
+    database: POSTGRES_DB || 'postgres',
     logging: false,
     models: [SiteTheme, UserTheme],
 });

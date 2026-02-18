@@ -33,18 +33,6 @@
 - Сервер: Express, Sequelize, PostgreSQL (`pg`), `http-proxy-middleware`, `cookie-parser`, `cors`.
 - Качество кода: ESLint, Prettier, Jest, Lefthook.
 
-## Структура
-```text
-.
-├── packages/
-│   ├── client/      # SPA + SSR hydration + game UI
-│   └── server/      # Express SSR + API + proxy
-├── docs/            # Техническая документация
-├── db/              # SQL-заготовки (сейчас не используются в рантайме)
-├── docker-compose.yml
-└── README.md
-```
-
 ## Быстрый старт (локально)
 1. Установите `Node.js >=18`, `yarn`, `docker`.
 2. Проверьте и при необходимости отредактируйте `.env`.
