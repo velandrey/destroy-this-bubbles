@@ -1,4 +1,5 @@
 import { Page } from '@components/page';
+import { SpeakButton } from '@components/speakButton';
 import { ROUTES } from '@constants/routes';
 import { useOAuth } from '@hooks/useOAuth';
 import { Button } from '@mui/material';
@@ -6,6 +7,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
+    FullText,
     GameTitle,
     GameDescription,
     GameRules,
@@ -39,6 +41,7 @@ const MenuPage = () => {
                 <p className={styles.discription}>{GameRules}</p>
                 <p className={styles.discription}>{GameGoal}</p>
             </article>
+            <SpeakButton text={FullText} className={styles.speakButton} />
             <Button
                 variant="contained"
                 color="primary"

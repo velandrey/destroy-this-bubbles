@@ -9,3 +9,5 @@ export const PlayText = 'Играть';
 export const ProfileText = 'Профиль';
 export const ForumText = 'Форум';
 export const LeaderboardText = 'Таблица лидеров';
+export const FullText =
+    GameTitle + '. ' + GameDescription + ' ' + GameRules + ' ' + GameGoal;

@@ -29,6 +29,13 @@ $accent-color: rgb(176, 25, 210);
     animation: pulse 1.5s ease-in-out infinite;
 }
 
+.speakButton {
+    font-size: 1.1rem !important;
+    padding: 3px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
 @keyframes pulse {
     0% {
         transform: scale(1);
